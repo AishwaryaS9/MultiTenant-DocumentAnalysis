@@ -1,0 +1,6 @@
+export type AnalysisType =
+    | "summary"
+    | "qa"
+    | "sentiment"
+    | "entities"
+    | "extract";
