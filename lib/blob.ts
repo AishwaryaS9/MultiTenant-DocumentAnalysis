@@ -23,7 +23,7 @@ export async function uploadToBlob(
     }
 }
 
-export async function deletefromBlob(url: string): Promise<void> {
+export async function deleteFromBlob(url: string): Promise<void> {
     try {
         await del(url, {
             token: process.env.BLOB_READ_WRITE_TOKEN,
