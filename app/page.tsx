@@ -85,10 +85,10 @@ export default function Home() {
             Join thousands of teams using DocuAI to work smarter with their documents.
           </p>
           <Link href="/sign-up">
-            <Button size="lg">Get Started Free</Button>
+            <Button size="lg" className="px-8">Get Started Free</Button>
           </Link>
           <p className="text-sm text-gray-500 mt-4">
-            No credit card required. 14-day free trial.
+            No credit card required • 14-day free trial.
           </p>
         </div>
       </section>

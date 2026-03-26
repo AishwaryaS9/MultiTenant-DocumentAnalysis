@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs'
+
 export default function Header() {
+
     const pathname = usePathname();
+    
     const getNavItems = () => {
         const baseItems = [
             { href: "/", label: "Home", icon: <Home className='w-4 h-4' /> },
