@@ -1,19 +1,44 @@
 "use client"
-import { Brain, Home, LogIn, UserPlus, Users } from 'lucide-react'
+import { Brain, Building, FileText, Home, LogIn, UserPlus, Users } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
-import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs'
+import { SignInButton, SignOutButton, useOrganization, UserButton, useUser } from '@clerk/nextjs'
 
 export default function Header() {
 
     const pathname = usePathname();
-    
+    const { user } = useUser();
+    const { organization } = useOrganization();
+
     const getNavItems = () => {
         const baseItems = [
-            { href: "/", label: "Home", icon: <Home className='w-4 h-4' /> },
-            { href: "/select-org", label: "Switch Organization", icon: <Users className='w-4 h-4' /> }
+            {
+                href: "/",
+                label: "Home",
+                icon: <Home className='w-4 h-4' />
+            }
         ];
+
+        if (organization) {
+            return [
+                {
+                    href: `/${organization.slug}`,
+                    label: "Organization Dashboard",
+                    icon: <Building className='w-4 h-4' />
+                },
+                {
+                    href: `/${organization.slug}/documents`,
+                    label: "Organization Documents",
+                    icon: <FileText className='w-4 h-4' />
+                },
+                {
+                    href: "/select-org",
+                    label: "Switch Organization",
+                    icon: <Users className='w-4 h-4' />
+                }
+            ]
+        }
         return [...baseItems];
     }
 
@@ -48,6 +73,9 @@ export default function Header() {
                 <div className="flex items-center gap-4">
                     <SignInButton>
                         <div className="md:flex items-center gap-2">
+                            <span className='text-sm text-gray-600'>
+                                {organization ? `In ${organization.name}` : user?.firstName || user?.username}
+                            </span>
                             <UserButton />
                         </div>
                     </SignInButton>

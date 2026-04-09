@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
 import { syncUserToDatabase } from "@/lib/sync-user";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default async function RootLayout({
             </main>
             {/* Footer */}
             <Footer />
+            <Toaster position="top-right" richColors />
           </div>
         </body>
       </html>
