@@ -151,7 +151,7 @@ export default async function OrgDashboardPage({
                                             </div>
                                         </div>
                                         {doc.aiSummary ? (
-                                            <Brain className="h-5 w-5 text-gray-500" />
+                                            <Brain className="h-5 w-5 text-green-500" />
                                         ) : (
                                             <Button variant="outline" size="sm">
                                                 Analyze

@@ -97,7 +97,7 @@ export async function POST(request: Request) {
         )
     } catch (error: any) {
         console.error("Document upload error", error);
-        return NextResponse.json({ error: error.message || "Failed to document" }, { status: 500 });
+        return NextResponse.json({ error: error.message || "Failed to upload document" }, { status: 500 });
     }
 }
 
@@ -108,7 +108,7 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // url format --->  /api/documents?organizationId=${orgainization.id}
+        // url format --->  /api/documents?organizationId=${organization.id}
         const { searchParams } = new URL(request.url);
         const clerkOrgId = searchParams.get("organizationId");
 
