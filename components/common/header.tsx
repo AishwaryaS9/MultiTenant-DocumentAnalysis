@@ -1,15 +1,18 @@
 "use client"
-import { Brain, Building, FileText, Home, LogIn, UserPlus, Users } from 'lucide-react'
+import { Brain, Building, FileText, Home, LogIn, Menu, UserPlus, Users } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import { SignInButton, SignOutButton, useOrganization, UserButton, useUser } from '@clerk/nextjs'
+import { useState } from 'react';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 
 export default function Header() {
 
     const pathname = usePathname();
     const { user } = useUser();
     const { organization } = useOrganization();
+    const [isOpen, setIsOpen] = useState(false);
 
     const getNavItems = () => {
         const baseItems = [
@@ -22,6 +25,7 @@ export default function Header() {
 
         if (organization) {
             return [
+                ...baseItems,
                 {
                     href: `/${organization.slug}`,
                     label: "Organization Dashboard",
@@ -39,7 +43,14 @@ export default function Header() {
                 }
             ]
         }
-        return [...baseItems];
+        return [
+            ...baseItems,
+            {
+                href: "/select-org",
+                label: "Switch Organization",
+                icon: <Users className="h-4 w-4" />,
+            },
+        ];
     }
 
     const navItems = getNavItems();
@@ -95,6 +106,71 @@ export default function Header() {
                             </Link>
                         </div>
                     </SignOutButton>
+
+                    {/* Mobile Menu */}
+                    <div className="md:hidden">
+                        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                            <SheetTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                    <Menu className="h-5 w-5" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="right" className="w-75 sm:w-100">
+                                <div className="flex flex-col gap-4 mt-8">
+                                    {/* Mobile Navigation */}
+                                    {navItems.map((item) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={() => setIsOpen(false)}
+                                        >
+                                            <Button
+                                                variant={pathname === item.href ? "secondary" : "ghost"}
+                                                className="w-full justify-start gap-2"
+                                            >
+                                                {item.icon}
+                                                {item.label}
+                                            </Button>
+                                        </Link>
+                                    ))}
+
+                                    {/* Mobile Auth */}
+                                    <div className="border-t pt-4 mt-4">
+                                        <SignInButton>
+                                            <div className="flex flex-col gap-2">
+                                                <div className="px-2 text-sm text-gray-600 mb-2">
+                                                    {organization
+                                                        ? `In: ${organization.name}`
+                                                        : `Signed in as ${user?.firstName || user?.username}`}
+                                                </div>
+                                                <div className="flex justify-center">
+                                                    {/* <UserButton afterSignOutUrl="/" /> */}
+                                                    <UserButton />
+                                                </div>
+                                            </div>
+                                        </SignInButton>
+
+                                        <SignOutButton>
+                                            <div className="flex flex-col gap-2">
+                                                <Link href="/sign-in" onClick={() => setIsOpen(false)}>
+                                                    <Button variant="outline" className="w-full">
+                                                        <LogIn className="h-4 w-4 mr-2" />
+                                                        Sign In
+                                                    </Button>
+                                                </Link>
+                                                <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                                                    <Button className="w-full">
+                                                        <UserPlus className="h-4 w-4 mr-2" />
+                                                        Sign Up
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        </SignOutButton>
+                                    </div>
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+                    </div>
                 </div>
             </div>
         </header>

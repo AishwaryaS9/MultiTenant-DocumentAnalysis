@@ -46,21 +46,21 @@ model OrganizationMember {
 
 
 model Document {
-  id                  String          @id @default(cuid())
-  name                String 
-  content             String?
-  fileUrl             String?         @default("member")
-  fileSize            Int?
-  fileType            String?
-  aiSummary           String?
-  aiKeywords          String[]
-  sentiment           String?
-  organizationId      String 
-  userId              String
-  organization        Organization    @relation(fields: [organizationId], references:[id])
-  user                User            @relation(fields: [userId], references: [id])
- 
-  createdAt           DateTime        @default(now())
-  @@unique([organizationId, userId])
+  id             String   @id @default(cuid())
+  name           String
+  content        String?
+  fileUrl        String?
+  fileSize       Int?     
+  fileType       String?  
+  aiSummary      String?
+  aiKeywords     String[]
+  sentiment      String?
+  organizationId String
+  userId         String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+  
+  createdAt      DateTime @default(now())
+  
   @@map("documents")
 }

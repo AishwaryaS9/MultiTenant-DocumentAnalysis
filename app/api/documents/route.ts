@@ -1,3 +1,4 @@
+export const runtime = "nodejs";
 import { uploadToBlob } from "@/lib/blob";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
