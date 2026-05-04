@@ -8,7 +8,7 @@ export async function syncUserToDatabase() {
             return null;
         }
         const email = clerkUser.emailAddresses[0]?.emailAddress || "";
-        const name = `${clerkUser.firstName || ""} ${clerkUser.lastActiveAt || ""}`.trim();
+        const name = `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim();
 
         //Check if user exists in db
         let dbUser = await prisma.user.findUnique({
