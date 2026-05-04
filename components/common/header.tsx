@@ -3,7 +3,7 @@ import { Brain, Building, FileText, Home, LogIn, Menu, UserPlus, Users } from 'l
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
-import { SignInButton, SignOutButton, useOrganization, UserButton, useUser } from '@clerk/nextjs'
+import { useOrganization, UserButton, useUser } from '@clerk/nextjs'
 import { useState } from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 
@@ -82,15 +82,14 @@ export default function Header() {
 
                 {/* Auth */}
                 <div className="flex items-center gap-4">
-                    <SignInButton>
+                    {user ? (
                         <div className="md:flex items-center gap-2">
                             <span className='text-sm text-gray-600'>
                                 {organization ? `In ${organization.name}` : user?.firstName || user?.username}
                             </span>
                             <UserButton />
                         </div>
-                    </SignInButton>
-                    <SignOutButton>
+                    ) : (
                         <div className="md:flex items-center gap-2">
                             <Link href="/sign-in">
                                 <Button variant="ghost" size="sm">
@@ -105,7 +104,7 @@ export default function Header() {
                                 </Button>
                             </Link>
                         </div>
-                    </SignOutButton>
+                    )}
 
                     {/* Mobile Menu */}
                     <div className="md:hidden">
@@ -136,7 +135,7 @@ export default function Header() {
 
                                     {/* Mobile Auth */}
                                     <div className="border-t pt-4 mt-4">
-                                        <SignInButton>
+                                        {user ? (
                                             <div className="flex flex-col gap-2">
                                                 <div className="px-2 text-sm text-gray-600 mb-2">
                                                     {organization
@@ -144,13 +143,10 @@ export default function Header() {
                                                         : `Signed in as ${user?.firstName || user?.username}`}
                                                 </div>
                                                 <div className="flex justify-center">
-                                                    {/* <UserButton afterSignOutUrl="/" /> */}
                                                     <UserButton />
                                                 </div>
                                             </div>
-                                        </SignInButton>
-
-                                        <SignOutButton>
+                                        ) : (
                                             <div className="flex flex-col gap-2">
                                                 <Link href="/sign-in" onClick={() => setIsOpen(false)}>
                                                     <Button variant="outline" className="w-full">
@@ -165,7 +161,7 @@ export default function Header() {
                                                     </Button>
                                                 </Link>
                                             </div>
-                                        </SignOutButton>
+                                        )}
                                     </div>
                                 </div>
                             </SheetContent>
