@@ -1,5 +1,5 @@
 "use client"
-import { Brain, Building, FileText, Home, LogIn, Menu, UserPlus, Users } from 'lucide-react'
+import { Brain, Building, FileText, Home, Menu, Users } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
@@ -65,10 +65,10 @@ export default function Header() {
                     ) : (
                         <div className="flex items-center gap-2">
                             <Link href="/sign-in" className="hidden sm:block">
-                                <Button variant="ghost" size="sm" className="rounded-full">Sign In</Button>
+                                <Button variant="ghost" size="sm" className="rounded-full cursor-pointer">Sign In</Button>
                             </Link>
                             <Link href="/sign-up">
-                                <Button size="sm" className='rounded-full bg-slate-900 text-white hover:bg-slate-800 px-6'>
+                                <Button size="sm" className='rounded-full bg-slate-900 text-white hover:bg-slate-800 px-6 cursor-pointer'>
                                     Create Account
                                 </Button>
                             </Link>

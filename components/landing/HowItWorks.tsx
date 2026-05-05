@@ -5,8 +5,6 @@ export default function HowItWorks() {
   return (
     <section className="py-24 bg-[#F9F7F2]">
       <div className="container max-w-7xl mx-auto px-4">
-        
-        {/* Brand Icon - Ref: image_99347d.png */}
         <div className="flex justify-center mb-8">
           <div className="w-14 h-14 bg-[#1A1A1A] rounded-2xl flex items-center justify-center shadow-2xl">
             <BarChart3 className="w-7 h-7 text-orange-400" />
@@ -28,7 +26,7 @@ export default function HowItWorks() {
               <div className="shrink-0 w-11 h-11 bg-orange-400 rounded-xl flex items-center justify-center text-black shadow-sm group-hover:scale-110 transition-transform duration-300">
                 <step.icon className="w-6 h-6" />
               </div>
-              
+
               {/* Content */}
               <div className="space-y-1">
                 <h3 className="font-bold text-[#1A1A1A] text-[17px] leading-tight">

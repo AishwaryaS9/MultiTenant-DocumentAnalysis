@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const Features = () => {
     return (
-        <section className="py-24 ">
+        <section>
             <div className="container max-w-6xl mx-auto px-4">
                 <div className="grid md:grid-cols-2 gap-6">
                     {features.slice(0, 4).map((feature, index) => (
