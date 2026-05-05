@@ -1,112 +1,95 @@
-import { Brain, Github, Mail, Twitter } from 'lucide-react';
+import { Brain } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
-    const footerLinks = {
-        Product: [
+
+    const sections = {
+        platform: [
             { label: "Features", href: "/#features" },
             { label: "Pricing", href: "/pricing" },
-            { label: "API", href: "/api-docs" },
+            { label: "Integrations", href: "/integrations" },
         ],
-        Company: [
+        company: [
             { label: "About", href: "/about" },
-            { label: "Blog", href: "/blog" },
-            { label: "Careers", href: "/careers" },
-        ],
-        Legal: [
+            { label: "Changelog", href: "/changelog" },
             { label: "Privacy", href: "/privacy" },
-            { label: "Terms", href: "/terms" },
-            { label: "Security", href: "/security" },
-        ],
-        Support: [
-            { label: "Help Center", href: "/help" },
-            { label: "Contact Us", href: "/contact" },
-            { label: "Status", href: "/status" },
-        ],
+        ]
     };
 
-    const socialLinks = [
-        {
-            icon: <Github className="h-5 w-5" />,
-            href: "https://github.com",
-            label: "GitHub",
-        },
-        {
-            icon: <Twitter className="h-5 w-5" />,
-            href: "https://twitter.com",
-            label: "Twitter",
-        },
-        {
-            icon: <Mail className="h-5 w-5" />,
-            href: "mailto:support@docuai.com",
-            label: "Email",
-        },
-    ];
-
     return (
-        <footer className='border-t bg-gray-50'>
-            <div className="container mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                    {/* Brand */}
-                    <div className="lg:col-span-2">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Brain className='h-8 w-8 text-blue-600' />
-                            <span className='text-lg font-bold'>DocuAI</span>
-                        </div>
-                        <p className='text-gray-600 mb-6 max-w-md'>
-                            AI-powered document analysis for teams. Upload, analyze, and
-                            collaborate on documents with your organization.
+        <footer className="bg-white text-slate-900 border-t border-slate-50">
+            <div className="max-w-6xl mx-auto px-6 py-20">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
+
+                    {/* Section 1: Identity */}
+                    <div className="md:col-span-5 space-y-6">
+                        <Link href="/" className="flex items-center gap-2.5 font-bold text-lg">
+                            <div className="bg-amber-400 p-1.5 rounded-lg">
+                                <Brain className='h-5 w-5 text-white' />
+                            </div>
+                            <span className="tracking-tight text-slate-900">Docinate AI</span>
+                        </Link>
+                        <p className="text-base text-slate-500 leading-relaxed max-w-sm">
+                            AI-powered document analysis for teams. Upload, analyze, and collaborate on documents with your organization.
                         </p>
-                        <div className="flex gap-4">
-                            {socialLinks.map((link) => (
-                                <a key={link.label} href={link.href} target='_blank'
-                                    rel="noopener noreferrer"
-                                    className='text-gray-400 hover:text-gray-600 transition-colors'
-                                    aria-label={link.label}>
-                                    {link.icon}
-                                </a>
-                            ))}
+                        {/* Subtle Status Indicator */}
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            All systems operational
                         </div>
                     </div>
 
-                    {/* Footer Links */}
-                    {Object.entries(footerLinks).map(([category, links]) => (
-                        <div key={category}>
-                            <h3 className="font-semibold text-lg mb-4">
-                                {category}
-                            </h3>
-                            <ul className="space-y-2">
-                                {links.map((link) => (
-                                    <li key={link.label}>
-                                        <Link href={link.href} className='text-gray-600 hover:text-gray-900 transition-colors'>
-                                            {link.label}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+                    {/* Section 2: Navigation Groups */}
+                    <div className="md:col-span-4 grid grid-cols-2 gap-8">
+                        {Object.entries(sections).map(([title, links]) => (
+                            <div key={title} className="space-y-5">
+                                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">{title}</h4>
+                                <ul className="space-y-4">
+                                    {links.map((link) => (
+                                        <li key={link.label}>
+                                            <Link href={link.href} className="text-sm text-slate-600 hover:text-blue-600 transition-all underline-offset-4 hover:underline">
+                                                {link.label}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Section 3: Minimal Newsletter */}
+                    <div className="md:col-span-3 space-y-5">
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">Stay Updated</h4>
+                        <form className="relative group">
+                            <input
+                                type="email"
+                                placeholder="Email address"
+                                className="w-full bg-transparent border-b border-slate-200 py-2 text-sm focus:border-blue-600 outline-none transition-colors pr-8"
+                            />
+                            <button className="absolute right-0 top-2 text-slate-400 hover:text-blue-600 transition-colors">
+                                <span className="text-lg">→</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <div className="text-gray-600 mb-4 md:mb-0">
-                        &copy; {currentYear} DocuAI. All rights reserved.
+                {/* Bottom Metadata */}
+                <div className="mt-20 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-6 text-[13px] text-slate-400">
+                    <div className="flex gap-8">
+                        <p>&copy; {currentYear} Docinate Inc.</p>
+                        <Link href="/terms" className="hover:text-slate-900 transition-colors">Terms</Link>
+                        <Link href="/cookies" className="hover:text-slate-900 transition-colors">Cookies</Link>
                     </div>
-                    <div className="flex gap-6 text-sm text-gray-600">
-                        <Link href='/privacy' className='hover:text-gray-900'>
-                            Privacy Policy
-                        </Link>
-                        <Link href='/terms' className='hover:text-gray-900'>
-                            Terms of Service
-                        </Link>
-                        <Link href='/cookies' className='hover:text-gray-900'>
-                            Cookie Policy
-                        </Link>
+                    <div className="flex gap-6 italic">
+                        <a href="#" className="hover:text-slate-900 transition-colors not-italic font-medium">GitHub</a>
+                        <a href="#" className="hover:text-slate-900 transition-colors not-italic font-medium">LinkedIn</a>
                     </div>
                 </div>
             </div>
         </footer>
-    )
+    );
 }

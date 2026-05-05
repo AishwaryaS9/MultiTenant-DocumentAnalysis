@@ -11,7 +11,7 @@ import { syncUserToDatabase } from "@/lib/sync-user";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DocuAI - AI Powered Multi-tenant Document Analysis",
+  title: "Docinate AI - AI Powered Multi-tenant Document Analysis",
   description: "Analyze and collaboration on documents with Google Gemini AI",
 };
 
