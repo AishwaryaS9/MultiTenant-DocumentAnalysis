@@ -19,7 +19,6 @@ export default function SelectOrgPage() {
     const [orgName, setOrgName] = useState("");
     const [isCreating, setIsCreating] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
-    console.log("Organization list", userMemberships?.data);
 
     const refreshOrganization = async () => {
         setIsRefreshing(true);

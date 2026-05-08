@@ -1,44 +1,38 @@
+import { images } from "@/assets";
 import { AnalysisType } from "@/types";
 import {
-    Brain,
+    Building2,
+    FileUp,
     Hash,
     List,
     MessageCircle,
     MessageSquare,
-    Shield,
     Sparkles,
-    Upload,
-    Users,
+    UserPlus,
+    Zap,
 } from "lucide-react";
 
-export const features = [
-    {
-        icon: Brain,
-        title: "AI-Powered Analysis",
-        description: "Get instant summaries and insights with Google Gemini AI",
-    },
-    {
-        icon: Users,
-        title: "Multi-Tenant",
-        description: "Separate organizations with isolated document storage",
-    },
-    {
-        icon: Upload,
-        title: "Easy Upload",
-        description: "Drag & drop or select files in multiple formats",
-    },
-    {
-        icon: Shield,
-        title: "Secure",
-        description: "Your documents are encrypted and stored securely",
-    },
-];
-
 export const steps = [
-    "Sign up for free account",
-    "Create an organization",
-    "Upload documents",
-    "Get AI analysis instantly",
+    {
+        title: "Account Setup",
+        description: "Sign up for free account",
+        icon: UserPlus,
+    },
+    {
+        title: "Team Space",
+        description: "Create an organization",
+        icon: Building2,
+    },
+    {
+        title: "Data Input",
+        description: "Upload documents",
+        icon: FileUp,
+    },
+    {
+        title: "Instant Insight",
+        description: "Get AI analysis instantly",
+        icon: Zap,
+    },
 ];
 
 export const allowedTypes = [
@@ -93,3 +87,45 @@ export const formatFileSize = (bytes?: number) => {
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 };
+
+
+export const testimonials = [
+    { text: "Such an innovative solution", avatar: "🚀" },
+    { text: "If you are worried about your data or privacy this is the way to go", avatar: "🔒" },
+    { text: "This application is impressive", avatar: "✨" },
+    { text: "For sure a keeper", avatar: "👤" },
+    { text: "Such Power features - applying a prompt to each section", avatar: "🔥" },
+    { text: "I purchased and Love it!", avatar: "⭐" },
+];
+
+
+export const features = [
+    {
+        badge: "DEEP DIVE",
+        title: "Go deeper than ever into long documents",
+        description: "Our AI intelligently breaks down documents and creates multiple search indexes for more accurate, thorough analysis.",
+        image: images.feature_deep_dive,
+        bgColor: "bg-white",
+    },
+    {
+        badge: "FLOW AI",
+        title: "Smaller inputs to AI enable greater precision",
+        description: "Our AI intelligently breaks down documents and creates multiple search indexes for more accurate and thorough analysis.",
+        image: images.feature_flow_ai,
+        bgColor: "bg-white",
+    },
+    {
+        badge: "TABLE AI",
+        title: "Easily manage and analyze multiple documents",
+        description: "Visualize complex analysis with ease—AI works on every document and returns results in a structured table.",
+        image: images.feature_table_ai,
+        bgColor: "bg-white",
+    },
+    {
+        badge: "LOCAL LLM SUPPORT",
+        title: "Run document analysis without sending data to the cloud",
+        description: "Perfect for users focused on data privacy and security.",
+        image: images.feature_local_llm,
+        bgColor: "bg-white",
+    },
+];

@@ -3,15 +3,13 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
 import "./globals.css";
 import Header from "@/components/common/header";
-import Footer from "@/components/common/footer";
-
 import { Toaster } from "sonner";
 import { syncUserToDatabase } from "@/lib/sync-user";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DocuAI - AI Powered Multi-tenant Document Analysis",
+  title: "Docinate AI - AI Powered Multi-tenant Document Analysis",
   description: "Analyze and collaboration on documents with Google Gemini AI",
 };
 
@@ -37,8 +35,6 @@ export default async function RootLayout({
             <main className="flex-1">
               <UserSync>{children}</UserSync>
             </main>
-            {/* Footer */}
-            <Footer />
             <Toaster position="top-right" richColors />
           </div>
         </body>
