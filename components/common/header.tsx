@@ -42,7 +42,10 @@ export default function Header() {
                 {/* Navigation - Desktop */}
                 <nav className='hidden md:flex items-center gap-1'>
                     {navItems.map((item) => {
-                        const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
+                        const isDashboardPath = item.href === `/${organization?.slug}`;
+                        const isActive = isDashboardPath
+                            ? pathname === item.href
+                            : pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
                         return (
                             <Link key={item.href} href={item.href}>
                                 <Button variant="ghost" size="sm" className={`rounded-full px-4 ${isActive ? "text-amber-600 font-semibold" : "text-slate-600"}`}>

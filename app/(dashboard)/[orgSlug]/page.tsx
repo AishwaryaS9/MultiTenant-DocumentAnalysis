@@ -1,4 +1,4 @@
-import StatCard from "@/components/dashboard/StatCard";
+import StatCard from "@/components/dashboard/stat-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
