@@ -20,7 +20,7 @@ export default function Header() {
                 ...baseItems,
                 { href: `/${organization.slug}`, label: "Dashboard", icon: <Building className='w-4 h-4' /> },
                 { href: `/${organization.slug}/documents`, label: "Documents", icon: <FileText className='w-4 h-4' /> },
-                { href: "/select-org", label: "Switch Org", icon: <Users className='w-4 h-4' /> }
+                { href: "/select-org", label: "Switch Organization", icon: <Users className='w-4 h-4' /> }
             ]
         }
         return [...baseItems, { href: "/select-org", label: "Switch Organization", icon: <Users className="h-4 w-4" /> }];
