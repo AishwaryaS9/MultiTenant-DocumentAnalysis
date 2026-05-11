@@ -11,7 +11,7 @@ const StatCard = ({ title, value, icon, description, gradient }: { title: string
                     </div>
                 </div>
                 <div>
-                    <div className="text-4xl font-black text-slate-900 tracking-tighter">{value}</div>
+                    <div className="text-2xl font-black text-slate-900 tracking-tighter">{value}</div>
                     <p className="text-sm font-bold text-slate-500 mt-1">{title}</p>
                     <p className="text-xs text-slate-400 mt-1 font-medium">{description}</p>
                 </div>

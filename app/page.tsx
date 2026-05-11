@@ -1,5 +1,4 @@
 'use client'
-
 import CTASection from "@/components/landing/cta";
 import Hero from "@/components/landing/hero";
 import Testimonials from "@/components/landing/testimonials";
