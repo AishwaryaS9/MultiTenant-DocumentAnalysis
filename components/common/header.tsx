@@ -33,7 +33,7 @@ export default function Header() {
             <header className='max-w-6xl mx-auto border bg-white/80 backdrop-blur-md rounded-full px-6 py-2 flex items-center justify-between shadow-sm'>
                 {/* Logo */}
                 <Link href='/' className='flex items-center gap-2 font-bold text-lg' >
-                    <div className="bg-amber-400 p-1.5 rounded-lg">
+                    <div className="bg-amber-500 p-1.5 rounded-lg">
                         <Brain className='h-5 w-5 text-white' />
                     </div>
                     <span className="tracking-tight text-slate-900">Docinate AI</span>

@@ -1,18 +1,21 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import DashboardSidebar from "@/components/dashboard/dashboard-sidebar";
+import { UserButton } from "@clerk/nextjs";
+import { Brain } from "lucide-react";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-    const { userId } = await auth();
-    if (!userId) {
-        redirect("/sign-in");
-    }
+export default function DashboardLayout({ children, }: { children: React.ReactNode }) {
     return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Main Content */}
-            <main className="py-8">
-                <div className="container mx-auto px-4">{children}</div>
+        <div className="flex min-h-screen bg-slate-50/50">
+            <DashboardSidebar />
+            {/* Content Area */}
+            <main className="flex-1 overflow-y-auto">
+                <div className="md:hidden flex items-center justify-between p-4 bg-white border-b">
+                    <Brain className="text-amber-500 w-6 h-6" />
+                    <UserButton />
+                </div>
+                <div>
+                    {children}
+                </div>
             </main>
         </div>
-    )
-
+    );
 }
