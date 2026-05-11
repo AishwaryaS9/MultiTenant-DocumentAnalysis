@@ -1,24 +1,11 @@
-"use client"
-
-import { AnalysisType, Document } from "@/types";
+"use client";
+import { AnalysisType, DocumentCardProps } from "@/types";
 import { Brain, Calendar, Download, File, FileText, Loader2, Sparkles, Tag, Trash, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import ReactMarkdown from "react-markdown";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { analysisTypes } from "@/app/data/data";
-
-interface DocumentCardProps {
-    document: Document;
-    isAnalyzing: boolean;
-    selectedAnalysisType: AnalysisType;
-    onAnalysisTypeChange: (type: AnalysisType) => void;
-    onAnalyze: (documentId: string) => void;
-    onDelete: (documentId: string) => void;
-    onToggleSummary: (documentId: string) => void;
-    expandedSummaries: Set<string>;
-    formatFileSize: (bytes?: number) => string;
-}
 
 export default function DocumentCard({
     document: doc,
@@ -33,154 +20,219 @@ export default function DocumentCard({
 }: DocumentCardProps) {
     const isExpanded = expandedSummaries.has(doc.id);
 
-    //Get analysis type icon
     const getAnalysisIcon = (type: AnalysisType) => {
         const analysisType = analysisTypes.find((t) => t.value === type);
         const Icon = analysisType?.icon || Sparkles;
-        return <Icon className="h-4 w-4" />
-    }
+        return <Icon className="h-4 w-4" />;
+    };
 
     return (
-        <div className="border rounded-lg p-6 hover:shadow-lg transition-all">
-            <div className="flex items-center justify-between">
-                {/* Left Side */}
-                <div className="flex items-start gap-4 flex-1">
-                    <div className="p-3 rounded-lg bg-blue-100">
-                        <FileText className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                        {/* Document Header */}
-                        <div className="flex items-start justify-between mb-3">
-                            <div>
-                                <h3 className="font-semibold text-lg mb-1">
-                                    {doc.name}
-                                </h3>
-                                <div className="flex items-center gap-4 text-sm text-gray-500">
-                                    <span className="flex items-center gap-1">
-                                        <User className="h-3 w-3" />
-                                        {doc.user.name || doc.user.email}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                        <Calendar className="h-3 w-3" />
-                                        {new Date(doc.createdAt).toLocaleDateString()}
-                                    </span>
-                                    {doc.fileSize && (
-                                        <span className="flex items-center gap-1">
-                                            <File className="h-3 w-3" />
-                                            {formatFileSize(doc.fileSize)}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                            {doc.sentiment && (
-                                <Badge>
-                                    <div className="flex items-center gap-1">
-                                        <span className="capitalize">{doc.sentiment}</span>
-                                    </div>
-                                </Badge>
-                            )}
+        <div className="group relative overflow-hidden rounded-[32px] border border-white/40 bg-white/70 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.10)] p-7">
+            {/* Glow */}
+            <div className="absolute inset-0  pointer-events-none" />
+            <div className="relative z-10 flex flex-col xl:flex-row gap-8">
+                {/* Left */}
+                <div className="flex-1">
+                    <div className="flex gap-5">
+                        {/* Icon */}
+                        <div className="relative flex items-center justify-center w-14 h-14 rounded-2xl  border border-gray-50 shadow-inner">
+                            <FileText className="h-6 w-6 text-orange-600" />
                         </div>
-                    </div>
 
-                    {/* AI Analysis Section */}
-                    {doc.aiSummary && (
-                        <div className="mt-4 p-4 bg-linear-to-r from-gray-50 to-blue-50 rounded-lg border">
-                            <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                    <Brain className="h-5 w-5 text-green-600" />
-                                    <span className="font-medium">
-                                        AI Analysis
-                                    </span>
-                                    <Badge variant="outline" className="ml-2">
-                                        Gemini AI
-                                    </Badge>
-                                </div>
-                                {doc.aiSummary.length > 200 && (
-                                    <Button variant="ghost" size="sm" onClick={() => onToggleSummary(doc.id)}>
-                                        {isExpanded ? "Show less" : "Read more"}
-                                    </Button>
-                                )}
-                            </div>
+                        {/* Content */}
+                        <div className="flex-1">
+                            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                                <div>
+                                    <h3 className="text-xl font-semibold tracking-tight text-[#1A1A1A]">
+                                        {doc.name}
+                                    </h3>
 
-                            {/* Summary Content */}
-                            <div className="text-gray-700">
-                                {isExpanded ? (
-                                    <div className="prose prose-sm max-w-none">
-                                        <ReactMarkdown>
-                                            {doc.aiSummary}
-                                        </ReactMarkdown>
-                                    </div>
-                                ) : (
-                                    <div className="prose prose-sm max-w-none">
-                                        <ReactMarkdown>
-                                            {doc.aiSummary.length > 200 ?
-                                                `${doc.aiSummary.substring(0, 200)}...`
-                                                : doc.aiSummary}
-                                        </ReactMarkdown>
-                                    </div>
-                                )}
-                            </div>
+                                    <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-slate-500">
+                                        <span className="flex items-center gap-1">
+                                            <User className="h-3.5 w-3.5" />
+                                            {doc.user.name || doc.user.email}
+                                        </span>
 
-                            {/* Keywords */}
-                            {doc.aiKeywords.length > 0 && (
-                                <div className="mt-4 pt-3 border-t">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <Tag className="h-4 w-4 text-gray-500" />
-                                        <span className="text-sm font-medium">Key Topics</span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {doc.aiKeywords.slice(0, 8).map((keyword, idx) => (
-                                            <Badge key={idx} variant="secondary" className="px-3 py-1" >
-                                                {keyword}
-                                            </Badge>
-                                        ))}
-                                        {doc.aiKeywords.length > 8 && (
-                                            <Badge variant="outline" className="px-3 py-1">
-                                                +{doc.aiKeywords.length - 8} more
-                                            </Badge>
+                                        <span className="flex items-center gap-1">
+                                            <Calendar className="h-3.5 w-3.5" />
+                                            {new Date(doc.createdAt).toLocaleDateString()}
+                                        </span>
+
+                                        {doc.fileSize && (
+                                            <span className="flex items-center gap-1">
+                                                <File className="h-3.5 w-3.5" />
+                                                {formatFileSize(doc.fileSize)}
+                                            </span>
                                         )}
                                     </div>
                                 </div>
+
+                                {doc.sentiment && (
+                                    <Badge className="rounded-full px-4 py-1 bg-black text-white border-none capitalize">
+                                        {doc.sentiment}
+                                    </Badge>
+                                )}
+                            </div>
+
+                            {/* AI Summary */}
+                            {doc.aiSummary ? (
+                                <div className="mt-6 relative overflow-hidden rounded-3xl border border-gray-50 p-6 shadow-sm transition-all duration-300 hover:shadow-md">
+                                    <div className="absolute top-0 right-0 w-32 h-32 blur-3xl opacity-30" />
+                                    <div className="relative z-10 flex items-center justify-between gap-4 mb-5">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                                                <Brain className="h-5 w-5 text-orange-600" />
+                                            </div>
+                                            <div>
+                                                <div className="font-semibold text-[#1A1A1A]">AI Analysis</div>
+                                                <div className="text-sm text-slate-500">Generated insights</div>
+                                            </div>
+                                            <div className="px-3 py-1 rounded-full bg-black text-white text-xs font-medium tracking-wide">
+                                                Gemini AI
+                                            </div>
+                                        </div>
+                                        {doc.aiSummary.length > 200 && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => onToggleSummary(doc.id)}
+                                                className="rounded-xl hover:bg-orange-100"
+                                            >
+                                                {isExpanded ? "Show less" : "Read more"}
+                                            </Button>
+                                        )}
+                                    </div>
+
+                                    <div className="relative z-10 prose prose-sm max-w-none text-slate-700 text-sm leading-7">
+                                        <ReactMarkdown>
+                                            {isExpanded
+                                                ? doc.aiSummary
+                                                : doc.aiSummary.length > 200
+                                                    ? `${doc.aiSummary.substring(0, 200)}...`
+                                                    : doc.aiSummary}
+                                        </ReactMarkdown>
+                                    </div>
+                                    {doc.aiKeywords.length > 0 && (
+                                        <div className="relative z-10 mt-6 pt-5 border-t border-orange-100">
+                                            <div className="flex items-center gap-2 mb-4">
+                                                <Tag className="h-4 w-4 text-slate-500" />
+
+                                                <span className="text-sm font-medium text-slate-700">
+                                                    Key Topics
+                                                </span>
+                                            </div>
+
+                                            <div className="flex flex-wrap gap-2">
+                                                {doc.aiKeywords.slice(0, 8).map((keyword, idx) => (
+                                                    <div
+                                                        key={idx}
+                                                        className="px-3 py-1.5 rounded-full bg-white/80 border border-slate-200 text-sm text-slate-700 shadow-sm"
+                                                    >
+                                                        {keyword}
+                                                    </div>
+                                                ))}
+
+                                                {doc.aiKeywords.length > 8 && (
+                                                    <div className="px-3 py-1.5 rounded-full border border-slate-200 text-sm text-slate-500">
+                                                        +{doc.aiKeywords.length - 8} more
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                /* Placeholder State (Empty or Failed) */
+                                <div className="mt-6 rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50/50 p-8 flex flex-col items-center justify-center text-center transition-colors hover:bg-slate-50">
+                                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
+                                        {doc.status === "failed" ? (
+                                            <FileText className="h-6 w-6 text-slate-400" />
+                                        ) : (
+                                            <Sparkles className="h-6 w-6 text-orange-400" />
+                                        )}
+                                    </div>
+
+                                    <div className="max-w-70">
+                                        <h4 className="text-sm font-semibold text-slate-900">
+                                            {doc.status === "failed" ? "Analysis Failed" : "No Analysis Yet"}
+                                        </h4>
+                                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                            {doc.status === "failed"
+                                                ? "Could not analyze for summary. The file might be too small or contain unsupported formatting."
+                                                : "Unlock key insights, summaries, and sentiment analysis by running the AI processor."
+                                            }
+                                        </p>
+                                    </div>
+
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => onAnalyze(doc.id)}
+                                        disabled={isAnalyzing}
+                                        className="mt-4 text-orange-600 hover:text-orange-700 hover:bg-orange-50 font-medium"
+                                    >
+                                        {isAnalyzing ? (
+                                            <><Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" /> Processing...</>
+                                        ) : (
+                                            doc.status === "failed" ? "Try Again" : "Get Started"
+                                        )}
+                                    </Button>
+                                </div>
                             )}
                         </div>
-                    )}
+                    </div>
                 </div>
-                {/* Right Side */}
-                <div className="flex flex-col gap-2 ml-4">
-                    {/* Download Button */}
+
+                {/* Right Actions */}
+                <div className="xl:w-47.5 xl:border-l xl:border-slate-200/60 xl:pl-5 flex flex-col items-start space-y-3">
+                    {/* Download */}
                     {doc.fileUrl && (
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => window.open(doc.fileUrl, "_blank")}
-                            title="Download"
-                            className="justify-start"
-                        >
-                            <Download className="h-4 w-4 mr-2" />
+                            className=" w-42.5 justify-start rounded-xl border-slate-200/80 hover:bg-slate-50 h-9 text-sm font-medium shadow-xs">
+                            <Download className="h-3.5 w-3.5 mr-2" />
                             Download
                         </Button>
                     )}
 
-                    {/* Analysis Section */}
-                    <div className="space-y-2">
-                        <div className="text-xs text-gray-500">
-                            {doc.aiSummary ? "Re-analyze with:" : "Analyze with"}
+                    {/* Analysis */}
+                    <div className="space-y-2.5 w-42.5">
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400 font-semibold px-1">
+                            {doc.aiSummary ? "Re-analyze with" : "Analyze with"}
                         </div>
-                        <Select value={selectedAnalysisType}
-                            onValueChange={(value: AnalysisType) => onAnalysisTypeChange(value)}>
-                            <SelectTrigger className="w-full">
+
+                        <Select
+                            value={selectedAnalysisType}
+                            onValueChange={(value: AnalysisType) =>
+                                onAnalysisTypeChange(value)
+                            }>
+                            <SelectTrigger
+                                className="rounded-xl h-9 border-slate-200/80 text-sm shadow-xs w-42.5">
                                 <SelectValue>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 truncate">
                                         {getAnalysisIcon(selectedAnalysisType)}
-                                        {analysisTypes.find((type) => type.value === selectedAnalysisType)?.label}
+
+                                        <span className="truncate">
+                                            {
+                                                analysisTypes.find(
+                                                    (type) => type.value === selectedAnalysisType
+                                                )?.label
+                                            }
+                                        </span>
                                     </div>
                                 </SelectValue>
                             </SelectTrigger>
 
-                            <SelectContent>
+                            <SelectContent className="rounded-xl border-slate-200">
                                 {analysisTypes.map((type) => (
-                                    <SelectItem key={type.value} value={type.value}>
-                                        <div className="flex items-center gap-2">
+                                    <SelectItem
+                                        key={type.value}
+                                        value={type.value}
+                                        className="rounded-lg"
+                                    >
+                                        <div className="flex items-center gap-2 text-sm">
                                             <type.icon className="h-4 w-4" />
                                             {type.label}
                                         </div>
@@ -190,34 +242,34 @@ export default function DocumentCard({
                         </Select>
 
                         <Button
-                            variant={doc.aiSummary ? "outline" : "default"}
-                            size="sm"
                             onClick={() => onAnalyze(doc.id)}
                             disabled={isAnalyzing}
-                            className="justify-start w-full"
-                        >
+                            className="w-42.5 rounded-xl bg-[#1A1A1A] hover:bg-black text-white h-9 text-sm font-medium shadow-xs shadow-black/5 active:scale-[0.98] transition-all" >
                             {isAnalyzing ? (
                                 <>
-                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                    <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" />
                                     {doc.aiSummary ? "Re-analyzing..." : "Analyzing..."}
                                 </>
                             ) : (
                                 <>
-                                    <Brain className="h-4 w-4 mr-2" />
+                                    <Brain className="h-3.5 w-3.5 mr-2" />
                                     {doc.aiSummary ? "Re-analyze" : "Analyze"}
                                 </>
                             )}
                         </Button>
                     </div>
-                    {/* Delete Button */}
-                    <Button variant="ghost" size="sm"
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 justify-start"
+
+                    {/* Delete */}
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-42.5 justify-start rounded-xl text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 h-9 text-sm font-medium"
                         onClick={() => onDelete(doc.id)}>
-                        <Trash className="w-4 h-4 mr-2" />
+                        <Trash className="w-3.5 h-3.5 mr-2" />
                         Delete
                     </Button>
                 </div>
             </div>
         </div>
-    )
+    );
 }
