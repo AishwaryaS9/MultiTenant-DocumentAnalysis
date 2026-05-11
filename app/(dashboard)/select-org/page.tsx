@@ -154,11 +154,8 @@ export default function SelectOrgPage() {
 
                     {/* RIGHT SIDE */}
                     <div className="flex items-center py-20">
-
                         <div className="w-full">
-
                             <div className="flex items-center justify-between mb-8">
-
                                 <div>
                                     <h2 className="text-2xl font-semibold text-[#111111]">
                                         Your Workspaces
@@ -198,7 +195,6 @@ export default function SelectOrgPage() {
                                 ) : (
 
                                     userMemberships?.data?.map((membership) => (
-
                                         <button
                                             key={membership.organization.id}
                                             onClick={() =>
@@ -206,13 +202,8 @@ export default function SelectOrgPage() {
                                                     membership.organization
                                                 )
                                             }
-                                            // className="group relative w-full overflow-hidden rounded-[32px] border border-black/5 bg-white/70 backdrop-blur-xl p-6 text-left transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_25px_80px_rgba(0,0,0,0.08)]"
                                             className="group relative w-full overflow-hidden rounded-[32px] border border-black/5 bg-white/70 backdrop-blur-xl p-6 text-left hover:shadow-xs"
                                         >
-
-                                            {/* Hover Glow */}
-                                            {/* <div className="absolute inset-0 bg-linear-to-r from-orange-100/0 via-orange-100/40 to-orange-100/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" /> */}
-
                                             <div className="relative flex items-center justify-between">
 
                                                 <div className="flex items-center gap-5">
@@ -220,12 +211,10 @@ export default function SelectOrgPage() {
                                                     {/* Logo */}
                                                     <div className="relative">
 
-                                                        <div className="w-16 h-16 rounded-3xl bg-[#111111] flex items-center justify-center shadow-sm">
-
-                                                            <Building2 className="w-7 h-7 text-white" />
-
+                                                        <div className="w-16 h-16 rounded-3xl bg-slate-700 flex items-center justify-center shadow-sm">
+                                                            {/* <Building2 className="w-7 h-7 text-white" /> */}
+                                                            <span className="text-3xl text-white font-bold">{membership.organization.name.charAt(0)}</span>
                                                         </div>
-
                                                         <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-400 border-4 border-white" />
                                                     </div>
 
@@ -250,7 +239,7 @@ export default function SelectOrgPage() {
                                                 </div>
 
                                                 {/* Arrow */}
-                                                <div className="w-12 h-12 rounded-full bg-[#F5F5F3] flex items-center justify-center transition-all duration-300 group-hover:bg-[#111111]">
+                                                <div className="w-12 h-12 rounded-full bg-[#F5F5F3] flex items-center justify-center transition-all duration-300 group-hover:bg-slate-800">
                                                     <ArrowRight className="w-5 h-5 text-gray-500 transition-all duration-300 group-hover:text-white group-hover:translate-x-0.5" />
                                                 </div>
                                             </div>
