@@ -29,8 +29,6 @@ export default async function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
           <div className="min-h-screen flex flex-col">
-            {/* Header */}
-            <Header />
             {/* Main */}
             <main className="flex-1">
               <UserSync>{children}</UserSync>
