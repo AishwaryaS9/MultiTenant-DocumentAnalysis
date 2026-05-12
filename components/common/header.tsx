@@ -1,5 +1,5 @@
 "use client"
-import { Brain, Building, FileText, Home, Menu, Users } from 'lucide-react'
+import { Brain, Home, Menu, Settings, Star, Users, Zap } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
@@ -14,17 +14,15 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
 
     const getNavItems = () => {
-        const baseItems = [{ href: "/", label: "Home", icon: <Home className='w-4 h-4' /> }];
-        if (organization) {
-            return [
-                ...baseItems,
-                { href: `/${organization.slug}`, label: "Dashboard", icon: <Building className='w-4 h-4' /> },
-                { href: `/${organization.slug}/documents`, label: "Documents", icon: <FileText className='w-4 h-4' /> },
-                { href: "/select-org", label: "Switch Organization", icon: <Users className='w-4 h-4' /> }
-            ]
-        }
-        return [...baseItems, { href: "/select-org", label: "Switch Organization", icon: <Users className="h-4 w-4" /> }];
-    }
+        const baseItems = [
+            { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
+            { href: "#testimonials", label: "Testimonials", icon: <Users className="w-4 h-4" /> },
+            { href: "#features", label: "Features", icon: <Star className="w-4 h-4" /> },
+            { href: "#how-it-works", label: "How It Works", icon: <Settings className="w-4 h-4" /> },
+            { href: "#cta", label: "Call To Action", icon: <Zap className="w-4 h-4" /> },
+        ];
+        return [...baseItems]
+    };
 
     const navItems = getNavItems();
 

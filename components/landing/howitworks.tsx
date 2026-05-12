@@ -3,7 +3,7 @@ import { BarChart3 } from "lucide-react";
 
 export default function HowItWorks() {
     return (
-        <section className="py-24 bg-[#F9F7F2]">
+        <section id="how-it-works" className="py-24 bg-[#F9F7F2]">
             <div className="container max-w-7xl mx-auto px-4">
                 <div className="flex justify-center mb-8">
                     <div className="w-14 h-14 bg-[#1A1A1A] rounded-2xl flex items-center justify-center shadow-2xl">

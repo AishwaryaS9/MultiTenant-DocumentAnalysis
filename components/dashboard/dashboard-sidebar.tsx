@@ -13,10 +13,8 @@ export default function Sidebar() {
 
     const navItems = [
         { href: "/", label: "Home", icon: <Home className='w-5 h-5' /> },
-        ...(organization ? [
-            { href: `/${organization.slug}`, label: "Dashboard", icon: <Building className='w-5 h-5' /> },
-            { href: `/${organization.slug}/documents`, label: "Documents", icon: <FileText className='w-5 h-5' /> },
-        ] : []),
+        { href: `/${organization?.slug || 'dashboard'}`, label: "Dashboard", icon: <Building className='w-5 h-5' /> },
+        { href: `/${organization?.slug || 'documents'}/documents`, label: "Documents", icon: <FileText className='w-5 h-5' /> },
         { href: "/select-org", label: "Switch Organizations", icon: <Users className="h-5 w-5" /> }
     ];
 

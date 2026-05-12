@@ -14,8 +14,9 @@ export default function CTASection() {
       : "/dashboard"
     : "/sign-up";
 
+
   return (
-    <section className="py-24 bg-[#1A1A1A] text-white">
+    <section id="cta" className="py-24 bg-[#1A1A1A] text-white">
       <div className="container max-w-4xl mx-auto px-4 text-center">
         <h2 className="text-4xl font-bold mb-6 tracking-tight">
           Ready to analyze your documents?
@@ -43,3 +44,4 @@ export default function CTASection() {
     </section>
   );
 }
+
