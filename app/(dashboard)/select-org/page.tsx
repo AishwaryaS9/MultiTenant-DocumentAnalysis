@@ -30,20 +30,29 @@ export default function SelectOrgPage() {
             if (!createOrganization) {
                 throw new Error("Organization creation unavailable");
             }
-
             const newOrg = await createOrganization({
                 name: orgName.trim()
             });
 
+            // SAVE TO PRISMA
+            await fetch("/api/organizations", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    clerkOrgId: newOrg.id,
+                    name: newOrg.name,
+                    slug: newOrg.slug,
+                }),
+            });
+
             if (setActive) {
                 await setActive({
-                    organization: newOrg.id
+                    organization: newOrg.id,
                 });
             }
-
             toast.success("Workspace created");
-
-            router.push(`/${newOrg.slug}`);
         } catch (error: any) {
             console.error(error);
             toast.error(error.message);
@@ -59,7 +68,7 @@ export default function SelectOrgPage() {
                     organization: organization.id
                 });
             }
-
+            console.log('selcted-Org', JSON.stringify(organization.slug))
             router.push(`/${organization.slug}`);
         } catch (error) {
             toast.error("Failed to switch workspace");

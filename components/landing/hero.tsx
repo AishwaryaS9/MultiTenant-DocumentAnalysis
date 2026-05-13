@@ -1,13 +1,21 @@
 "use client";
-import { useOrganization, useUser } from '@clerk/nextjs';
-import Link from 'next/link';
-import { Button } from '../ui/button';
-import { LogIn, Sparkles } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import { useOrganization, useUser } from "@clerk/nextjs";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { LogIn, Sparkles } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 const Hero = () => {
-    const { user } = useUser();
-    const { organization } = useOrganization();
+    const { user, isLoaded } = useUser();
+    const { organization, isLoaded: isOrgLoaded } = useOrganization();
+
+    if (!isLoaded || !isOrgLoaded) return null;
+
+    const orgSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
+
+    console.log('orgslug', JSON.stringify(orgSlug))
+
+    const href = orgSlug ? `/${orgSlug}` : "/select-org";
 
     // Animation Variants
     const containerVariants: Variants = {
@@ -20,7 +28,14 @@ const Hero = () => {
 
     const itemVariants: Variants = {
         hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.8,
+                ease: [0.16, 1, 0.3, 1]
+            }
+        }
     };
 
     return (
@@ -62,42 +77,49 @@ const Hero = () => {
                     The collaborative intelligence layer for your team. Upload complex PDF sets and get instantly actionable insights.
                 </motion.p>
 
-                <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <motion.div
+                    variants={itemVariants}
+                    className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+                >
                     {!user ? (
                         <>
                             <Link href="/sign-up">
-                                <Button size="lg" className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black shadow-2xl shadow-orange-200/50 transition-all hover:scale-105 active:scale-95">
+                                <Button
+                                    size="lg"
+                                    className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black shadow-2xl shadow-orange-200/50 transition-all hover:scale-105 active:scale-95"
+                                >
                                     Start Free Trial
                                 </Button>
                             </Link>
+
                             <Link href="/sign-in">
-                                <Button variant="ghost" size="lg" className="rounded-full px-10 py-7 text-lg flex gap-2">
+                                <Button
+                                    variant="ghost"
+                                    size="lg"
+                                    className="rounded-full px-10 py-7 text-lg flex gap-2"
+                                >
                                     <LogIn className="w-5 h-5" />
                                     Sign In
                                 </Button>
                             </Link>
                         </>
                     ) : (
-                        <Link href={organization ? `/${organization.slug}` : "/dashboard"}>
-                            <Button size="lg" className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black">
+                        <Link href={href}>
+                            <Button
+                                size="lg"
+                                className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black"
+                            >
                                 Go to Dashboard
                             </Button>
                         </Link>
                     )}
                 </motion.div>
-
-
             </motion.div>
         </section>
     );
 };
 
 export default Hero;
-
-
-
-
-
 
 
 
