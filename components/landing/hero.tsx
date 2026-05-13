@@ -107,7 +107,7 @@ const Hero = () => {
                         <Link href={href}>
                             <Button
                                 size="lg"
-                                className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black"
+                                className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black cursor-pointer"
                             >
                                 Go to Dashboard
                             </Button>
