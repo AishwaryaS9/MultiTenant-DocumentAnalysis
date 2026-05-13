@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Urbanist } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
 import "./globals.css";
-import Header from "@/components/common/header";
 import { Toaster } from "sonner";
 import { syncUserToDatabase } from "@/lib/sync-user";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const urbanist = Urbanist({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Docinate AI - AI Powered Multi-tenant Document Analysis",

@@ -1,9 +1,8 @@
 import { testimonials } from '@/app/data/data'
-import React from 'react'
 
 const Testimonials = () => {
     return (
-        <section className="py-12 overflow-hidden bg-transparent">
+        <section id='testimonials' className="py-12 overflow-hidden bg-transparent">
             <div className="flex flex-col gap-6">
                 {/* Row 1 */}
                 <div className="flex whitespace-nowrap animate-marquee">
