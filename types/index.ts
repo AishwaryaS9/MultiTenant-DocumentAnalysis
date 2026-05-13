@@ -5,6 +5,8 @@ export type AnalysisType =
     | "entities"
     | "extract";
 
+
+//Document
 export interface Document {
     id: string;
     name: string;
@@ -31,10 +33,61 @@ export interface DocumentCardProps {
     onDelete: (documentId: string) => void;
     onToggleSummary: (documentId: string) => void;
     expandedSummaries: Set<string>;
-    formatFileSize: (bytes?: number) => string;
 }
 
 export interface DocumentUploadDialogProps {
     onUploadSuccess?: () => void;
     trigger?: React.ReactNode;
+}
+
+export interface DocumentItemProps {
+    doc: {
+        id: string;
+        name: string;
+        createdAt: Date;
+        aiSummary: string | null;
+    };
+}
+
+export interface DocumentsHeaderProps {
+    organizationName?: string;
+    onUploadSuccess: () => void;
+}
+
+
+export interface RecentDocumentsProps {
+    documents: any[];
+    orgSlug: string;
+}
+
+export interface DocumentsListProps {
+    documents: Document[];
+    isAnalyzing: string | null;
+    selectedAnalysisType: AnalysisType;
+    expandedSummaries: Set<string>;
+    onAnalyze: (id: string) => void;
+    onDelete: (id: string) => void;
+    onToggleSummary: (id: string) => void;
+    onAnalysisTypeChange: (value: AnalysisType) => void;
+}
+
+export interface DocumentsStatsProps {
+    documents: Document[];
+}
+
+export interface EmptyDocumentsProps {
+    onUploadSuccess: () => void;
+}
+
+//Dashboard
+export interface DashboardHeaderProps {
+    orgName: string;
+    role: string;
+    documentCount: number;
+    orgSlug: string;
+}
+
+export interface EmptyDashboardProps {
+    orgName: string;
+    orgSlug: string;
 }
