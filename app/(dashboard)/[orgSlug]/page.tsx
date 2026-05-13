@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { FileText, Users, Zap } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 interface OrgDashboardPageProps {
@@ -106,22 +107,27 @@ export default async function OrgDashboardPage({
                     />
 
                     <div className="space-y-6">
-                        <Card className="border-none bg-linear-to-br from-amber-50 to-orange-50 shadow-sm border border-amber-100/50 rounded-3xl p-2">
+                        <Card className="border-none bg-linear-to-br from-amber-50 to-orange-50 shadow-sm border border-amber-100/50 rounded-3xl p-4">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-sm font-black text-amber-900 flex items-center gap-2 uppercase tracking-widest">
                                     <div className="p-1.5 bg-amber-200/50 rounded-lg">
                                         <Zap className="w-4 h-4 text-amber-600" />
                                     </div>
-                                    Insight
+                                    Search Documents
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-amber-800 leading-relaxed font-medium">
-                                    Documents analyzed with Docinate AI are 4x faster to search through.
-                                    Maximize your team's efficiency by indexing all assets.
+                                    Instantly search across all organizational documents using AI-powered indexing.
+                                    Find insights, contracts, notes, and assets in seconds.
                                 </p>
-                                <Button className="w-full mt-6 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold shadow-lg shadow-amber-200/50">
-                                    Invite Team Members
+                                <Button
+                                    asChild
+                                    className="w-full mt-6 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold shadow-lg shadow-amber-200/50"
+                                >
+                                    <Link href={`/${orgSlug}/search`}>
+                                        Search Documents
+                                    </Link>
                                 </Button>
                             </CardContent>
                         </Card>
