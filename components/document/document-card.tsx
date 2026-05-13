@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import ReactMarkdown from "react-markdown";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { analysisTypes } from "@/app/data/data";
+import { analysisTypes, formatFileSize } from "@/app/data/data";
 
 export default function DocumentCard({
     document: doc,
@@ -16,7 +16,6 @@ export default function DocumentCard({
     onDelete,
     onToggleSummary,
     expandedSummaries,
-    formatFileSize,
 }: DocumentCardProps) {
     const isExpanded = expandedSummaries.has(doc.id);
 
@@ -191,7 +190,7 @@ export default function DocumentCard({
                             variant="outline"
                             size="sm"
                             onClick={() => window.open(doc.fileUrl, "_blank")}
-                            className=" w-42.5 justify-start rounded-xl border-slate-200/80 hover:bg-slate-50 h-9 text-sm font-medium shadow-xs">
+                            className=" w-42.5  rounded-xl border-slate-200/80 hover:bg-slate-50 h-9 text-sm font-medium shadow-xs">
                             <Download className="h-3.5 w-3.5 mr-2" />
                             Download
                         </Button>
@@ -263,7 +262,7 @@ export default function DocumentCard({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="w-42.5 justify-start rounded-xl text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 h-9 text-sm font-medium"
+                        className="w-42.5 rounded-xl text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100 h-9 text-sm font-medium"
                         onClick={() => onDelete(doc.id)}>
                         <Trash className="w-3.5 h-3.5 mr-2" />
                         Delete
