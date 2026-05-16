@@ -3,6 +3,7 @@ import { Card, CardContent } from "../ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { EmptyDashboardProps } from "@/types";
+// import InviteTeamModal from "./invite-team-modal";
 
 export default async function EmptyDashboard({ orgName, orgSlug }: EmptyDashboardProps) {
 
@@ -40,6 +41,7 @@ export default async function EmptyDashboard({ orgName, orgSlug }: EmptyDashboar
                                 >
                                     Invite Team
                                 </Button>
+                                {/* <InviteTeamModal /> */}
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-14">
