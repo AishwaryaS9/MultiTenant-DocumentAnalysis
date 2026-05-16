@@ -1,5 +1,4 @@
 "use client"
-
 import { Brain, Home, Menu, Settings, Star, Users, Zap } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -41,14 +40,12 @@ export default function Header() {
         <div className="fixed top-4 w-full z-50 px-4 transition-all duration-300">
             <header
                 className={`
-                    max-w-6xl mx-auto flex items-center justify-between px-6 py-3
-                    transition-all duration-300
-                    ${scrolled
+            container max-w-7xl mx-auto flex items-center justify-between px-6 py-3
+            transition-all duration-300
+            ${scrolled
                         ? "bg-white/80 backdrop-blur-xl border shadow-lg rounded-full"
                         : "bg-transparent rounded-2xl"
-                    }
-                `}
-            >
+                    }`}>
                 {/* Logo */}
                 <Link href='/' className='flex items-center gap-2 font-bold text-lg'>
                     <div className="bg-amber-500 p-1.5 rounded-lg">
@@ -121,28 +118,120 @@ export default function Header() {
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="rounded-full"
+                                    className="rounded-full hover:bg-slate-100 transition"
                                 >
                                     <Menu className="h-5 w-5" />
                                 </Button>
                             </SheetTrigger>
 
-                            <SheetContent side="right" className="w-full">
-                                <div className="flex flex-col gap-4 mt-8">
-                                    {navItems.map((item) => (
+                            <SheetContent
+                                side="right"
+                                className="w-[90%] sm:w-100 border-l bg-white/95 backdrop-blur-2xl px-6 py-8"
+                            >
+                                {/* Top */}
+                                <div className="flex items-center justify-between mb-10">
+                                    <Link
+                                        href="/"
+                                        onClick={() => setIsOpen(false)}
+                                        className="flex items-center gap-2 font-bold text-lg"
+                                    >
+                                        <div className="bg-amber-500 p-1.5 rounded-lg">
+                                            <Brain className="h-5 w-5 text-white" />
+                                        </div>
+
+                                        <span className="tracking-tight text-slate-900">
+                                            Docinate AI
+                                        </span>
+                                    </Link>
+                                </div>
+
+                                {/* Navigation */}
+                                <nav className="flex flex-col gap-2">
+                                    {navItems.map((item) => {
+                                        const isDashboardPath = item.href === `/${organization?.slug}`;
+
+                                        const isActive = isDashboardPath
+                                            ? pathname === item.href
+                                            : pathname === item.href ||
+                                            (item.href !== "/" &&
+                                                pathname?.startsWith(item.href));
+
+                                        return (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={() => setIsOpen(false)}
+                                                className={`group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300
+                                                    ${isActive
+                                                        ? "bg-amber-50 text-amber-600"
+                                                        : "text-slate-700 hover:bg-slate-100"
+                                                    }`}>
+                                                <span className="font-medium text-base">
+                                                    {item.label}
+                                                </span>
+                                            </Link>
+                                        );
+                                    })}
+                                </nav>
+
+                                {/* Divider */}
+                                <div className="my-8 border-t border-slate-200" />
+
+                                {/* User/Auth Section */}
+                                {user ? (
+                                    <div className="flex items-center justify-between rounded-2xl bg-slate-100 p-4">
+                                        <div>
+                                            <p className="text-sm text-slate-500">
+                                                Signed in as
+                                            </p>
+
+                                            <h3 className="font-semibold text-slate-800">
+                                                {organization
+                                                    ? organization.name
+                                                    : user?.firstName}
+                                            </h3>
+                                        </div>
+
+                                        <UserButton />
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-3">
                                         <Link
-                                            key={item.href}
-                                            href={item.href}
+                                            href="/sign-in"
                                             onClick={() => setIsOpen(false)}
                                         >
                                             <Button
-                                                variant="ghost"
-                                                className="w-full justify-start text-lg"
+                                                variant="outline"
+                                                className="w-full rounded-xl h-11"
                                             >
-                                                {item.label}
+                                                Sign In
                                             </Button>
                                         </Link>
-                                    ))}
+
+                                        <Link
+                                            href="/sign-up"
+                                            onClick={() => setIsOpen(false)}
+                                        >
+                                            <Button className="w-full rounded-xl h-11 bg-slate-900 hover:bg-slate-800">
+                                                Create Account
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                )}
+
+                                {/* Footer */}
+                                <div className="absolute bottom-6 left-6 right-6">
+                                    <div className="rounded-2xl bg-linear-to-r from-amber-500 to-orange-500 p-px">
+                                        <div className="rounded-2xl bg-white px-4 py-3">
+                                            <p className="text-sm font-medium text-slate-800">
+                                                AI-powered documentation platform
+                                            </p>
+
+                                            <p className="text-xs text-slate-500 mt-1">
+                                                Build smarter workflows with Docinate AI
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </SheetContent>
                         </Sheet>

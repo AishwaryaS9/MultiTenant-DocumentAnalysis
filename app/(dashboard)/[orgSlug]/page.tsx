@@ -123,7 +123,7 @@ export default async function OrgDashboardPage({
                                 </p>
                                 <Button
                                     asChild
-                                    className="w-full mt-6 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold shadow-lg shadow-amber-200/50"
+                                    className="w-full mt-6 bg-amber-600 hover:bg-amber-500 text-white rounded-xl font-bold shadow-lg shadow-amber-200/50"
                                 >
                                     <Link href={`/${orgSlug}/search`}>
                                         Search Documents

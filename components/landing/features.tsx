@@ -1,73 +1,90 @@
+'use client'
 import { features } from '@/app/data/data'
 import Image from 'next/image'
+import { motion, Variants } from 'framer-motion'
 
 export default function Features() {
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 },
+        },
+    }
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.5, ease: "easeOut" },
+        },
+    }
+
     return (
-        <section id="features"
-            className="py-16 md:py-24 relative overflow-hidden"
-            aria-labelledby="features-title"
-        >
-            {/* Decorative Background Elements - Hidden from Screen Readers */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-30 pointer-events-none" aria-hidden="true">
-                <div className="absolute top-24 left-10 w-72 h-72 bg-blue-200 rounded-full blur-[120px]" />
-                <div className="absolute bottom-24 right-10 w-72 h-72 bg-purple-200 rounded-full blur-[120px]" />
-            </div>
+        <section id="features" className="py-20 bg-[#F9F9F9]">
+            <div className="container max-w-7xl mx-auto px-4">
 
-            <div className="container max-w-6xl mx-auto px-4 relative z-10">
-                <div className="text-center mb-12 md:mb-16">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 mb-6">
-                        <span className="text-xs font-bold tracking-wider text-blue-600 uppercase">
-                            Features
-                        </span>
-                    </div>
-                    <h2
-                        id="features-title"
-                        className="text-3xl md:text-5xl font-semibold tracking-tight text-[#1A1A1A] mb-4"
+                {/* Header Section from image_bd5799.jpg */}
+                <div className="text-center mb-16">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#FFF0ED] mb-4"
                     >
-                        Everything You Need
+                        <span className="text-[12px] font-bold tracking-widest text-[#FF8A71] uppercase">
+                            ✦ Feature
+                        </span>
+                    </motion.div>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-black mb-4">
+                        Everything In One Place
                     </h2>
-                    <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto">
-                        Powerful tools designed to help teams analyze, summarize, and collaborate on complex documents in seconds.
-                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                    {features.slice(0, 4).map((feature, index) => (
-                        <article
-                            key={index}
-                            className="rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 bg-white flex flex-col justify-between shadow-sm border border-gray-100/50 hover:shadow-md transition-shadow duration-300"
-                        >
-                            <div className="mb-8">
-                                <div
-                                    className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#FFF8E6] border border-[#FFE8A3] mb-6"
-                                    role="note"
-                                >
-                                    <div className="w-2 h-2 bg-orange-400 rounded-full" aria-hidden="true" />
-                                    <span className="text-[10px] font-bold tracking-widest text-orange-800 uppercase">
-                                        {feature.badge}
-                                    </span>
+                {/* Bento Grid Layout */}
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.1 }}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                >
+                    {features.slice(0, 4).map((feature, index) => {
+                        const isLarge = index === 0 || index === 3;
+
+                        return (
+                            <motion.article
+                                key={index}
+                                variants={itemVariants}
+                                className={`group relative overflow-hidden rounded-[2rem] bg-[#F2F2F2] p-8 md:p-10 flex flex-col justify-between min-h-112.5
+                                    ${isLarge ? 'md:col-span-2' : 'md:col-span-1'}`}
+                            >
+                                <div className="relative z-10">
+                                    <h3 className="text-2xl font-bold text-black mb-3">
+                                        {feature.title}
+                                    </h3>
+                                    <p className="text-gray-500 text-sm md:text-base max-w-md leading-relaxed">
+                                        {feature.description}
+                                    </p>
                                 </div>
-                                <h3 className="text-2xl md:text-3xl font-semibold text-[#1A1A1A] mb-4 leading-tight">
-                                    {feature.title}
-                                </h3>
-                                <p className="text-gray-500 text-sm leading-relaxed max-w-sm">
-                                    {feature.description}
-                                </p>
-                            </div>
 
-                            <div className="relative w-full aspect-video bg-gray-50 rounded-2xl overflow-hidden mt-4">
-                                <Image
-                                    src={feature.image}
-                                    alt={`Interface preview showing ${feature.title}`}
-                                    fill
-                                    className="object-cover"
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    priority={index < 2} // Preload first two feature images for better performance
-                                />
-                            </div>
-                        </article>
-                    ))}
-                </div>
+                                {/* Inner Image Container - Light background as seen in image_bd5799.jpg */}
+                                <div className="mt-8 relative w-full h-full bg-white/50 rounded-2xl overflow-hidden flex items-center justify-center p-4">
+                                    <div className="relative w-full h-full min-h-50">
+                                        <Image
+                                            src={feature.image}
+                                            alt={feature.title}
+                                            fill
+                                            className="object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
+                                            sizes={isLarge ? "66vw" : "33vw"}
+                                            priority={index < 2}
+                                        />
+                                    </div>
+                                </div>
+                            </motion.article>
+                        )
+                    })}
+                </motion.div>
             </div>
         </section>
     )
