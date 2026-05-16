@@ -14,8 +14,16 @@ export const metadata: Metadata = {
   description: "Analyze and collaboration on documents with Google Gemini AI",
 };
 
-async function UserSync({ children }: { children: React.ReactNode }) {
-  await syncUserToDatabase();
+async function UserSync({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  try {
+    await syncUserToDatabase();
+  } catch (error) {
+    console.error("User sync failed:", error);
+  }
   return <>{children}</>;
 }
 

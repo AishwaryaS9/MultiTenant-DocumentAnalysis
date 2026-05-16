@@ -91,3 +91,30 @@ export interface EmptyDashboardProps {
     orgName: string;
     orgSlug: string;
 }
+
+//Search
+export interface SearchHeaderProps {
+    query: string;
+    resultsCount: number;
+}
+
+export interface SearchFormProps {
+    query: string;
+}
+
+export interface NoResultsStateProps {
+    query: string;
+}
+
+export interface SearchResultProps {
+    document: any;
+}
+
+export interface SearchPageProps {
+    params: Promise<{
+        orgSlug: string;
+    }>;
+    searchParams: Promise<{
+        query?: string;
+    }>;
+}
