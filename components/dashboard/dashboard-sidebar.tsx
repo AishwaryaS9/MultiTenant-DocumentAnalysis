@@ -40,7 +40,7 @@ export default function Sidebar() {
         <div className="flex flex-col h-full py-6 px-4">
             {/* Logo */}
             <Link href='/' className='flex items-center gap-3 px-2 mb-10'>
-                <div className="bg-amber-500 p-2 rounded-xl shadow-lg shadow-amber-200">
+                <div className="bg-amber-500 p-2 rounded-xl shadow-sm shadow-amber-200">
                     <Brain className='h-6 w-6 text-white' />
                 </div>
                 <span className="font-black text-xl tracking-tight text-slate-900">Docinate AI</span>

@@ -44,7 +44,8 @@ export async function POST(request: Request) {
             data: {
                 userId: user.id,
                 organizationId: organization.id,
-                role: "owner"
+                // role: "owner"
+                role: "admin"
             },
         });
         return NextResponse.json({ success: true, organization, message: "Organization created successfully!" })

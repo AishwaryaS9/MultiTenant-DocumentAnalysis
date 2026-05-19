@@ -58,7 +58,8 @@ export async function POST(req: Request) {
         }
 
         // Only owner/admin can invite
-        const allowedRoles = ["owner", "admin"];
+        // const allowedRoles = ["owner", "admin"];
+        const allowedRoles = ["admin"];
 
         if (!allowedRoles.includes(membership.role)) {
             return NextResponse.json(
