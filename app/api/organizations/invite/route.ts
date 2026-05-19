@@ -18,7 +18,6 @@ export async function POST(req: Request) {
 
         const email = body.email?.trim();
         const role = body.role || "org:member";
-        // const role = body.role || "member";
         if (!email) {
             return NextResponse.json(
                 { error: "Email is required" },
@@ -58,7 +57,6 @@ export async function POST(req: Request) {
         }
 
         // Only owner/admin can invite
-        // const allowedRoles = ["owner", "admin"];
         const allowedRoles = ["admin"];
 
         if (!allowedRoles.includes(membership.role)) {
@@ -67,6 +65,24 @@ export async function POST(req: Request) {
                 { status: 403 }
             );
         }
+
+
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
+
+        if (!existingUser) {
+            return NextResponse.json(
+                {
+                    error:
+                        "User must create an account before being invited",
+                },
+                { status: 400 }
+            );
+        }
+
 
         // Get Clerk instance
         const client = await clerkClient();

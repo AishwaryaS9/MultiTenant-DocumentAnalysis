@@ -1,9 +1,7 @@
 "use client";
-
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Loader2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
-
 import {
     Dialog,
     DialogContent,
@@ -12,10 +10,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
     Select,
     SelectContent,
@@ -24,12 +20,17 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-export default function InviteTeamModal() {
+interface InviteTeamModalProps {
+    children: ReactNode;
+}
+
+export default function InviteTeamModal({
+    children,
+}: InviteTeamModalProps) {
     const [open, setOpen] = useState(false);
 
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("org:member");
-    // const [role, setRole] = useState("member");
 
     const [loading, setLoading] = useState(false);
 
@@ -68,7 +69,6 @@ export default function InviteTeamModal() {
 
             setEmail("");
             setRole("org:member");
-            // setRole("member");
 
             setOpen(false);
         } catch (error: any) {
@@ -85,12 +85,7 @@ export default function InviteTeamModal() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button
-                    variant="ghost"
-                    className="rounded-xl font-semibold text-slate-600"
-                >
-                    Invite Team
-                </Button>
+                {children}
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-md rounded-3xl border-none p-8">
@@ -138,19 +133,17 @@ export default function InviteTeamModal() {
 
                             <SelectContent>
                                 <SelectItem value="org:member">
-                                    {/* <SelectItem value="member"> */}
                                     Member
                                 </SelectItem>
 
                                 <SelectItem value="org:admin">
-                                    {/* <SelectItem value="admin"> */}
                                     Admin
                                 </SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
 
-                    {/* Button */}
+                    {/* Submit */}
                     <Button
                         onClick={handleInvite}
                         disabled={loading}
