@@ -59,7 +59,16 @@ export default function DashboardHeader({
                 >
                     Invite Team
                 </Button> */}
-                <InviteTeamModal />
+                {/* <InviteTeamModal /> */}
+                <InviteTeamModal>
+                    <Button
+                        variant="ghost"
+                        className="rounded-xl font-semibold text-slate-600"
+                    >
+                        {/* <UserPlus className="w-4 h-4 mr-2" /> */}
+                        Invite Team
+                    </Button>
+                </InviteTeamModal>
 
                 <Link href={`/${orgSlug}/documents`}>
                     <Button className="rounded-xl bg-slate-900 hover:bg-black px-8 py-6 flex gap-2 font-bold text-md">

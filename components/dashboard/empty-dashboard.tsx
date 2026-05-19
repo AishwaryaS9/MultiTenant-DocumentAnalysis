@@ -3,7 +3,7 @@ import { Card, CardContent } from "../ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { EmptyDashboardProps } from "@/types";
-// import InviteTeamModal from "./invite-team-modal";
+import InviteTeamModal from "./invite-team-modal";
 
 export default async function EmptyDashboard({ orgName, orgSlug }: EmptyDashboardProps) {
 
@@ -35,13 +35,15 @@ export default async function EmptyDashboard({ orgName, orgSlug }: EmptyDashboar
                                     </Button>
                                 </Link>
 
-                                <Button
-                                    variant="outline"
-                                    className="rounded-2xl px-8 py-6 text-base font-semibold"
-                                >
-                                    Invite Team
-                                </Button>
-                                {/* <InviteTeamModal /> */}
+                                <InviteTeamModal>
+                                    <Button
+                                        variant="outline"
+                                        className="rounded-2xl px-8 py-6 text-base font-semibold"
+                                    >
+                                        Invite Team
+                                    </Button>
+                                    {/* <InviteTeamModal /> */}
+                                </InviteTeamModal>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-14">
