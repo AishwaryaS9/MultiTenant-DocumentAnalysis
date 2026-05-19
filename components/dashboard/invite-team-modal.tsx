@@ -28,8 +28,8 @@ export default function InviteTeamModal() {
     const [open, setOpen] = useState(false);
 
     const [email, setEmail] = useState("");
-    // const [role, setRole] = useState("org:member");
-    const [role, setRole] = useState("member");
+    const [role, setRole] = useState("org:member");
+    // const [role, setRole] = useState("member");
 
     const [loading, setLoading] = useState(false);
 
@@ -67,8 +67,8 @@ export default function InviteTeamModal() {
             toast.success("Invitation sent successfully");
 
             setEmail("");
-            // setRole("org:member");
-            setRole("member");
+            setRole("org:member");
+            // setRole("member");
 
             setOpen(false);
         } catch (error: any) {
@@ -137,13 +137,13 @@ export default function InviteTeamModal() {
                             </SelectTrigger>
 
                             <SelectContent>
-                                {/* <SelectItem value="org:member"> */}
-                                <SelectItem value="member">
+                                <SelectItem value="org:member">
+                                    {/* <SelectItem value="member"> */}
                                     Member
                                 </SelectItem>
 
-                                {/* <SelectItem value="org:admin"> */}
-                                <SelectItem value="admin">
+                                <SelectItem value="org:admin">
+                                    {/* <SelectItem value="admin"> */}
                                     Admin
                                 </SelectItem>
                             </SelectContent>
