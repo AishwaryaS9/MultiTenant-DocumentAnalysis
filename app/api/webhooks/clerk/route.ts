@@ -156,7 +156,8 @@ export async function POST(req: Request) {
         }
 
         // Normalize Clerk role
-        const rawRole = data.role || "org:member";
+        // const rawRole = data.role || "org:member";
+        const rawRole = data.role || "member";
 
         const normalizedRole = rawRole
             .replace("org:", "")
