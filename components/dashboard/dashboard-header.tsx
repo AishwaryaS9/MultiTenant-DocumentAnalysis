@@ -2,6 +2,7 @@ import { ShieldCheck, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DashboardHeaderProps } from "@/types";
+import InviteTeamModal from "./invite-team-modal";
 
 export default function DashboardHeader({
     orgName,
@@ -52,12 +53,13 @@ export default function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-3">
-                <Button
+                {/* <Button
                     variant="ghost"
                     className="rounded-xl font-semibold text-slate-600"
                 >
                     Invite Team
-                </Button>
+                </Button> */}
+                <InviteTeamModal />
 
                 <Link href={`/${orgSlug}/documents`}>
                     <Button className="rounded-xl bg-slate-900 hover:bg-black px-8 py-6 flex gap-2 font-bold text-md">

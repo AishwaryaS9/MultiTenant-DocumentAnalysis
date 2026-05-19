@@ -14,16 +14,8 @@ export const metadata: Metadata = {
   description: "Analyze and collaboration on documents with Google Gemini AI",
 };
 
-async function UserSync({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  try {
-    await syncUserToDatabase();
-  } catch (error) {
-    console.error("User sync failed:", error);
-  }
+async function UserSync({ children }: { children: React.ReactNode }) {
+  await syncUserToDatabase();
   return <>{children}</>;
 }
 
@@ -36,7 +28,7 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+        <body className={urbanist.className}>
           <div className="min-h-screen flex flex-col">
             {/* Main */}
             <main className="flex-1">

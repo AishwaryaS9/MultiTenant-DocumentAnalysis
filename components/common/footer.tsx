@@ -52,7 +52,7 @@ export default function Footer() {
                     {/* Section 1: Identity */}
                     <motion.div variants={itemVariants} className="md:col-span-5 space-y-6">
                         <Link href="/" className="flex items-center gap-2.5 font-bold text-lg">
-                            <div className="bg-amber-400 p-1.5 rounded-lg">
+                            <div className="bg-amber-500 p-1.5 rounded-lg">
                                 <Brain className='h-5 w-5 text-white' />
                             </div>
                             <span className="tracking-tight text-slate-900">Docinate AI</span>
