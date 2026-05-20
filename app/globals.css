@@ -192,3 +192,29 @@
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent) transparent;
 }
+
+
+@layer utilities {
+
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-slate-200) transparent;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-slate-200, rgba(0, 0, 0, 0.1));
+    border-radius: 999px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-slate-300, rgba(0, 0, 0, 0.2));
+  }
+}
