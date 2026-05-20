@@ -15,11 +15,17 @@ interface OrgDashboardPageProps {
     params: Promise<{ orgSlug: string }>;
 }
 
+// interface OrgDashboardPageProps {
+//     params: { orgSlug: string };
+// }
+
 export default async function OrgDashboardPage({
     params,
 }: OrgDashboardPageProps) {
     const { userId } = await auth();
     const { orgSlug } = await params;
+    // const { orgSlug } = params;
+
 
     if (!userId) redirect("/sign-in");
 
