@@ -32,46 +32,51 @@ export default function SelectOrgPage() {
             toast.error("Please enter organization name");
             return;
         }
-
         setIsCreating(true);
-
         try {
-            if (!createOrganization) {
-                throw new Error("Organization creation unavailable");
+            const response = await fetch(
+                "/api/organizations",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: orgName,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error);
             }
-
-            const newOrg = await createOrganization({
-                name: orgName.trim(),
-            });
-
-            // SAVE TO PRISMA
-            await fetch("/api/organizations", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    clerkOrgId: newOrg.id,
-                    name: newOrg.name,
-                    slug: newOrg.slug,
-                }),
-            });
 
             if (setActive) {
                 await setActive({
-                    organization: newOrg.id,
+                    organization: data.organization.clerkOrgId,
                 });
             }
 
             toast.success("Workspace created");
             setOrgName("");
+            router.push(
+                `/${data.organization.slug}`
+            );
+
         } catch (error: any) {
-            console.error(error);
-            toast.error(error.message || "Something went wrong");
+            toast.error(
+                error.message ||
+                "Something went wrong"
+            );
+            setOrgName("");
         } finally {
             setIsCreating(false);
         }
     };
+
+
 
     const handleSelectOrg = async (organization: any) => {
         try {

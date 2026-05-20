@@ -28,6 +28,7 @@ export type OrganizationMinAggregateOutputType = {
   id: string | null
   clerkOrgId: string | null
   name: string | null
+  normalizedName: string | null
   slug: string | null
   createdAt: Date | null
 }
@@ -36,6 +37,7 @@ export type OrganizationMaxAggregateOutputType = {
   id: string | null
   clerkOrgId: string | null
   name: string | null
+  normalizedName: string | null
   slug: string | null
   createdAt: Date | null
 }
@@ -44,6 +46,7 @@ export type OrganizationCountAggregateOutputType = {
   id: number
   clerkOrgId: number
   name: number
+  normalizedName: number
   slug: number
   createdAt: number
   _all: number
@@ -54,6 +57,7 @@ export type OrganizationMinAggregateInputType = {
   id?: true
   clerkOrgId?: true
   name?: true
+  normalizedName?: true
   slug?: true
   createdAt?: true
 }
@@ -62,6 +66,7 @@ export type OrganizationMaxAggregateInputType = {
   id?: true
   clerkOrgId?: true
   name?: true
+  normalizedName?: true
   slug?: true
   createdAt?: true
 }
@@ -70,6 +75,7 @@ export type OrganizationCountAggregateInputType = {
   id?: true
   clerkOrgId?: true
   name?: true
+  normalizedName?: true
   slug?: true
   createdAt?: true
   _all?: true
@@ -151,6 +157,7 @@ export type OrganizationGroupByOutputType = {
   id: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt: Date
   _count: OrganizationCountAggregateOutputType | null
@@ -180,6 +187,7 @@ export type OrganizationWhereInput = {
   id?: Prisma.StringFilter<"Organization"> | string
   clerkOrgId?: Prisma.StringFilter<"Organization"> | string
   name?: Prisma.StringFilter<"Organization"> | string
+  normalizedName?: Prisma.StringFilter<"Organization"> | string
   slug?: Prisma.StringFilter<"Organization"> | string
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   members?: Prisma.OrganizationMemberListRelationFilter
@@ -190,6 +198,7 @@ export type OrganizationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   clerkOrgId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   members?: Prisma.OrganizationMemberOrderByRelationAggregateInput
@@ -199,6 +208,7 @@ export type OrganizationOrderByWithRelationInput = {
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   clerkOrgId?: string
+  normalizedName?: string
   slug?: string
   AND?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
   OR?: Prisma.OrganizationWhereInput[]
@@ -207,12 +217,13 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Organization"> | Date | string
   members?: Prisma.OrganizationMemberListRelationFilter
   documents?: Prisma.DocumentListRelationFilter
-}, "id" | "clerkOrgId" | "slug">
+}, "id" | "clerkOrgId" | "normalizedName" | "slug">
 
 export type OrganizationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   clerkOrgId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.OrganizationCountOrderByAggregateInput
@@ -227,6 +238,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   clerkOrgId?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   name?: Prisma.StringWithAggregatesFilter<"Organization"> | string
+  normalizedName?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Organization"> | Date | string
 }
@@ -235,6 +247,7 @@ export type OrganizationCreateInput = {
   id?: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrganizationInput
@@ -245,6 +258,7 @@ export type OrganizationUncheckedCreateInput = {
   id?: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -255,6 +269,7 @@ export type OrganizationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrganizationNestedInput
@@ -265,6 +280,7 @@ export type OrganizationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -275,6 +291,7 @@ export type OrganizationCreateManyInput = {
   id?: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt?: Date | string
 }
@@ -283,6 +300,7 @@ export type OrganizationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -291,6 +309,7 @@ export type OrganizationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -299,6 +318,7 @@ export type OrganizationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clerkOrgId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -307,6 +327,7 @@ export type OrganizationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clerkOrgId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -315,6 +336,7 @@ export type OrganizationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clerkOrgId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -356,6 +378,7 @@ export type OrganizationCreateWithoutMembersInput = {
   id?: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt?: Date | string
   documents?: Prisma.DocumentCreateNestedManyWithoutOrganizationInput
@@ -365,6 +388,7 @@ export type OrganizationUncheckedCreateWithoutMembersInput = {
   id?: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt?: Date | string
   documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -390,6 +414,7 @@ export type OrganizationUpdateWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documents?: Prisma.DocumentUpdateManyWithoutOrganizationNestedInput
@@ -399,6 +424,7 @@ export type OrganizationUncheckedUpdateWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documents?: Prisma.DocumentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -408,6 +434,7 @@ export type OrganizationCreateWithoutDocumentsInput = {
   id?: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt?: Date | string
   members?: Prisma.OrganizationMemberCreateNestedManyWithoutOrganizationInput
@@ -417,6 +444,7 @@ export type OrganizationUncheckedCreateWithoutDocumentsInput = {
   id?: string
   clerkOrgId: string
   name: string
+  normalizedName: string
   slug: string
   createdAt?: Date | string
   members?: Prisma.OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
@@ -442,6 +470,7 @@ export type OrganizationUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUpdateManyWithoutOrganizationNestedInput
@@ -451,6 +480,7 @@ export type OrganizationUncheckedUpdateWithoutDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clerkOrgId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  normalizedName?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   members?: Prisma.OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -500,6 +530,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   clerkOrgId?: boolean
   name?: boolean
+  normalizedName?: boolean
   slug?: boolean
   createdAt?: boolean
   members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
@@ -511,6 +542,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   clerkOrgId?: boolean
   name?: boolean
+  normalizedName?: boolean
   slug?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["organization"]>
@@ -519,6 +551,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   clerkOrgId?: boolean
   name?: boolean
+  normalizedName?: boolean
   slug?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["organization"]>
@@ -527,11 +560,12 @@ export type OrganizationSelectScalar = {
   id?: boolean
   clerkOrgId?: boolean
   name?: boolean
+  normalizedName?: boolean
   slug?: boolean
   createdAt?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkOrgId" | "name" | "slug" | "createdAt", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clerkOrgId" | "name" | "normalizedName" | "slug" | "createdAt", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Organization$membersArgs<ExtArgs>
   documents?: boolean | Prisma.Organization$documentsArgs<ExtArgs>
@@ -550,6 +584,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     clerkOrgId: string
     name: string
+    normalizedName: string
     slug: string
     createdAt: Date
   }, ExtArgs["result"]["organization"]>
@@ -980,6 +1015,7 @@ export interface OrganizationFieldRefs {
   readonly id: Prisma.FieldRef<"Organization", 'String'>
   readonly clerkOrgId: Prisma.FieldRef<"Organization", 'String'>
   readonly name: Prisma.FieldRef<"Organization", 'String'>
+  readonly normalizedName: Prisma.FieldRef<"Organization", 'String'>
   readonly slug: Prisma.FieldRef<"Organization", 'String'>
   readonly createdAt: Prisma.FieldRef<"Organization", 'DateTime'>
 }
