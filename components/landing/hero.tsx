@@ -13,8 +13,6 @@ const Hero = () => {
 
     const orgSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
 
-    console.log('orgslug', JSON.stringify(orgSlug))
-
     const href = orgSlug ? `/${orgSlug}` : "/select-org";
 
     // Animation Variants
