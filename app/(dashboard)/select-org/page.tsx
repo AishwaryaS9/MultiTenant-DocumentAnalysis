@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useOrganizationList, useUser } from "@clerk/nextjs";
+import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import {
     ArrowRight,
     Building2,
@@ -16,6 +16,7 @@ import { toast } from "sonner";
 export default function SelectOrgPage() {
     const { user } = useUser();
     const router = useRouter();
+    const { organization } = useOrganization();
 
     const { userMemberships, setActive, createOrganization } =
         useOrganizationList({
@@ -43,6 +44,7 @@ export default function SelectOrgPage() {
                     },
                     body: JSON.stringify({
                         name: orgName,
+                        // slug: organization?.slug
                     }),
                 }
             );

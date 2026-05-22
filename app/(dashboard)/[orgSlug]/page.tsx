@@ -26,7 +26,6 @@ export default async function OrgDashboardPage({
     const { orgSlug } = await params;
     // const { orgSlug } = params;
 
-
     if (!userId) redirect("/sign-in");
 
     const organization = await prisma.organization.findUnique({

@@ -19,7 +19,7 @@ function generateSlug(name: string) {
 
 export async function POST(request: Request) {
     try {
-        const { userId } = await auth();
+        const { userId, } = await auth();
 
         if (!userId) {
             return NextResponse.json(
@@ -76,6 +76,7 @@ export async function POST(request: Request) {
                         },
                         {
                             slug: generatedSlug,
+                            // slug: slug,
                         },
                     ],
                 },
@@ -132,6 +133,8 @@ export async function POST(request: Request) {
                 }
             );
 
+
+
         /**
          * CREATE DATABASE ORGANIZATION
          */
@@ -141,7 +144,7 @@ export async function POST(request: Request) {
                     clerkOrgId: clerkOrg.id,
                     name: name.trim(),
                     normalizedName,
-                    slug: generatedSlug,
+                    slug: clerkOrg.slug!, // <- use Clerk slug
                 },
             });
 
