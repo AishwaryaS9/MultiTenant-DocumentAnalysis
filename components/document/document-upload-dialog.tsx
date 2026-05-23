@@ -183,7 +183,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
 
                                 <label
                                     htmlFor="file-upload"
-                                    className="group relative flex flex-col items-center justify-center gap-4 rounded-[28px] border-2 border-dashed border-slate-200 bg-white/60 px-6 py-10 text-center transition-all duration-300 hover:border-orange-300 hover:bg-orange-50/40 cursor-pointer overflow-hidden min-h-[240px]"
+                                    className="group relative flex flex-col items-center justify-center gap-4 rounded-[28px] border-2 border-dashed border-slate-200 bg-white/60 px-6 py-10 text-center transition-all duration-300 hover:border-orange-300 hover:bg-orange-50/40 cursor-pointer overflow-hidden min-h-60"
                                 >
                                     {/* Glow */}
                                     <div className="absolute inset-0 bg-linear-to-br from-orange-50/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -195,7 +195,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                                                 <Check className="w-8 h-8 text-emerald-600" />
                                             </div>
                                             <div className="space-y-1">
-                                                <div className="font-semibold text-[#1A1A1A] text-lg max-w-[250px] truncate">
+                                                <div className="font-semibold text-[#1A1A1A] text-lg max-w-62.5 truncate">
                                                     {selectedFile.name}
                                                 </div>
                                                 <p className="text-sm text-slate-500">
