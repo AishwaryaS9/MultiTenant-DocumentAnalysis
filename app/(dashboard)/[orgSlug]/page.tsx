@@ -6,10 +6,13 @@ import StatCard from "@/components/dashboard/stat-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
+// import { syncUserToDatabase } from "@/lib/sync-user";
 import { auth } from "@clerk/nextjs/server";
 import { FileText, Users, Zap } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 interface OrgDashboardPageProps {
     params: Promise<{ orgSlug: string }>;
@@ -22,9 +25,11 @@ interface OrgDashboardPageProps {
 export default async function OrgDashboardPage({
     params,
 }: OrgDashboardPageProps) {
+    // await syncUserToDatabase();
     const { userId } = await auth();
     const { orgSlug } = await params;
     // const { orgSlug } = params;
+
 
     if (!userId) redirect("/sign-in");
 
