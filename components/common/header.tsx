@@ -3,9 +3,16 @@ import { Brain, Home, Menu, Settings, Star, Users, Zap } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
-import { useOrganization, UserButton, useUser } from '@clerk/nextjs'
+import {
+    useOrganization,
+    UserButton,
+    useUser,
+    useOrganizationList
+} from '@clerk/nextjs'
 import { useEffect, useState } from 'react';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "../ui/sheet";
+import { DesktopWorkspaceSwitcher } from './desktop-workspace-switcher';
+import { MobileWorkspaceSwitcher } from './mobile-workspace-switcher';
 
 export default function Header() {
     const pathname = usePathname();
@@ -14,6 +21,13 @@ export default function Header() {
 
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [activeHash, setActiveHash] = useState("");
+
+    const { userMemberships, setActive } = useOrganizationList({
+        userMemberships: {
+            infinite: true,
+        },
+    });
 
     useEffect(() => {
         const handleScroll = () => {
@@ -23,15 +37,49 @@ export default function Header() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    useEffect(() => {
+        if (pathname !== "/") return;
+
+        const hashes = ["#testimonials", "#features", "#how-it-works", "#cta"];
+        const elements = hashes.map(hash => document.querySelector(hash)).filter(Boolean);
+
+        const observerOptions = {
+            root: null,
+            rootMargin: "-20% 0px -60% 0px",
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveHash(`#${entry.target.id}`);
+                }
+            });
+        }, observerOptions);
+
+        elements.forEach(el => el && observer.observe(el));
+
+        const checkTop = () => {
+            if (window.scrollY < 100) {
+                setActiveHash("");
+            }
+        };
+        window.addEventListener("scroll", checkTop);
+
+        return () => {
+            elements.forEach(el => el && observer.unobserve(el));
+            window.removeEventListener("scroll", checkTop);
+        };
+    }, [pathname]);
+
     const getNavItems = () => {
-        const baseItems = [
+        return [
             { href: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
             { href: "#testimonials", label: "Testimonials", icon: <Users className="w-4 h-4" /> },
             { href: "#features", label: "Features", icon: <Star className="w-4 h-4" /> },
             { href: "#how-it-works", label: "How It Works", icon: <Settings className="w-4 h-4" /> },
             { href: "#cta", label: "Call To Action", icon: <Zap className="w-4 h-4" /> },
         ];
-        return [...baseItems];
     };
 
     const navItems = getNavItems();
@@ -40,52 +88,64 @@ export default function Header() {
         <div className="fixed top-4 w-full z-50 px-4 transition-all duration-300">
             <header
                 className={`
-            container max-w-7xl mx-auto flex items-center justify-between px-6 py-3
-            transition-all duration-300
-            ${scrolled
-                        ? "bg-white/80 backdrop-blur-xl border shadow-lg rounded-full"
+                    container max-w-7xl mx-auto flex items-center justify-between px-6 py-3
+                    transition-all duration-300 border border-transparent
+                    ${scrolled
+                        ? "bg-white/80 backdrop-blur-xl border-slate-200/80 shadow-md rounded-full"
                         : "bg-transparent rounded-2xl"
-                    }`}>
+                    }
+                `}
+            >
                 {/* Logo */}
-                <Link href='/' className='flex items-center gap-2 font-bold text-lg'>
+                <Link href='/' className='flex items-center gap-2 font-bold text-lg focus:outline-none'>
                     <div className="bg-amber-500 p-1.5 rounded-lg">
                         <Brain className='h-5 w-5 text-white' />
                     </div>
-
                     <span className="tracking-tight text-slate-900">
                         Docinate AI
                     </span>
                 </Link>
 
                 {/* Navigation - Desktop */}
-                <nav className='hidden md:flex items-center gap-1'>
+                <nav className='hidden md:flex items-center gap-1' role="menu">
                     {navItems.map((item) => {
-                        const isDashboardPath = item.href === `/${organization?.slug}`;
-                        const isActive = isDashboardPath
-                            ? pathname === item.href
-                            : pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
+                        const isActive = item.href === "/"
+                            ? (pathname === "/" && activeHash === "")
+                            : (pathname === "/" && activeHash === item.href);
+
                         return (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 role="menuitem"
-                                aria-label={`Navigate to ${item.href}`}
-                                className="rounded-full px-4 py-2 text-slate-600 text-md font-medium transition-all duration-300 ease-in-out 
-                                hover:text-amber-600 hover:font-semibold focus:outline-none active:scale-95">
+                                aria-current={isActive ? "page" : undefined}
+                                aria-label={`Navigate to ${item.label}`}
+                                className={`
+                                    rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out 
+                                    focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/20 active:scale-95
+                                    ${isActive
+                                        ? "bg-amber-50 text-amber-700 shadow-xs shadow-amber-100/50 font-semibold"
+                                        : "text-slate-600 hover:text-amber-600 hover:bg-slate-50/80"
+                                    }
+                                `}
+                            >
                                 {item.label}
                             </Link>
                         );
                     })}
                 </nav>
 
-                {/* Auth */}
+                {/* Auth - Desktop */}
                 <div className="flex items-center gap-3">
                     {user ? (
                         <div className="flex items-center gap-3">
-                            <span className='hidden sm:inline text-sm font-medium text-slate-800 bg-slate-100 px-3 py-1 rounded-full'>
-                                {organization ? organization.name : user?.firstName}
-                            </span>
-
+                            <DesktopWorkspaceSwitcher
+                                organization={organization}
+                                user={user}
+                                memberships={userMemberships?.data || []}
+                                setActive={setActive}
+                                onSwitch={() => setIsOpen(false)}
+                            />
                             <UserButton />
                         </div>
                     ) : (
@@ -94,7 +154,7 @@ export default function Header() {
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="rounded-full cursor-pointer"
+                                    className="rounded-full cursor-pointer font-medium text-slate-600 hover:text-slate-900"
                                 >
                                     Sign In
                                 </Button>
@@ -103,7 +163,7 @@ export default function Header() {
                             <Link href="/sign-up">
                                 <Button
                                     size="sm"
-                                    className='rounded-full bg-slate-900 text-white hover:bg-slate-800 px-6 cursor-pointer'
+                                    className='rounded-full bg-slate-900 text-white hover:bg-slate-800 px-5 font-medium shadow-xs transition cursor-pointer'
                                 >
                                     Create Account
                                 </Button>
@@ -111,123 +171,121 @@ export default function Header() {
                         </div>
                     )}
 
-                    {/* Mobile Menu */}
+                    {/* Mobile Menu Trigger */}
                     <div className="md:hidden">
                         <Sheet open={isOpen} onOpenChange={setIsOpen}>
                             <SheetTrigger asChild>
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="rounded-full hover:bg-slate-100 transition"
+                                    className="rounded-full hover:bg-slate-100/80 transition"
                                 >
-                                    <Menu className="h-5 w-5" />
+                                    <Menu className="h-5 w-5 text-slate-700" />
                                 </Button>
                             </SheetTrigger>
 
                             <SheetContent
                                 side="right"
-                                className="w-[90%] sm:w-100 border-l bg-white/95 backdrop-blur-2xl px-6 py-8"
-                            >
-                                {/* Top */}
-                                <div className="flex items-center justify-between mb-10">
-                                    <Link
-                                        href="/"
-                                        onClick={() => setIsOpen(false)}
-                                        className="flex items-center gap-2 font-bold text-lg"
-                                    >
-                                        <div className="bg-amber-500 p-1.5 rounded-lg">
-                                            <Brain className="h-5 w-5 text-white" />
-                                        </div>
+                                className="w-[90%] sm:w-100 border-l border-slate-100 bg-white/95 backdrop-blur-2xl px-6 py-8 flex flex-col justify-between">
+                                <SheetHeader className="sr-only">
+                                    <SheetTitle>Mobile Navigation Menu</SheetTitle>
+                                    <SheetDescription>
+                                        Navigation links and workspace management
+                                    </SheetDescription>
+                                </SheetHeader>
+                                
+                                <div className="space-y-6 overflow-y-auto max-h-[80vh] pr-1">
+                                    {/* Brand Header */}
+                                    <div className="flex items-center justify-between">
+                                        <Link
+                                            href="/"
+                                            onClick={() => setIsOpen(false)}
+                                            className="flex items-center gap-2 font-bold text-lg focus:outline-none"
+                                        >
+                                            <div className="bg-amber-500 p-1.5 rounded-lg">
+                                                <Brain className="h-5 w-5 text-white" />
+                                            </div>
+                                            <span className="tracking-tight text-slate-900">
+                                                Docinate AI
+                                            </span>
+                                        </Link>
+                                    </div>
 
-                                        <span className="tracking-tight text-slate-900">
-                                            Docinate AI
-                                        </span>
-                                    </Link>
+                                    {/* Anchored Navigation Links */}
+                                    <nav className="flex flex-col gap-1">
+                                        {navItems.map((item) => {
+                                            const isActive = item.href === "/"
+                                                ? (pathname === "/" && activeHash === "")
+                                                : (pathname === "/" && activeHash === item.href);
+
+                                            return (
+                                                <Link
+                                                    key={item.href}
+                                                    href={item.href}
+                                                    onClick={() => setIsOpen(false)}
+                                                    className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                                                        ${isActive
+                                                            ? "bg-amber-50 text-amber-700 font-semibold"
+                                                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                                        }`}
+                                                >
+                                                    <span className="text-sm font-medium">
+                                                        {item.label}
+                                                    </span>
+                                                </Link>
+                                            );
+                                        })}
+                                    </nav>
+
+                                    {/* Native Mobile Workspace Dropdown Accordion */}
+                                    {user && (
+                                        <MobileWorkspaceSwitcher
+                                            organization={organization}
+                                            user={user}
+                                            memberships={userMemberships?.data || []}
+                                            setActive={setActive}
+                                            onSwitch={() => setIsOpen(false)}
+                                        />
+                                    )}
+
                                 </div>
 
-                                {/* Navigation */}
-                                <nav className="flex flex-col gap-2">
-                                    {navItems.map((item) => {
-                                        const isDashboardPath = item.href === `/${organization?.slug}`;
-
-                                        const isActive = isDashboardPath
-                                            ? pathname === item.href
-                                            : pathname === item.href ||
-                                            (item.href !== "/" &&
-                                                pathname?.startsWith(item.href));
-
-                                        return (
-                                            <Link
-                                                key={item.href}
-                                                href={item.href}
-                                                onClick={() => setIsOpen(false)}
-                                                className={`group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300
-                                                    ${isActive
-                                                        ? "bg-amber-50 text-amber-600"
-                                                        : "text-slate-700 hover:bg-slate-100"
-                                                    }`}>
-                                                <span className="font-medium text-base">
-                                                    {item.label}
-                                                </span>
-                                            </Link>
-                                        );
-                                    })}
-                                </nav>
-
-                                {/* Divider */}
-                                <div className="my-8 border-t border-slate-200" />
-
-                                {/* User/Auth Section */}
-                                {user ? (
-                                    <div className="flex items-center justify-between rounded-2xl bg-slate-100 p-4">
-                                        <div>
-                                            <p className="text-sm text-slate-500">
-                                                Signed in as
-                                            </p>
-
-                                            <h3 className="font-semibold text-slate-800">
-                                                {organization
-                                                    ? organization.name
-                                                    : user?.firstName}
-                                            </h3>
+                                {/* Bottom Auth & Footer Context Block */}
+                                <div className="space-y-4 pt-4 border-t border-slate-100 ">
+                                    {user ? (
+                                        <div className="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-100 p-3.5">
+                                            <div className="min-w-0 pr-2">
+                                                <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                                                    User Profile
+                                                </p>
+                                                <h3 className="font-semibold text-sm text-slate-800 mt-0.5 truncate">
+                                                    {user?.fullName || user?.firstName || "Logged In User"}
+                                                </h3>
+                                            </div>
+                                            <UserButton />
                                         </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-2.5">
+                                            <Link href="/sign-in" onClick={() => setIsOpen(false)}>
+                                                <Button variant="outline" className="w-full rounded-xl h-11 border-slate-200 text-slate-700 font-medium">
+                                                    Sign In
+                                                </Button>
+                                            </Link>
+                                            <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                                                <Button className="w-full rounded-xl h-11 bg-slate-900 hover:bg-slate-800 text-white font-medium shadow-xs">
+                                                    Create Account
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    )}
 
-                                        <UserButton />
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col gap-3">
-                                        <Link
-                                            href="/sign-in"
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            <Button
-                                                variant="outline"
-                                                className="w-full rounded-xl h-11"
-                                            >
-                                                Sign In
-                                            </Button>
-                                        </Link>
-
-                                        <Link
-                                            href="/sign-up"
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            <Button className="w-full rounded-xl h-11 bg-slate-900 hover:bg-slate-800">
-                                                Create Account
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                )}
-
-                                {/* Footer */}
-                                <div className="absolute bottom-6 left-6 right-6">
-                                    <div className="rounded-2xl bg-linear-to-r from-amber-500 to-orange-500 p-px">
-                                        <div className="rounded-2xl bg-white px-4 py-3">
-                                            <p className="text-sm font-medium text-slate-800">
+                                    {/* Context Banner */}
+                                    <div className="rounded-xl bg-linear-to-r from-amber-500 to-orange-500 p-px shadow-xs">
+                                        <div className="rounded-xl bg-white px-4 py-3">
+                                            <p className="text-xs font-semibold text-slate-800">
                                                 AI-powered documentation platform
                                             </p>
-
-                                            <p className="text-xs text-slate-500 mt-1">
+                                            <p className="text-[11px] text-slate-400 mt-0.5">
                                                 Build smarter workflows with Docinate AI
                                             </p>
                                         </div>

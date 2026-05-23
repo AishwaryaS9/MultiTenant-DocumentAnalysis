@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useOrganization, UserButton, useUser } from '@clerk/nextjs'
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -100,6 +100,12 @@ export default function Sidebar() {
                         <Button variant="ghost" size="icon"><Menu /></Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-0 w-72">
+                        <SheetHeader className="sr-only">
+                            <SheetTitle>Mobile Sidebar Navigation</SheetTitle>
+                            <SheetDescription>
+                                Sidebar navigation links and workspace controls
+                            </SheetDescription>
+                        </SheetHeader>
                         <NavContent />
                     </SheetContent>
                 </Sheet>

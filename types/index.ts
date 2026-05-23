@@ -118,3 +118,21 @@ export interface SearchPageProps {
         query?: string;
     }>;
 }
+
+
+//Workspace
+export interface DesktopWorkspaceSwitcherProps {
+    organization: any;
+    user: any;
+    memberships: any[];
+    setActive?: (params: { organization: string }) => Promise<void>;
+    onSwitch?: () => void;
+}
+
+export interface MobileWorkspaceSwitcherProps {
+    organization: any;
+    user: any;
+    memberships: any[];
+    setActive?: (params: { organization: string }) => Promise<void>;
+    onSwitch?: () => void;
+}
