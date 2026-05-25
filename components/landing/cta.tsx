@@ -1,21 +1,17 @@
 'use client';
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useUser, useOrganization } from "@clerk/nextjs";
+import { useUser, useOrganization, useClerk } from "@clerk/nextjs";
 import { motion, Variants } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function CTASection() {
   const { user, isLoaded: isUserLoaded } = useUser();
   const { organization, isLoaded: isOrgLoaded } = useOrganization();
+  const { openSignUp } = useClerk();
+  const router = useRouter();
 
   const isLoaded = isUserLoaded && isOrgLoaded;
-
-  const href = user
-    ? organization
-      ? `/${organization.slug}`
-      : "/dashboard"
-    : "/sign-up";
 
   const containerVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
@@ -29,6 +25,18 @@ export default function CTASection() {
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
+  };
+
+  const handleCTAAction = () => {
+    if (user) {
+      router.push(
+        organization
+          ? `/${organization.slug}`
+          : "/dashboard"
+      );
+    } else {
+      openSignUp();
+    }
   };
 
   return (
@@ -72,20 +80,21 @@ export default function CTASection() {
           {!isLoaded ? (
             <div className="h-14 w-48 animate-pulse bg-white/10 rounded-full" />
           ) : (
-            <Link href={href} className="group">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Button
+                size="lg"
+                onClick={handleCTAAction}
+                className="h-14 px-10 rounded-full bg-white text-black hover:bg-white/90 text-lg font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
               >
-                <Button
-                  size="lg"
-                  className="h-14 px-10 rounded-full bg-white text-black hover:bg-white/90 text-lg font-bold transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                >
-                  {user ? "Go to Dashboard" : "Get Started Free"}
-                  <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </motion.div>
-            </Link>
+                {user ? "Go to Dashboard" : "Get Started Free"}
+                <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </motion.div>
+
           )}
 
           {isLoaded && !user && (

@@ -1,5 +1,5 @@
 "use client";
-import { useOrganization, useUser } from "@clerk/nextjs";
+import { useClerk, useOrganization, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { LogIn, Sparkles } from "lucide-react";
@@ -8,6 +8,7 @@ import { motion, Variants } from "framer-motion";
 const Hero = () => {
     const { user, isLoaded } = useUser();
     const { organization, isLoaded: isOrgLoaded } = useOrganization();
+    const { openSignIn, openSignUp } = useClerk();
 
     if (!isLoaded || !isOrgLoaded) return null;
 
@@ -81,25 +82,25 @@ const Hero = () => {
                 >
                     {!user ? (
                         <>
-                            <Link href="/sign-up">
-                                <Button
-                                    size="lg"
-                                    className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black shadow-2xl shadow-orange-200/50 transition-all hover:scale-105 active:scale-95"
-                                >
-                                    Start Free Trial
-                                </Button>
-                            </Link>
+                            {/* <Link href="/sign-up"> */}
+                            <Button onClick={() => openSignUp()}
+                                size="lg"
+                                className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black shadow-2xl shadow-orange-200/50 transition-all hover:scale-105 active:scale-95"
+                            >
+                                Start Free Trial
+                            </Button>
+                            {/* </Link> */}
 
-                            <Link href="/sign-in">
-                                <Button
-                                    variant="ghost"
-                                    size="lg"
-                                    className="rounded-full px-10 py-7 text-lg flex gap-2"
-                                >
-                                    <LogIn className="w-5 h-5" />
-                                    Sign In
-                                </Button>
-                            </Link>
+                            {/* <Link href="/sign-in"> */}
+                            <Button onClick={() => openSignIn()}
+                                variant="ghost"
+                                size="lg"
+                                className="rounded-full px-10 py-7 text-lg flex gap-2"
+                            >
+                                <LogIn className="w-5 h-5" />
+                                Sign In
+                            </Button>
+                            {/* </Link> */}
                         </>
                     ) : (
                         <Link href={href}>

@@ -7,7 +7,8 @@ import {
     useOrganization,
     UserButton,
     useUser,
-    useOrganizationList
+    useOrganizationList,
+    useClerk
 } from '@clerk/nextjs'
 import { useEffect, useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "../ui/sheet";
@@ -18,6 +19,7 @@ export default function Header() {
     const pathname = usePathname();
     const { user } = useUser();
     const { organization } = useOrganization();
+    const { openSignIn, openSignUp } = useClerk();
 
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -28,6 +30,13 @@ export default function Header() {
             infinite: true,
         },
     });
+
+    const orgSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
+
+    const dashboardUrl = orgSlug ? `/${orgSlug}` : "/select-org";
+
+
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -150,24 +159,24 @@ export default function Header() {
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
-                            <Link href="/sign-in" className="hidden sm:block">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="rounded-full cursor-pointer font-medium text-slate-600 hover:text-slate-900"
-                                >
-                                    Sign In
-                                </Button>
-                            </Link>
+                            {/* <Link href="/sign-in" className="hidden sm:block"> */}
+                            <Button onClick={() => openSignIn({ forceRedirectUrl: dashboardUrl })}
+                                variant="ghost"
+                                size="sm"
+                                className="rounded-full cursor-pointer font-medium text-slate-600 hover:text-slate-900"
+                            >
+                                Sign In
+                            </Button>
+                            {/* </Link> */}
 
-                            <Link href="/sign-up">
-                                <Button
-                                    size="sm"
-                                    className='rounded-full bg-slate-900 text-white hover:bg-slate-800 px-5 font-medium shadow-xs transition cursor-pointer'
-                                >
-                                    Create Account
-                                </Button>
-                            </Link>
+                            {/* <Link href="/sign-up"> */}
+                            <Button onClick={() => openSignUp({ forceRedirectUrl: dashboardUrl })}
+                                size="sm"
+                                className='rounded-full bg-slate-900 text-white hover:bg-slate-800 px-5 font-medium shadow-xs transition cursor-pointer'
+                            >
+                                Create Account
+                            </Button>
+                            {/* </Link> */}
                         </div>
                     )}
 
@@ -266,16 +275,18 @@ export default function Header() {
                                         </div>
                                     ) : (
                                         <div className="flex flex-col gap-2.5">
-                                            <Link href="/sign-in" onClick={() => setIsOpen(false)}>
-                                                <Button variant="outline" className="w-full rounded-xl h-11 border-slate-200 text-slate-700 font-medium">
-                                                    Sign In
-                                                </Button>
-                                            </Link>
-                                            <Link href="/sign-up" onClick={() => setIsOpen(false)}>
-                                                <Button className="w-full rounded-xl h-11 bg-slate-900 hover:bg-slate-800 text-white font-medium shadow-xs">
-                                                    Create Account
-                                                </Button>
-                                            </Link>
+                                            {/* <Link href="/sign-in" onClick={() => setIsOpen(false)}> */}
+                                            <Button onClick={() => openSignIn()}
+                                                variant="outline" className="w-full rounded-xl h-11 border-slate-200 text-slate-700 font-medium">
+                                                Sign In
+                                            </Button>
+                                            {/* </Link> */}
+                                            {/* <Link href="/sign-up" onClick={() => setIsOpen(false)}> */}
+                                            <Button onClick={() => openSignUp()}
+                                                className="w-full rounded-xl h-11 bg-slate-900 hover:bg-slate-800 text-white font-medium shadow-xs">
+                                                Create Account
+                                            </Button>
+                                            {/* </Link> */}
                                         </div>
                                     )}
 
