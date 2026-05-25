@@ -218,3 +218,17 @@
     background: var(--color-slate-300, rgba(0, 0, 0, 0.2));
   }
 }
+
+.cl-userButtonPopoverCard {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+.cl-userButtonPopoverActions {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+.cl-userButtonPopoverCard * {
+  pointer-events: auto !important;
+}
