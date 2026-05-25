@@ -57,7 +57,7 @@ export function MobileWorkspaceSwitcher({ organization, user, memberships, setAc
             </button>
 
             {open && (
-                <div className="mt-1 border-t border-slate-100 pt-1 px-1 pb-1 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="relative z-0 mt-1 border-t border-slate-100 pt-1 px-1 pb-1 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-200">
                     {memberships?.map((membership) => {
                         const org = membership.organization;
                         const isActive = organization?.id === org.id;
