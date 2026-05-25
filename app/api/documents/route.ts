@@ -1,5 +1,6 @@
 export const runtime = "nodejs";
 import { uploadToBlob } from "@/lib/blob";
+import { analyzeWithGemini } from "@/lib/gemini";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -59,6 +60,20 @@ export async function POST(request: Request) {
                 extractedContent = await file.text();
             }
         }
+
+        let aiSummary = null;
+        let aiKeywords: string[] = [];
+
+        if (extractedContent) {
+            const aiResult = await analyzeWithGemini(
+                extractedContent,
+                "summary"
+            );
+
+            aiSummary = aiResult.analysis;
+            aiKeywords = aiResult.keywords;
+        }
+
         const document = await prisma.document.create({
             data: {
                 name, content: extractedContent || null,
@@ -67,7 +82,8 @@ export async function POST(request: Request) {
                 fileType: fileType || "unknown",
                 organizationId: organization.id,
                 userId: user.id,
-                aiKeywords: [],
+                aiSummary,
+                aiKeywords,
             },
             include: {
                 user: {
