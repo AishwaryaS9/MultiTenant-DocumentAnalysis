@@ -38,22 +38,23 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Document has no content to analyze" }, { status: 400 });
         }
         //Analysis using gemini ai
-        const summary = await analyzeWithGemini(content, analysisType);
+        const result = await analyzeWithGemini(content, analysisType);
         //Save result ot DB
         const updateDocument = await prisma.document.update({
             where: {
                 id: documentId,
             },
             data: {
-                aiSummary: summary,
-                aiKeywords: ["analyzed"],
+                aiSummary: result.analysis,
+                aiKeywords: result.keywords,
                 sentiment: analysisType,
             }
         })
         // return response
         return NextResponse.json({
             success: true,
-            summary,
+            summary: result.analysis,
+            keywords: result.keywords,
             document: {
                 id: updateDocument.id,
                 name: updateDocument.name,

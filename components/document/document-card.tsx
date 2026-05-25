@@ -18,7 +18,7 @@ export default function DocumentCard({
     onToggleSummary,
     expandedSummaries,
 }: DocumentCardProps) {
-    const isExpanded = expandedSummaries.has(doc.id);
+    const isExpanded = expandedSummaries[doc.id];
 
     const getAnalysisIcon = (type: AnalysisType) => {
         const analysisType = analysisTypes.find((t) => t.value === type);

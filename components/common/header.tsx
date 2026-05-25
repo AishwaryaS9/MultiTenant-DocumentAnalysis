@@ -124,8 +124,8 @@ export default function Header() {
                                     rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out 
                                     focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/20 active:scale-95
                                     ${isActive
-                                        ? "bg-amber-50 text-amber-700 shadow-xs shadow-amber-100/50 font-semibold"
-                                        : "text-slate-600 hover:text-amber-600 hover:bg-slate-50/80"
+                                        ? "text-amber-700 font-semibold"
+                                        : "text-slate-600 hover:text-amber-600"
                                     }
                                 `}
                             >
@@ -225,8 +225,8 @@ export default function Header() {
                                                     onClick={() => setIsOpen(false)}
                                                     className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
                                                         ${isActive
-                                                            ? "bg-amber-50 text-amber-700 font-semibold"
-                                                            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                                            ? "text-amber-700 font-semibold"
+                                                            : "text-slate-600 hover:text-amber-600"
                                                         }`}
                                                 >
                                                     <span className="text-sm font-medium">

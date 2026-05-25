@@ -32,7 +32,8 @@ export interface DocumentCardProps {
     onAnalyze: (documentId: string) => void;
     onDelete: (documentId: string) => void;
     onToggleSummary: (documentId: string) => void;
-    expandedSummaries: Set<string>;
+    // expandedSummaries: Set<string>;
+    expandedSummaries: Record<string, boolean>;
 }
 
 export interface DocumentUploadDialogProps {
@@ -64,7 +65,8 @@ export interface DocumentsListProps {
     documents: Document[];
     isAnalyzing: string | null;
     selectedAnalysisType: AnalysisType;
-    expandedSummaries: Set<string>;
+    // expandedSummaries: Set<string>;
+    expandedSummaries: Record<string, boolean>;
     onAnalyze: (id: string) => void;
     onDelete: (id: string) => void;
     onToggleSummary: (id: string) => void;

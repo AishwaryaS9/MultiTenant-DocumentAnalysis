@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useOrganization } from "@clerk/nextjs";
 import { AnalysisType, Document } from "@/types";
@@ -17,9 +16,9 @@ export function useDocuments() {
         useState<AnalysisType>("summary");
 
     const [expandedSummaries, setExpandedSummaries] =
-        useState<Set<string>>(new Set());
+        useState<Record<string, boolean>>({});
 
-    const fetchDocuments = async () => {
+    const fetchDocuments = useCallback(async () => {
         if (!organization) return;
 
         setIsLoading(true);
@@ -39,31 +38,35 @@ export function useDocuments() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchDocuments();
     }, [organization]);
 
-    const handleAnalyze = async (documentId: string) => {
-        if (!organization) return;
+    const handleAnalyze = useCallback(
+        async (documentId: string) => {
+            if (!organization) return;
 
-        setIsAnalyzing(documentId);
+            setIsAnalyzing(documentId);
 
-        try {
-            const response = await fetch("/api/analyze", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    documentId,
-                    organizationId: organization.id,
-                    analysisType: selectedAnalysisType,
-                }),
-            });
+            try {
+                const response = await fetch("/api/analyze", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        documentId,
+                        organizationId: organization.id,
+                        analysisType: selectedAnalysisType,
+                    }),
+                });
 
-            if (response.ok) {
+                if (!response.ok) {
+                    throw new Error("Analysis failed");
+                }
+
                 const analysisTypeLabel = analysisTypes.find(
                     (type) => type.value === selectedAnalysisType
                 )?.label;
@@ -72,21 +75,39 @@ export function useDocuments() {
                     `${analysisTypeLabel || "Document"} analysis completed`
                 );
 
-                fetchDocuments();
+                await fetchDocuments();
 
-                setExpandedSummaries(
-                    (prev) => new Set(prev).add(documentId)
-                );
+                // Expand analyzed summary
+                setExpandedSummaries((prev) => ({
+                    ...prev,
+                    [documentId]: true,
+                }));
+            } catch (error) {
+                console.error(error);
+
+                toast.error("Analysis failed");
+            } finally {
+                setIsAnalyzing(null);
             }
-        } catch (error) {
-            console.error(error);
-            toast.error("Analysis failed");
-        } finally {
-            setIsAnalyzing(null);
-        }
-    };
+        },
+        [
+            organization,
+            selectedAnalysisType,
+            fetchDocuments,
+        ]
+    );
 
-    const handleDelete = async (documentId: string) => {
+    const toggleSummary = useCallback(
+        (documentId: string) => {
+            setExpandedSummaries((prev) => ({
+                ...prev,
+                [documentId]: !prev[documentId],
+            }));
+        },
+        []
+    );
+
+    const handleDelete = useCallback(async (documentId: string) => {
         try {
             const response = await fetch(
                 `/api/documents/${documentId}`,
@@ -103,19 +124,7 @@ export function useDocuments() {
             console.error(error);
             toast.error("Delete failed");
         }
-    };
-
-    const toggleSummary = (documentId: string) => {
-        const updated = new Set(expandedSummaries);
-
-        if (updated.has(documentId)) {
-            updated.delete(documentId);
-        } else {
-            updated.add(documentId);
-        }
-
-        setExpandedSummaries(updated);
-    };
+    }, []);
 
     return {
         organization,

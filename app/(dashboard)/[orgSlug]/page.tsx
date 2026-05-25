@@ -3,6 +3,7 @@ import DashboardHeader from "@/components/dashboard/dashboard-header";
 import EmptyDashboard from "@/components/dashboard/empty-dashboard";
 import RecentDocuments from "@/components/dashboard/recent-documents";
 import StatCard from "@/components/dashboard/stat-card";
+import AmbientBackground from "@/components/document/ambient-background";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
@@ -79,6 +80,7 @@ export default async function OrgDashboardPage({
 
     return (
         <div className="min-h-screen bg-slate-50/50">
+            <AmbientBackground />
             <div className="space-y-8 max-w-7xl mx-auto px-6 py-10">
                 {/* Header Section */}
                 <DashboardHeader

@@ -23,11 +23,9 @@ export default function DocumentsPage() {
     } = useDocuments();
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-[#fafafa]">
+        <div className="relative min-h-screen overflow-hidden bg-slate-50/50">
             <AmbientBackground />
-
             <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
-
                 <DocumentHeader
                     organizationName={organization?.name}
                     onUploadSuccess={fetchDocuments}

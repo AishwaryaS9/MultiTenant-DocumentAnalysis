@@ -13,10 +13,8 @@ export default function DocumentHeader({ organizationName, onUploadSuccess }: Do
 
                     <p className="mt-3 flex items-center gap-2 text-slate-500 font-medium">
                         <Building className="w-4 h-4" />
-
                         Managing assets for
-
-                        <span className="text-slate-900">
+                        <span className="text-amber-600 font-semibold">
                             {organizationName}
                         </span>
                     </p>
