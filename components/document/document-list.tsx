@@ -4,6 +4,7 @@ import DocumentCard from "@/components/document/document-card";
 export default function DocumentList({
     documents,
     isAnalyzing,
+    isDeleting,
     selectedAnalysisTypes,
     expandedSummaries,
     onAnalyze,
@@ -18,6 +19,7 @@ export default function DocumentList({
                     key={doc.id}
                     document={doc}
                     isAnalyzing={isAnalyzing === doc.id}
+                    isDeleting={isDeleting === doc.id}
                     selectedAnalysisType={
                         selectedAnalysisTypes[doc.id] || "summary"
                     }

@@ -13,6 +13,7 @@ export default function DocumentsPage() {
         documents,
         isLoading,
         isAnalyzing,
+        isDeleting,
         selectedAnalysisTypes,
         expandedSummaries,
         setDocumentAnalysisType,
@@ -46,6 +47,7 @@ export default function DocumentsPage() {
                     <DocumentList
                         documents={documents}
                         isAnalyzing={isAnalyzing}
+                        isDeleting={isDeleting}
                         selectedAnalysisTypes={selectedAnalysisTypes}
                         expandedSummaries={expandedSummaries}
                         onAnalyze={handleAnalyze}

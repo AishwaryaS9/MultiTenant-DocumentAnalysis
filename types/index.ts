@@ -27,12 +27,14 @@ export interface Document {
 export interface DocumentCardProps {
     document: Document;
     isAnalyzing: boolean;
+    isDeleting?: boolean;
     selectedAnalysisType: AnalysisType;
     onAnalysisTypeChange: (
         value: AnalysisType
     ) => void;
     onAnalyze: (documentId: string) => void;
-    onDelete: (documentId: string) => void;
+    // onDelete: (documentId: string) => void;
+    onDelete: (documentId: string) => Promise<void>;
     onToggleSummary: (documentId: string) => void;
     expandedSummaries: Record<string, boolean>;
 }
@@ -65,9 +67,11 @@ export interface RecentDocumentsProps {
 export interface DocumentsListProps {
     documents: Document[];
     isAnalyzing: string | null;
+    isDeleting: string | null;
     expandedSummaries: Record<string, boolean>;
     onAnalyze: (id: string) => void;
-    onDelete: (id: string) => void;
+    // onDelete: (id: string) => void;
+    onDelete: (id: string) => Promise<void>;
     onToggleSummary: (id: string) => void;
     selectedAnalysisTypes: Record<string, AnalysisType>;
     onAnalysisTypeChange: (
@@ -83,6 +87,15 @@ export interface DocumentsStatsProps {
 export interface EmptyDocumentsProps {
     onUploadSuccess: () => void;
 }
+
+export interface DeleteDocumentModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onConfirm: () => void;
+    isDeleting?: boolean;
+    documentName?: string;
+}
+
 
 //Dashboard
 export interface DashboardHeaderProps {
