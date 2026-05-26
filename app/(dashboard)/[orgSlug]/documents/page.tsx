@@ -13,9 +13,9 @@ export default function DocumentsPage() {
         documents,
         isLoading,
         isAnalyzing,
-        selectedAnalysisType,
+        selectedAnalysisTypes,
         expandedSummaries,
-        setSelectedAnalysisType,
+        setDocumentAnalysisType,
         fetchDocuments,
         handleAnalyze,
         handleDelete,
@@ -25,6 +25,7 @@ export default function DocumentsPage() {
     return (
         <div className="relative min-h-screen overflow-hidden bg-slate-50/50">
             <AmbientBackground />
+
             <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
                 <DocumentHeader
                     organizationName={organization?.name}
@@ -45,13 +46,13 @@ export default function DocumentsPage() {
                     <DocumentList
                         documents={documents}
                         isAnalyzing={isAnalyzing}
-                        selectedAnalysisType={selectedAnalysisType}
+                        selectedAnalysisTypes={selectedAnalysisTypes}
                         expandedSummaries={expandedSummaries}
                         onAnalyze={handleAnalyze}
                         onDelete={handleDelete}
                         onToggleSummary={toggleSummary}
                         onAnalysisTypeChange={
-                            setSelectedAnalysisType
+                            setDocumentAnalysisType
                         }
                     />
                 )}
