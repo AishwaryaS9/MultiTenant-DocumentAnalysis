@@ -11,12 +11,8 @@ export function useDocuments() {
     const [documents, setDocuments] = useState<Document[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState<string | null>(null);
-
-    const [selectedAnalysisType, setSelectedAnalysisType] =
-        useState<AnalysisType>("summary");
-
-    const [expandedSummaries, setExpandedSummaries] =
-        useState<Record<string, boolean>>({});
+    const [selectedAnalysisTypes, setSelectedAnalysisTypes] = useState<Record<string, AnalysisType>>({});
+    const [expandedSummaries, setExpandedSummaries] = useState<Record<string, boolean>>({});
 
     const fetchDocuments = useCallback(async () => {
         if (!organization) return;
@@ -30,7 +26,20 @@ export function useDocuments() {
 
             if (response.ok) {
                 const data = await response.json();
+
                 setDocuments(data.documents);
+
+                setSelectedAnalysisTypes((prev) => {
+                    const updated = { ...prev };
+
+                    data.documents.forEach((doc: Document) => {
+                        if (!updated[doc.id]) {
+                            updated[doc.id] = "summary";
+                        }
+                    });
+
+                    return updated;
+                });
             }
         } catch (error) {
             console.error(error);
@@ -38,11 +47,22 @@ export function useDocuments() {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [organization]);
 
     useEffect(() => {
         fetchDocuments();
-    }, [organization]);
+    }, [fetchDocuments]);
+
+
+    const setDocumentAnalysisType = (
+        documentId: string,
+        type: AnalysisType
+    ) => {
+        setSelectedAnalysisTypes((prev) => ({
+            ...prev,
+            [documentId]: type,
+        }));
+    };
 
     const handleAnalyze = useCallback(
         async (documentId: string) => {
@@ -51,6 +71,9 @@ export function useDocuments() {
             setIsAnalyzing(documentId);
 
             try {
+                const analysisType =
+                    selectedAnalysisTypes[documentId] || "summary";
+
                 const response = await fetch("/api/analyze", {
                     method: "POST",
                     headers: {
@@ -59,7 +82,7 @@ export function useDocuments() {
                     body: JSON.stringify({
                         documentId,
                         organizationId: organization.id,
-                        analysisType: selectedAnalysisType,
+                        analysisType,
                     }),
                 });
 
@@ -68,7 +91,7 @@ export function useDocuments() {
                 }
 
                 const analysisTypeLabel = analysisTypes.find(
-                    (type) => type.value === selectedAnalysisType
+                    (type) => type.value === analysisType
                 )?.label;
 
                 toast.success(
@@ -77,14 +100,12 @@ export function useDocuments() {
 
                 await fetchDocuments();
 
-                // Expand analyzed summary
                 setExpandedSummaries((prev) => ({
                     ...prev,
                     [documentId]: true,
                 }));
             } catch (error) {
                 console.error(error);
-
                 toast.error("Analysis failed");
             } finally {
                 setIsAnalyzing(null);
@@ -92,7 +113,7 @@ export function useDocuments() {
         },
         [
             organization,
-            selectedAnalysisType,
+            selectedAnalysisTypes,
             fetchDocuments,
         ]
     );
@@ -107,35 +128,43 @@ export function useDocuments() {
         []
     );
 
-    const handleDelete = useCallback(async (documentId: string) => {
-        try {
-            const response = await fetch(
-                `/api/documents/${documentId}`,
-                {
-                    method: "DELETE",
-                }
-            );
+    const handleDelete = useCallback(
+        async (documentId: string) => {
+            try {
+                const response = await fetch(
+                    `/api/documents/${documentId}`,
+                    {
+                        method: "DELETE",
+                    }
+                );
 
-            if (response.ok) {
-                toast.success("Document deleted");
-                fetchDocuments();
+                if (response.ok) {
+                    toast.success("Document deleted");
+
+                    setSelectedAnalysisTypes((prev) => {
+                        const updated = { ...prev };
+                        delete updated[documentId];
+                        return updated;
+                    });
+
+                    fetchDocuments();
+                }
+            } catch (error) {
+                console.error(error);
+                toast.error("Delete failed");
             }
-        } catch (error) {
-            console.error(error);
-            toast.error("Delete failed");
-        }
-    }, []);
+        },
+        [fetchDocuments]
+    );
 
     return {
         organization,
         documents,
         isLoading,
         isAnalyzing,
-        selectedAnalysisType,
+        selectedAnalysisTypes,
         expandedSummaries,
-
-        setSelectedAnalysisType,
-
+        setDocumentAnalysisType,
         fetchDocuments,
         handleAnalyze,
         handleDelete,

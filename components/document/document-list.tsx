@@ -4,7 +4,7 @@ import DocumentCard from "@/components/document/document-card";
 export default function DocumentList({
     documents,
     isAnalyzing,
-    selectedAnalysisType,
+    selectedAnalysisTypes,
     expandedSummaries,
     onAnalyze,
     onDelete,
@@ -18,8 +18,12 @@ export default function DocumentList({
                     key={doc.id}
                     document={doc}
                     isAnalyzing={isAnalyzing === doc.id}
-                    selectedAnalysisType={selectedAnalysisType}
-                    onAnalysisTypeChange={onAnalysisTypeChange}
+                    selectedAnalysisType={
+                        selectedAnalysisTypes[doc.id] || "summary"
+                    }
+                    onAnalysisTypeChange={(value) =>
+                        onAnalysisTypeChange(doc.id, value)
+                    }
                     onAnalyze={onAnalyze}
                     onDelete={onDelete}
                     onToggleSummary={onToggleSummary}

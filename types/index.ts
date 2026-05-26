@@ -28,11 +28,12 @@ export interface DocumentCardProps {
     document: Document;
     isAnalyzing: boolean;
     selectedAnalysisType: AnalysisType;
-    onAnalysisTypeChange: (type: AnalysisType) => void;
+    onAnalysisTypeChange: (
+        value: AnalysisType
+    ) => void;
     onAnalyze: (documentId: string) => void;
     onDelete: (documentId: string) => void;
     onToggleSummary: (documentId: string) => void;
-    // expandedSummaries: Set<string>;
     expandedSummaries: Record<string, boolean>;
 }
 
@@ -64,13 +65,15 @@ export interface RecentDocumentsProps {
 export interface DocumentsListProps {
     documents: Document[];
     isAnalyzing: string | null;
-    selectedAnalysisType: AnalysisType;
-    // expandedSummaries: Set<string>;
     expandedSummaries: Record<string, boolean>;
     onAnalyze: (id: string) => void;
     onDelete: (id: string) => void;
     onToggleSummary: (id: string) => void;
-    onAnalysisTypeChange: (value: AnalysisType) => void;
+    selectedAnalysisTypes: Record<string, AnalysisType>;
+    onAnalysisTypeChange: (
+        documentId: string,
+        value: AnalysisType
+    ) => void;
 }
 
 export interface DocumentsStatsProps {
