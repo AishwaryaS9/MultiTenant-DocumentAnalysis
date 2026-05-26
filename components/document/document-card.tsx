@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { AnalysisType, DocumentCardProps } from "@/types";
 import {
     Brain,
@@ -11,12 +12,14 @@ import {
     Trash2,
     User,
     Maximize2,
-    Activity
+    Activity,
+    Tag
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import ReactMarkdown from "react-markdown";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import ReactMarkdown from "react-markdown";
+import DeleteDocumentModal from "@/components/document/delete-document-modal";
 import { analysisTypes, formatFileSize } from "@/app/data/data";
 import { jsPDF } from "jspdf";
 import { cn } from "@/lib/utils";
@@ -24,6 +27,7 @@ import { cn } from "@/lib/utils";
 export default function DocumentCard({
     document: doc,
     isAnalyzing,
+    isDeleting,
     selectedAnalysisType,
     onAnalysisTypeChange,
     onAnalyze,
@@ -32,6 +36,8 @@ export default function DocumentCard({
     expandedSummaries,
 }: DocumentCardProps) {
     const isExpanded = expandedSummaries[doc.id];
+
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const getAnalysisIcon = (type: AnalysisType) => {
         const analysisType = analysisTypes.find((t) => t.value === type);
@@ -229,22 +235,34 @@ export default function DocumentCard({
 
                             {/* Tags Architecture */}
                             {doc.aiKeywords.length > 0 && (
-                                <div className="mt-4 flex flex-wrap gap-1.5 pt-3.5 border-t border-slate-100">
+                                <div className="mt-4 pt-3.5 border-t border-slate-100">
+                                    {/* Heading */}
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Tag className="h-3 w-3 text-slate-500" />
 
-                                    {doc.aiKeywords.slice(0, 5).map((keyword, idx) => (
-                                        <Badge
-                                            key={idx}
-                                            variant="outline"
-                                            className="rounded-md border-slate-200/60 bg-slate-50/50 px-2 py-0.5 text-xs font-semibold text-slate-600"
-                                        >
-                                            {keyword}
-                                        </Badge>
-                                    ))}
-                                    {doc.aiKeywords.length > 5 && (
-                                        <span className="text-xs font-semibold text-slate-400 self-center ml-1">
-                                            +{doc.aiKeywords.length - 5} topics
+                                        <span className="text-[12px] font-semibold text-slate-700">
+                                            Key Topics
                                         </span>
-                                    )}
+                                    </div>
+
+                                    {/* Badges */}
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {doc.aiKeywords.slice(0, 5).map((keyword, idx) => (
+                                            <Badge
+                                                key={idx}
+                                                variant="outline"
+                                                className="rounded-md border-slate-200/60 bg-slate-50/50 px-2 py-0.5 text-xs font-semibold text-slate-600"
+                                            >
+                                                {keyword}
+                                            </Badge>
+                                        ))}
+
+                                        {doc.aiKeywords.length > 5 && (
+                                            <span className="text-xs font-semibold text-slate-400 self-center ml-1">
+                                                +{doc.aiKeywords.length - 5} topics
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -278,7 +296,7 @@ export default function DocumentCard({
                             variant="outline"
                             size="default"
                             onClick={() => window.open(doc.fileUrl, "_blank")}
-                            className="w-full justify-start h-9 px-4 rounded-xl border-slate-200/80 hover:bg-slate-50 text-slate-700 font-bold text-sm transition-all active:scale-[0.99]"
+                            className="w-full justify-center h-9 px-4 rounded-xl border-slate-200/80 hover:bg-slate-50 text-slate-700 font-semibold text-sm transition-all active:scale-[0.99]"
                         >
                             <Download className="h-4 w-4 mr-2.5 text-slate-400 shrink-0" />
                             <span>Download File</span>
@@ -290,7 +308,7 @@ export default function DocumentCard({
                             variant="outline"
                             size="default"
                             onClick={handleDownloadPDF}
-                            className="w-full justify-start h-9 px-4 rounded-xl border-orange-200/60 bg-orange-50/20 text-orange-700 hover:bg-orange-50 font-bold text-sm transition-all active:scale-[0.99]"
+                            className="w-full justify-center h-9 px-4 rounded-xl border-orange-200/60 bg-orange-50/20 text-orange-700 hover:bg-orange-50 font-semibold text-sm transition-all active:scale-[0.99]"
                         >
                             {/* <ArrowUpRight className="h-4 w-4 mr-2.5 text-orange-500 shrink-0" /> */}
                             <Sparkles className="h-4 w-4 mr-2.5 text-orange-500 shrink-0" />
@@ -312,7 +330,7 @@ export default function DocumentCard({
                             }
                         >
                             <SelectTrigger
-                                className="w-full rounded-lg h-9 px-4 border-slate-200/80 shadow-xs font-bold text-sm transition-all active:scale-[0.99]">
+                                className="w-full rounded-lg h-9 px-4 border-slate-200/80 shadow-xs font-semibold text-sm transition-all active:scale-[0.99]">
                                 {/* <SelectValue /> */}
                                 <SelectValue>
                                     <div className="flex items-center gap-2 truncate">
@@ -341,7 +359,7 @@ export default function DocumentCard({
                         onClick={() => onAnalyze(doc.id)}
                         disabled={isAnalyzing}
                         className={cn(
-                            "w-full h-9 px-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center cursor-pointer shadow-xs active:scale-[0.99]",
+                            "w-full h-9 px-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center cursor-pointer shadow-xs active:scale-[0.99]",
                             doc.aiSummary
                                 ? "bg-slate-900 text-white hover:bg-black"
                                 : "bg-orange-400 text-white hover:bg-orange-600"
@@ -363,15 +381,24 @@ export default function DocumentCard({
                     <Button
                         variant="ghost"
                         size="default"
-                        className="w-full justify-center h-9 px-4 rounded-xl text-rose-500 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 font-bold text-sm transition-colors"
-                        onClick={() => onDelete(doc.id)}
+                        className="w-full justify-center h-9 px-4 rounded-xl text-rose-500 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 font-semibold text-sm transition-colors"
+                        onClick={() => setDeleteModalOpen(true)}
                     >
                         <Trash2 className="w-4 h-4 mr-2.5 shrink-0" />
                         <span>Delete</span>
                     </Button>
                 </div>
-
             </div>
+            <DeleteDocumentModal
+                open={deleteModalOpen}
+                onOpenChange={setDeleteModalOpen}
+                documentName={doc.name}
+                isDeleting={isDeleting}
+                onConfirm={async () => {
+                    await onDelete(doc.id);
+                    setDeleteModalOpen(false);
+                }}
+            />
         </div>
     );
 }

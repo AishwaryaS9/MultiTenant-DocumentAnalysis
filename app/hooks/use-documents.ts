@@ -13,6 +13,7 @@ export function useDocuments() {
     const [isAnalyzing, setIsAnalyzing] = useState<string | null>(null);
     const [selectedAnalysisTypes, setSelectedAnalysisTypes] = useState<Record<string, AnalysisType>>({});
     const [expandedSummaries, setExpandedSummaries] = useState<Record<string, boolean>>({});
+    const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
     const fetchDocuments = useCallback(async () => {
         if (!organization) return;
@@ -131,6 +132,8 @@ export function useDocuments() {
     const handleDelete = useCallback(
         async (documentId: string) => {
             try {
+                setIsDeleting(documentId);
+
                 const response = await fetch(
                     `/api/documents/${documentId}`,
                     {
@@ -138,20 +141,24 @@ export function useDocuments() {
                     }
                 );
 
-                if (response.ok) {
-                    toast.success("Document deleted");
-
-                    setSelectedAnalysisTypes((prev) => {
-                        const updated = { ...prev };
-                        delete updated[documentId];
-                        return updated;
-                    });
-
-                    fetchDocuments();
+                if (!response.ok) {
+                    throw new Error("Delete failed");
                 }
+
+                toast.success("Document deleted");
+
+                setSelectedAnalysisTypes((prev) => {
+                    const updated = { ...prev };
+                    delete updated[documentId];
+                    return updated;
+                });
+
+                await fetchDocuments();
             } catch (error) {
                 console.error(error);
                 toast.error("Delete failed");
+            } finally {
+                setIsDeleting(null);
             }
         },
         [fetchDocuments]
@@ -169,5 +176,6 @@ export function useDocuments() {
         handleAnalyze,
         handleDelete,
         toggleSummary,
+        isDeleting,
     };
 }
