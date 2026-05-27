@@ -8,7 +8,7 @@ export default function DocumentStats({ documents }: DocumentsStatsProps) {
     const analyzedDocs = documents.filter((d) => d.aiSummary).length;
     const totalStorageBytes = documents.reduce((acc, doc) => acc + (doc.fileSize || 0), 0);
 
-    const MAX_DOCS_CAP = 100; 
+    const MAX_DOCS_CAP = 100;
     const MAX_STORAGE_CAP = 50 * 1024 * 1024;
 
     const totalDocsProgress = (totalDocs / MAX_DOCS_CAP) * 100;

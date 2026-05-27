@@ -23,6 +23,7 @@ import DeleteDocumentModal from "@/components/document/delete-document-modal";
 import { analysisTypes, formatFileSize } from "@/app/data/data";
 import { jsPDF } from "jspdf";
 import { cn } from "@/lib/utils";
+import { generateAnalysisPDF } from "@/lib/generate-analysis-pdf";
 
 export default function DocumentCard({
     document: doc,
@@ -45,86 +46,6 @@ export default function DocumentCard({
         return <Icon className="h-4 w-4" />;
     };
 
-    // --- PDF GENERATION PIPELINE ---
-    const handleDownloadPDF = () => {
-        const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const margin = 20;
-        const maxContentWidth = pageWidth - (margin * 2);
-        let currentY = 25;
-
-        pdf.setFillColor(249, 115, 22);
-        pdf.rect(0, 0, pageWidth, 4, "F");
-
-        pdf.setFont("Helvetica", "bold");
-        pdf.setFontSize(20);
-        pdf.setTextColor(26, 26, 26);
-        const titleLines = pdf.splitTextToSize(`AI Analysis Report: ${doc.name}`, maxContentWidth);
-        pdf.text(titleLines, margin, currentY);
-        currentY += (titleLines.length * 7) + 4;
-
-        pdf.setFont("Helvetica", "normal");
-        pdf.setFontSize(10);
-        pdf.setTextColor(100, 116, 139);
-        pdf.text(`Analyzed By: Gemini AI`, margin, currentY);
-        pdf.text(`Date: ${new Date(doc.createdAt).toLocaleDateString()}`, pageWidth - margin - 40, currentY);
-        currentY += 6;
-
-        pdf.text(`Uploaded By: ${doc.user.name || doc.user.email}`, margin, currentY);
-        if (doc.sentiment) {
-            pdf.text(`Overall Sentiment: ${doc.sentiment.toUpperCase()}`, pageWidth - margin - 40, currentY);
-        }
-        currentY += 12;
-
-        pdf.setDrawColor(226, 232, 240);
-        pdf.line(margin, currentY, pageWidth - margin, currentY);
-        currentY += 12;
-
-        pdf.setFont("Helvetica", "bold");
-        pdf.setFontSize(14);
-        pdf.setTextColor(26, 26, 26);
-        pdf.text("Executive Insights Summary", margin, currentY);
-        currentY += 8;
-
-        pdf.setFont("Helvetica", "normal");
-        pdf.setFontSize(11);
-        pdf.setTextColor(51, 65, 85);
-
-        const cleanSummaryText = doc.aiSummary ? doc.aiSummary.replace(/[*#`_-]/g, "") : "No summary available.";
-        const summaryLines = pdf.splitTextToSize(cleanSummaryText, maxContentWidth);
-
-        summaryLines.forEach((line: string) => {
-            if (currentY > 275) { pdf.addPage(); currentY = 25; }
-            pdf.text(line, margin, currentY);
-            currentY += 6.5;
-        });
-
-        if (doc.aiKeywords && doc.aiKeywords.length > 0) {
-            currentY += 10;
-            if (currentY > 260) { pdf.addPage(); currentY = 25; }
-
-            pdf.setFont("Helvetica", "bold");
-            pdf.setFontSize(13);
-            pdf.setTextColor(26, 26, 26);
-            pdf.text("Key Topics Identified", margin, currentY);
-            currentY += 8;
-
-            pdf.setFont("Helvetica", "normal");
-            pdf.setFontSize(10);
-            pdf.setTextColor(71, 85, 105);
-
-            const keywordsString = doc.aiKeywords.join(", ");
-            const keywordsLines = pdf.splitTextToSize(keywordsString, maxContentWidth);
-
-            keywordsLines.forEach((line: string) => {
-                if (currentY > 275) { pdf.addPage(); currentY = 25; }
-                pdf.text(line, margin, currentY);
-                currentY += 6;
-            });
-        }
-
-        pdf.save(`AI_Analysis_${doc.name.replace(/\.[^/.]+$/, "")}.pdf`);
-    };
 
     return (
         <div className="group relative overflow-hidden rounded-[24px] border border-slate-200/80 bg-linear-to-b from-white to-slate-50/50
@@ -140,12 +61,13 @@ export default function DocumentCard({
 
                     {/* Document Header Line Info */}
                     <div className="flex items-start gap-4">
-                        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-orange-500 shadow-sm transition-all duration-500 ">
+                        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-slate-900 shadow-sm transition-all duration-500 ">
                             <FileText className="h-6 w-6" />
                             <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[10px] font-black border border-slate-100 text-slate-900 shadow-3xs">
                                 AI
                             </span>
                         </div>
+
 
                         <div className="min-w-0 flex-1 space-y-1.5">
                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
@@ -307,7 +229,16 @@ export default function DocumentCard({
                         <Button
                             variant="outline"
                             size="default"
-                            onClick={handleDownloadPDF}
+                            onClick={() =>
+                                generateAnalysisPDF({
+                                    name: doc.name,
+                                    createdAt: doc.createdAt,
+                                    aiSummary: doc.aiSummary,
+                                    aiKeywords: doc.aiKeywords,
+                                    sentiment: doc.sentiment,
+                                    user: doc.user,
+                                })
+                            }
                             className="w-full justify-center h-9 px-4 rounded-xl border-orange-200/60 bg-orange-50/20 text-orange-700 hover:bg-orange-50 font-semibold text-sm transition-all active:scale-[0.99]"
                         >
                             {/* <ArrowUpRight className="h-4 w-4 mr-2.5 text-orange-500 shrink-0" /> */}

@@ -60,8 +60,7 @@ const StatCard = ({
                         "relative flex h-14 w-14 items-center justify-center rounded-2xl",
                         "border border-white/80 bg-white/80 backdrop-blur-md",
                         "shadow-sm shadow-slate-200/40",
-                        "transition-all duration-200",
-                        "group-hover:scale-110"
+                        
                     )}>
                         <div className={cn("absolute inset-0 rounded-2xl opacity-20 blur-xl", gradient)} />
                         <div className="relative z-10">{icon}</div>

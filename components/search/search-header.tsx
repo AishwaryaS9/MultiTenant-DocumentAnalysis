@@ -1,47 +1,63 @@
-import { Search } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Search, Sparkles } from "lucide-react";
 import { SearchHeaderProps } from "@/types";
 
-export function SearchHeader({ query, resultsCount }: SearchHeaderProps) {
+export function SearchHeader({
+    query,
+    resultsCount,
+}: SearchHeaderProps) {
     return (
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-slate-100 shadow-sm text-xs font-semibold text-slate-700 backdrop-blur">
-                    <Search className="w-3.5 h-3.5" />
-                    Document Search
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            {/* Left Content */}
+            <div className="space-y-4">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-100 bg-amber-50/80 px-3.5 py-1.5 
+                text-xs font-semibold text-amber-700 shadow-sm backdrop-blur">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    AI Powered Search
                 </div>
 
+                {/* Heading */}
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A] leading-tight">
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                         Search Documents
                     </h1>
 
-                    <p className="text-slate-600 mt-3 text-base max-w-2xl leading-relaxed">
-                        Instantly find reports, contracts, invoices,
-                        and AI-generated insights across your workspace.
+                    <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+                        Instantly find reports, contracts,
+                        invoices, and AI-generated insights
+                        across your workspace.
                     </p>
                 </div>
             </div>
 
+            {/* Results Card */}
             {query && (
-                <Card className="bg-white/90 border border-slate-100 rounded-3xl shadow-sm backdrop-blur-sm">
-                    <CardContent className="px-6 py-5">
-                        <p className="text-xs uppercase tracking-[0.2em] text-slate-400 font-bold">
-                            Results
-                        </p>
+                <div className="inline-flex items-center gap-4 rounded-lg shadow-xs bg-white/80 px-5 py-4 "    >
+                    {/* Icon */}
+                    <div
+                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 border border-amber-100">
+                        <Search className="h-5 w-5 text-amber-600" />
+                    </div>
 
-                        <div className="mt-2 flex items-end gap-2">
-                            <span className="text-4xl font-black text-slate-900">
+                    {/* Content */}
+                    <div className="flex flex-col">
+                        <span className="text-xs font-medium text-slate-500">
+                            Search Results
+                        </span>
+
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-bold tracking-tight text-slate-900">
                                 {resultsCount}
                             </span>
 
-                            <span className="text-sm text-slate-500 pb-1">
+                            <span className="text-sm text-slate-500">
                                 document
-                                {resultsCount !== 1 ? "s" : ""}
+                                {resultsCount !== 1 ? "s" : ""}&nbsp;
+                                found
                             </span>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             )}
         </div>
     );

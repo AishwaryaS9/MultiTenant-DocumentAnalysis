@@ -31,7 +31,6 @@ export default async function OrgDashboardPage({
     const { orgSlug } = await params;
     // const { orgSlug } = params;
 
-
     if (!userId) redirect("/sign-in");
 
     const organization = await prisma.organization.findUnique({
@@ -57,6 +56,16 @@ export default async function OrgDashboardPage({
     });
 
     if (!membership) redirect("/select-org");
+
+    {/* Progress Calculations */ }
+    const MAX_DOCS_CAP = 100;
+    const MAX_MEMBERS_CAP = 25;
+
+    const docsProgress =
+        (organization._count.documents / MAX_DOCS_CAP) * 100;
+
+    const membersProgress =
+        (organization._count.members / MAX_MEMBERS_CAP) * 100;
 
     const analyzedDocs = await prisma.document.count({
         where: {
@@ -97,12 +106,16 @@ export default async function OrgDashboardPage({
                         value={organization._count.documents}
                         icon={<FileText className="text-blue-500" />}
                         description="Stored in vault"
+                        gradient="from-blue-400 via-blue-500 to-indigo-400"
+                        progress={docsProgress}
                     />
                     <StatCard
                         title="Active Seats"
                         value={organization._count.members}
                         icon={<Users className="text-indigo-500" />}
                         description="Team collaborators"
+                        gradient="from-violet-400 via-violet-500 to-purple-400"
+                        progress={membersProgress}
                     />
 
                     {/* Featured AI Card */}
