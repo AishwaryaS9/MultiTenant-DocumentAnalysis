@@ -102,7 +102,7 @@ export interface DeleteDocumentModalProps {
 export interface DashboardHeaderProps {
     orgName: string;
     role: string;
-    documentCount: number;
+    // documentCount: number;
     orgSlug: string;
 }
 

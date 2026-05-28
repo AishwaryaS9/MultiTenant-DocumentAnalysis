@@ -53,18 +53,23 @@ export default function DocumentHeader({
 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-3 self-start sm:self-center shrink-0">
-                    {/* Search Button */}
-                    <Button
-                        variant="outline"
-                        className="h-11 rounded-xl border-slate-200 bg-white/80 backdrop-blur-sm hover:bg-slate-50"
-                    >
-                        <Link href={`/${orgSlug}/search`}>
-                            <Search className="w-4 h-4 mr-2" />
-                            Search Documents
-                        </Link>
+                    <Link href={`/${orgSlug}/search`}>
+                        <Button
+                            variant="outline"
+                            className={cn(
+                                "h-11 rounded-xl border-slate-200 bg-white/80 px-4 cursor-pointer",
 
-                    </Button>
+                                "hover:bg-slate-50 hover:border-slate-100 hover:shadow-xs",
 
+                            )}
+                        >
+                            <Search className="mr-2 h-4 w-4 text-slate-500 transition-transform duration-200 group-hover:scale-105" />
+
+                            <span className="font-medium text-slate-700">
+                                Search Documents
+                            </span>
+                        </Button>
+                    </Link>
                     {/* Upload Button */}
                     <DocumentUploadDialog
                         onUploadSuccess={onUploadSuccess}
