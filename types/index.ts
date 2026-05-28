@@ -109,6 +109,7 @@ export interface DashboardHeaderProps {
 export interface EmptyDashboardProps {
     orgName: string;
     orgSlug: string;
+    role: string;
 }
 
 //Search
