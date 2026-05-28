@@ -108,7 +108,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
             <DialogTrigger asChild>
                 {trigger || (
                     <Button
-                        className="rounded-2xl bg-[#1A1A1A] hover:bg-black text-white shadow-sm shadow-black/10 h-11 px-5 " >
+                        className="rounded-2xl bg-[#1A1A1A] hover:bg-black text-white shadow-sm shadow-black/10 h-11 px-5 cursor-pointer" >
                         <Upload className="h-4 w-4 mr-2" />
                         Upload Document
                     </Button>

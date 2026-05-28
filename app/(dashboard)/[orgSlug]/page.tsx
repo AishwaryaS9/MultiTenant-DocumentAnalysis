@@ -88,7 +88,6 @@ export default async function OrgDashboardPage({
                 <DashboardHeader
                     orgName={organization.name}
                     role={membership.role}
-                    documentCount={organization._count.documents}
                     orgSlug={orgSlug}
                 />
 

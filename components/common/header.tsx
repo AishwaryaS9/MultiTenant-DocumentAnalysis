@@ -41,36 +41,56 @@ export default function Header() {
         if (pathname !== "/") return;
 
         const hashes = ["#testimonials", "#features", "#how-it-works", "#cta"];
-        const elements = hashes.map(hash => document.querySelector(hash)).filter(Boolean);
 
-        const observerOptions = {
-            root: null,
-            rootMargin: "-20% 0px -60% 0px",
-            threshold: 0
-        };
+        const elements = hashes
+            .map(hash => document.querySelector(hash))
+            .filter(Boolean);
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveHash(`#${entry.target.id}`);
+        let hasScrolled = false;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!hasScrolled && window.scrollY < 80) {
+                    setActiveHash("");
+                    return;
                 }
-            });
-        }, observerOptions);
 
-        elements.forEach(el => el && observer.observe(el));
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActiveHash(`#${entry.target.id}`);
+                    }
+                });
+            },
+            {
+                root: null,
+                rootMargin: "-20% 0px -60% 0px",
+                threshold: 0,
+            }
+        );
 
-        const checkTop = () => {
+        elements.forEach((el) => {
+            if (el) observer.observe(el);
+        });
+
+        const handleScroll = () => {
+            hasScrolled = true;
+
             if (window.scrollY < 100) {
                 setActiveHash("");
             }
         };
-        window.addEventListener("scroll", checkTop);
+
+        window.addEventListener("scroll", handleScroll);
 
         return () => {
-            elements.forEach(el => el && observer.unobserve(el));
-            window.removeEventListener("scroll", checkTop);
+            elements.forEach((el) => {
+                if (el) observer.unobserve(el);
+            });
+
+            window.removeEventListener("scroll", handleScroll);
         };
     }, [pathname]);
+
 
     const getNavItems = () => {
         return [
@@ -193,7 +213,7 @@ export default function Header() {
                                         Navigation links and workspace management
                                     </SheetDescription>
                                 </SheetHeader>
-                                
+
                                 <div className="space-y-6 overflow-y-auto max-h-[80vh] pr-1">
                                     {/* Brand Header */}
                                     <div className="flex items-center justify-between">

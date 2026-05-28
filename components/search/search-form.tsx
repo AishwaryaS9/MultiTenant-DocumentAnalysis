@@ -66,7 +66,7 @@ export function SearchForm({ query }: SearchFormProps) {
                         {/* Search Button */}
                         <Button
                             type="submit"
-                            className="h-12 rounded-xl bg-slate-900 px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800">
+                            className="h-12 rounded-xl bg-slate-900 px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800 cursor-pointer">
                             Search
                         </Button>
                     </div>
