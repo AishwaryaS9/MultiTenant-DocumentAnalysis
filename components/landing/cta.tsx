@@ -32,7 +32,7 @@ export default function CTASection() {
   };
 
   return (
-    <section id="cta" className="relative py-32 bg-[#0A0A0A] overflow-hidden">
+    <section id="cta" className="relative py-32 bg-hero overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 rounded-full pointer-events-none" />
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center mask-[radial-gradient(white,transparent_85%)] opacity-20 pointer-events-none" />

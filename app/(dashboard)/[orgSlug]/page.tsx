@@ -76,6 +76,7 @@ export default async function OrgDashboardPage({
             <EmptyDashboard
                 orgName={organization.name}
                 orgSlug={orgSlug}
+                role={membership.role}
             />
         );
     }
@@ -177,15 +178,18 @@ export default async function OrgDashboardPage({
                                     </div>
                                 </div>
 
-                                <InviteTeamModal>
-                                    <Button className="w-full h-11 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-semibold transition-all 
+                                {membership.role === "admin" && (
+                                    <InviteTeamModal>
+                                        <Button className="w-full h-11 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-semibold transition-all 
                                     duration-200 shadow-sm hover:shadow-md cursor-pointer">
-                                        <span className="flex items-center gap-2">
-                                            Invite Team Members
-                                            <Users className="w-4 h-4" />
-                                        </span>
-                                    </Button>
-                                </InviteTeamModal>
+                                            <span className="flex items-center gap-2">
+                                                Invite Team Members
+                                                <Users className="w-4 h-4" />
+                                            </span>
+                                        </Button>
+                                    </InviteTeamModal>
+                                )}
+
                             </CardContent>
                         </Card>
                     </div>

@@ -35,13 +35,16 @@ export default function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-3">
-                <InviteTeamModal>
-                    <Button
-                        variant="ghost"
-                        className="rounded-xl font-semibold text-slate-600 cursor-pointer">
-                        Invite Team
-                    </Button>
-                </InviteTeamModal>
+                {role === "admin" && (
+                    <InviteTeamModal>
+                        <Button
+                            variant="ghost"
+                            className="rounded-xl font-semibold text-slate-600 cursor-pointer">
+                            Invite Team
+                        </Button>
+                    </InviteTeamModal>
+                )}
+
 
                 <Link href={`/${orgSlug}/documents`}>
                     <Button className="rounded-xl bg-slate-900 hover:bg-slate-800 px-8 py-6 flex gap-2 font-bold text-md cursor-pointer">

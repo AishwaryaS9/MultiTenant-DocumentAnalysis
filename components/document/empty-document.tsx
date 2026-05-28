@@ -9,7 +9,7 @@ export default function EmptyDocuments({ onUploadSuccess }: EmptyDocumentsProps)
                 <FilePlus className="w-10 h-10 text-orange-500" />
             </div>
 
-            <h3 className="mt-6 text-2xl font-semibold text-[#1A1A1A]">
+            <h3 className="mt-6 text-2xl font-semibold text-strong">
                 Your vault is empty
             </h3>
 

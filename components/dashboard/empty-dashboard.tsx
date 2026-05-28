@@ -14,6 +14,7 @@ import InviteTeamModal from "./invite-team-modal";
 export default async function EmptyDashboard({
     orgName,
     orgSlug,
+    role
 }: EmptyDashboardProps) {
     return (
         <div className="min-h-screen overflow-hidden bg-linear-to-br from-slate-50 via-white to-amber-50/40 flex items-center justify-center px-4 py-4">
@@ -51,20 +52,23 @@ export default async function EmptyDashboard({
                             {/* CTA */}
                             <div className="mt-7 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                 <Link href={`/${orgSlug}/documents`}>
-                                    <Button className="group h-11 rounded-2xl px-6 text-sm font-semibold bg-slate-900 hover:bg-black shadow-lg shadow-slate-900/10 transition-all">
+                                    <Button className="group h-11 rounded-2xl px-6 text-sm font-semibold bg-slate-900 hover:bg-black shadow-lg shadow-slate-900/10 transition-all cursor-pointer">
                                         <Upload className="mr-2 h-4 w-4" />
                                         Upload First Document
                                     </Button>
                                 </Link>
 
-                                <InviteTeamModal>
-                                    <Button
-                                        variant="outline"
-                                        className="h-11 rounded-2xl px-6 text-sm font-semibold border-slate-300 bg-white/70 hover:bg-slate-50"
-                                    >
-                                        Invite Team
-                                    </Button>
-                                </InviteTeamModal>
+                                {role === "admin" && (
+                                    <InviteTeamModal>
+                                        <Button
+                                            variant="outline"
+                                            className="h-11 rounded-2xl px-6 text-sm font-semibold border-slate-300 bg-white/70 hover:bg-slate-50"
+                                        >
+                                            Invite Team
+                                        </Button>
+                                    </InviteTeamModal>
+                                )}
+
                             </div>
                         </div>
 

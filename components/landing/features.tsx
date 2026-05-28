@@ -22,7 +22,7 @@ export default function Features() {
     }
 
     return (
-        <section id="features" className="py-20 bg-[#F9F9F9]">
+        <section id="features" className="py-20 bg-surface">
             <div className="container max-w-7xl mx-auto px-4">
 
                 {/* Header Section from image_bd5799.jpg */}
@@ -30,9 +30,9 @@ export default function Features() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
-                        className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#FFF0ED] mb-4"
+                        className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-feature-pill mb-4"
                     >
-                        <span className="text-[12px] font-bold tracking-widest text-[#FF8A71] uppercase">
+                        <span className="text-[12px] font-bold tracking-widest text-feature-accent uppercase">
                             ✦ Feature
                         </span>
                     </motion.div>
@@ -56,7 +56,7 @@ export default function Features() {
                             <motion.article
                                 key={index}
                                 variants={itemVariants}
-                                className={`group relative overflow-hidden rounded-[2rem] bg-[#F2F2F2] p-8 md:p-10 flex flex-col justify-between min-h-112.5
+                                className={`group relative overflow-hidden rounded-[2rem] bg-feature-card p-8 md:p-10 flex flex-col justify-between min-h-112.5
                                     ${isLarge ? 'md:col-span-2' : 'md:col-span-1'}`}
                             >
                                 <div className="relative z-10">

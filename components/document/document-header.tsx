@@ -20,7 +20,7 @@ export default function DocumentHeader({
             )}
         >
             {/* Mesh Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#f8fafc_1px,transparent_1px),linear-gradient(to_bottom,#f8fafc_1px,transparent_1px)] bg-size-[24px_24px] opacity-40" />
+            <div className="absolute inset-0 bg-grid-pattern opacity-40" />
 
             {/* Ambient Light */}
             <div className="absolute -top-20 right-1/3 h-40 w-40 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700" />

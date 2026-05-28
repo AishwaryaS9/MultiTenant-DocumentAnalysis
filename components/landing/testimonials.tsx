@@ -2,7 +2,7 @@ import { testimonials } from '@/app/data/data'
 
 const Testimonials = () => {
     return (
-        <section id='testimonials' className="py-20 overflow-hidden bg-[#F9F9F9]">
+        <section id='testimonials' className="py-20 overflow-hidden bg-surface">
             <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                     Trusted by industry leaders
@@ -14,8 +14,8 @@ const Testimonials = () => {
 
             <div className="relative flex flex-col gap-8">
                 {/* Gradient Overlays for the "Fade" effect */}
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-linear-to-r from-[#fcfbf7] to-transparent z-10" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-linear-to-l from-[#fcfbf7] to-transparent z-10" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-testimonial-fade-right z-10" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-testimonial-fade-left z-10" />
 
                 {/* Row 1 */}
                 <div className="flex whitespace-nowrap animate-marquee hover:paused cursor-pointer">
