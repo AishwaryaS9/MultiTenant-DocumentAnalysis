@@ -1,16 +1,15 @@
 import AIProgressCard from "@/components/dashboard/ai-progress-card";
 import DashboardHeader from "@/components/dashboard/dashboard-header";
 import EmptyDashboard from "@/components/dashboard/empty-dashboard";
+import InviteTeamModal from "@/components/dashboard/invite-team-modal";
 import RecentDocuments from "@/components/dashboard/recent-documents";
 import StatCard from "@/components/dashboard/stat-card";
 import AmbientBackground from "@/components/document/ambient-background";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
-// import { syncUserToDatabase } from "@/lib/sync-user";
 import { auth } from "@clerk/nextjs/server";
 import { FileText, Users, Zap } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -19,17 +18,11 @@ interface OrgDashboardPageProps {
     params: Promise<{ orgSlug: string }>;
 }
 
-// interface OrgDashboardPageProps {
-//     params: { orgSlug: string };
-// }
-
 export default async function OrgDashboardPage({
     params,
 }: OrgDashboardPageProps) {
-    // await syncUserToDatabase();
     const { userId } = await auth();
     const { orgSlug } = await params;
-    // const { orgSlug } = params;
 
     if (!userId) redirect("/sign-in");
 
@@ -132,28 +125,68 @@ export default async function OrgDashboardPage({
                     />
 
                     <div className="space-y-6">
-                        <Card className="border-none bg-linear-to-br from-amber-50 to-orange-50 shadow-sm border border-amber-100/50 rounded-3xl p-4">
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-sm font-black text-amber-900 flex items-center gap-2 uppercase tracking-widest">
-                                    <div className="p-1.5 bg-amber-200/50 rounded-lg">
-                                        <Zap className="w-4 h-4 text-amber-600" />
+                        <Card className="relative overflow-hidden rounded-3xl border border-amber-50 bg-white shadow-sm hover:shadow-md transition-all duration-300">
+                            <CardHeader className="pb-3 flex flex-row items-start justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 rounded-2xl bg-amber-100">
+                                        <Zap className="w-5 h-5 text-amber-600" />
                                     </div>
-                                    Search Documents
-                                </CardTitle>
+
+                                    <div>
+                                        <CardTitle className="text-base font-bold text-slate-900">
+                                            AI Insight
+                                        </CardTitle>
+
+                                        <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider font-medium">
+                                            Productivity Boost
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="px-3 py-1 rounded-full bg-amber-50 border border-amber-100 text-xs font-semibold text-amber-700">
+                                    4x Faster
+                                </div>
                             </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-amber-800 leading-relaxed font-medium">
-                                    Instantly search across all organizational documents using AI-powered indexing.
-                                    Find insights, contracts, notes, and assets in seconds.
+
+                            <CardContent className="space-y-5">
+                                <p className="text-sm leading-relaxed text-slate-600 font-medium">
+                                    Documents analyzed with{" "}
+                                    <span className="font-semibold text-amber-700">
+                                        Docinate AI
+                                    </span>{" "}
+                                    are significantly easier to search, summarize, and organize.
                                 </p>
-                                <Button
-                                    asChild
-                                    className="w-full mt-6 bg-amber-600 hover:bg-amber-500 text-white rounded-xl font-bold shadow-lg shadow-amber-200/50"
-                                >
-                                    <Link href={`/${orgSlug}/search`}>
-                                        Search Documents
-                                    </Link>
-                                </Button>
+
+                                {/* Mini Feature Cards */}
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                        <p className="text-xl font-black text-slate-900">
+                                            4x
+                                        </p>
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            Faster Search
+                                        </p>
+                                    </div>
+
+                                    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                        <p className="text-xl font-black text-slate-900">
+                                            AI
+                                        </p>
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            Smart Indexing
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <InviteTeamModal>
+                                    <Button className="w-full h-11 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-semibold transition-all 
+                                    duration-200 shadow-sm hover:shadow-md cursor-pointer">
+                                        <span className="flex items-center gap-2">
+                                            Invite Team Members
+                                            <Users className="w-4 h-4" />
+                                        </span>
+                                    </Button>
+                                </InviteTeamModal>
                             </CardContent>
                         </Card>
                     </div>

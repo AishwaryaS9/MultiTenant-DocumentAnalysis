@@ -1,24 +1,10 @@
 "use client";
 import { ReactNode, useState } from "react";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2, UserPlus, X } from "lucide-react";
 import { toast } from "sonner";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 
 interface InviteTeamModalProps {
     children: ReactNode;
@@ -88,18 +74,38 @@ export default function InviteTeamModal({
                 {children}
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-md rounded-3xl border-none p-8">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-black tracking-tight text-slate-900">
-                        Invite Team Member
-                    </DialogTitle>
+            <DialogContent className="sm:max-w-md rounded-3xl border border-slate-200/70 bg-white p-0 overflow-hidden shadow-2xl">
 
-                    <DialogDescription className="text-slate-500 pt-1">
-                        Invite collaborators to your workspace.
-                    </DialogDescription>
-                </DialogHeader>
+                {/* Close Button */}
+                <button
+                    onClick={() => setOpen(false)}
+                    className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-slate-200
+                     bg-white text-slate-500 transition-all duration-200 hover:bg-slate-100 hover:text-slate-900">
+                    <X className="w-4 h-4" />
+                </button>
 
-                <div className="space-y-5 mt-4">
+                {/* Header */}
+                <div className="border-b border-slate-100 bg-slate-50/70 px-8 py-6">
+                    <div className="flex items-start gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 shadow-sm">
+                            <UserPlus className="w-5 h-5 text-white" />
+                        </div>
+
+                        <DialogHeader className="space-y-2 text-left">
+                            <DialogTitle className="text-2xl font-black tracking-tight text-slate-900">
+                                Invite Team Member
+                            </DialogTitle>
+
+                            <DialogDescription className="text-sm leading-relaxed text-slate-500">
+                                Invite teammates to collaborate inside your workspace.
+                            </DialogDescription>
+                        </DialogHeader>
+                    </div>
+                </div>
+
+                {/* Body */}
+                <div className="px-8 py-6 space-y-6">
+
                     {/* Email */}
                     <div className="space-y-2">
                         <label className="text-sm font-semibold text-slate-700">
@@ -113,7 +119,10 @@ export default function InviteTeamModal({
                             onChange={(e) =>
                                 setEmail(e.target.value)
                             }
-                            className="h-12 rounded-xl"
+                            className="
+                                h-12 rounded-2xl border-slate-200
+                                focus-visible:ring-1 focus-visible:ring-slate-900/10
+                            "
                         />
                     </div>
 
@@ -123,40 +132,39 @@ export default function InviteTeamModal({
                             Role
                         </label>
 
-                        <Select
-                            value={role}
-                            onValueChange={setRole}
-                        >
-                            <SelectTrigger className="h-12 rounded-xl">
-                                <SelectValue placeholder="Select role" />
-                            </SelectTrigger>
+                        <div className="flex items-center gap-2">
+                            <span
+                                className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700">
+                                Member
+                            </span>
 
-                            <SelectContent>
-                                <SelectItem value="org:member">
-                                    Member
-                                </SelectItem>
-
-                                <SelectItem value="org:admin">
-                                    Admin
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
+                            <span className="text-xs text-slate-400">
+                                Default role
+                            </span>
+                        </div>
+                    </div>
+                    {/* Info Box */}
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                        <p className="text-xs leading-relaxed text-slate-600">
+                            Invited members will receive an email invitation
+                            to join your organization workspace.
+                        </p>
                     </div>
 
                     {/* Submit */}
                     <Button
                         onClick={handleInvite}
                         disabled={loading}
-                        className="w-full h-12 rounded-xl bg-slate-900 hover:bg-black font-semibold"
-                    >
+                        className="h-12 w-full rounded-2xl bg-slate-900 hover:bg-black font-semibold text-white transition-all
+                         duration-200 shadow-sm hover:shadow-md cursor-pointer">
                         {loading ? (
                             <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Sending Invite...
                             </>
                         ) : (
                             <>
-                                <UserPlus className="w-4 h-4 mr-2" />
+                                <UserPlus className="mr-2 h-4 w-4" />
                                 Send Invitation
                             </>
                         )}

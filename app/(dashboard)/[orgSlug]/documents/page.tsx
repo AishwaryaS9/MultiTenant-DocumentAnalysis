@@ -31,6 +31,7 @@ export default function DocumentsPage() {
                 <DocumentHeader
                     organizationName={organization?.name}
                     onUploadSuccess={fetchDocuments}
+                    orgSlug={organization?.slug || ""}
                 />
 
                 {documents.length > 0 && !isLoading && (

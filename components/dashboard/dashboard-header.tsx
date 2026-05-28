@@ -53,25 +53,16 @@ export default function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-3">
-                {/* <Button
-                    variant="ghost"
-                    className="rounded-xl font-semibold text-slate-600"
-                >
-                    Invite Team
-                </Button> */}
-                {/* <InviteTeamModal /> */}
                 <InviteTeamModal>
                     <Button
                         variant="ghost"
-                        className="rounded-xl font-semibold text-slate-600"
-                    >
-                        {/* <UserPlus className="w-4 h-4 mr-2" /> */}
+                        className="rounded-xl font-semibold text-slate-600 cursor-pointer">
                         Invite Team
                     </Button>
                 </InviteTeamModal>
 
                 <Link href={`/${orgSlug}/documents`}>
-                    <Button className="rounded-xl bg-slate-900 hover:bg-black px-8 py-6 flex gap-2 font-bold text-md">
+                    <Button className="rounded-xl bg-slate-900 hover:bg-slate-800 px-8 py-6 flex gap-2 font-bold text-md cursor-pointer">
                         <Upload className="w-5 h-5" />
                         Upload Asset
                     </Button>
