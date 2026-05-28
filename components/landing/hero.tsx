@@ -40,7 +40,7 @@ const Hero = () => {
         <section className="relative pt-32 pb-20 overflow-hidden bg-white">
             {/* Background Decorative Elements */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[32px_32px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-hero-grid-dots mask-hero-grid opacity-40" />
                 <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-250 h-150 bg-orange-50/50 rounded-[100%] blur-[120px] -z-10" />
             </div>
 
@@ -60,7 +60,7 @@ const Hero = () => {
 
                 <motion.h1
                     variants={itemVariants}
-                    className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#1A1A1A] mb-8 leading-[1.1] text-center"
+                    className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-strong mb-8 leading-[1.1] text-center"
                 >
                     Analyze Documents <br />
                     <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-600 to-orange-400">
@@ -84,7 +84,7 @@ const Hero = () => {
                             <Link href="/sign-up">
                                 <Button
                                     size="lg"
-                                    className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black shadow-2xl shadow-orange-200/50 transition-all hover:scale-105 active:scale-95"
+                                    className="rounded-full px-10 py-7 text-lg bg-strong hover:bg-strong-dark shadow-2xl shadow-orange-200/50 transition-all hover:scale-105 active:scale-95"
                                 >
                                     Start Free Trial
                                 </Button>
@@ -105,7 +105,7 @@ const Hero = () => {
                         <Link href={href}>
                             <Button
                                 size="lg"
-                                className="rounded-full px-10 py-7 text-lg bg-[#1A1A1A] hover:bg-black cursor-pointer"
+                                className="rounded-full px-10 py-7 text-lg bg-strong hover:bg-strong-dark cursor-pointer"
                             >
                                 Go to Dashboard
                             </Button>

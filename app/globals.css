@@ -81,6 +81,19 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --color-page-bg: #F9F7F2;
+  --color-surface-bg: #F9F9F9;
+  --color-feature-pill: #FFF0ED;
+  --color-feature-accent: #FF8A71;
+  --color-feature-card: #F2F2F2;
+  --color-strong: #1A1A1A;
+  --color-strong-dark: #000000;
+  --color-hero-bg: #0A0A0A;
+  --color-dashboard-panel: #0F172A;
+  --color-hero-grid: #e5e7eb;
+  --color-grid-line: #f8fafc;
+  --color-hero-mask: #000000;
+  --color-testimonial-fade: #fcfbf7;
 }
 
 .dark {
@@ -216,6 +229,69 @@
 
   .thin-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--color-slate-300, rgba(0, 0, 0, 0.2));
+  }
+
+  .bg-page {
+    background-color: var(--color-page-bg);
+  }
+
+  .bg-surface {
+    background-color: var(--color-surface-bg);
+  }
+
+  .bg-feature-pill {
+    background-color: var(--color-feature-pill);
+  }
+
+  .text-feature-accent {
+    color: var(--color-feature-accent);
+  }
+
+  .bg-feature-card {
+    background-color: var(--color-feature-card);
+  }
+
+  .text-strong {
+    color: var(--color-strong);
+  }
+
+  .bg-strong {
+    background-color: var(--color-strong);
+  }
+
+  .hover\:bg-strong-dark:hover {
+    background-color: var(--color-strong-dark);
+  }
+
+  .bg-hero {
+    background-color: var(--color-hero-bg);
+  }
+
+  .bg-dashboard-panel {
+    background-color: var(--color-dashboard-panel);
+  }
+
+  .bg-hero-grid-dots {
+    background-image: radial-gradient(var(--color-hero-grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .mask-hero-grid {
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, var(--color-hero-mask) 70%, transparent 100%);
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, var(--color-hero-mask) 70%, transparent 100%);
+  }
+
+  .bg-grid-pattern {
+    background-image: linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--color-grid-line) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .bg-testimonial-fade-right {
+    background-image: linear-gradient(to right, var(--color-testimonial-fade), transparent);
+  }
+
+  .bg-testimonial-fade-left {
+    background-image: linear-gradient(to left, var(--color-testimonial-fade), transparent);
   }
 }
 

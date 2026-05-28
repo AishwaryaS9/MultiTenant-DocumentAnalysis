@@ -108,7 +108,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
             <DialogTrigger asChild>
                 {trigger || (
                     <Button
-                        className="rounded-2xl bg-[#1A1A1A] hover:bg-black text-white shadow-sm shadow-black/10 h-11 px-5 cursor-pointer" >
+                        className="rounded-2xl bg-strong hover:bg-strong-dark text-white shadow-sm shadow-black/10 h-11 px-5 cursor-pointer" >
                         <Upload className="h-4 w-4 mr-2" />
                         Upload Document
                     </Button>
@@ -135,7 +135,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                             </div>
 
                             <div>
-                                <DialogTitle className="text-2xl font-semibold tracking-tight text-[#1A1A1A]">
+                                <DialogTitle className="text-2xl font-semibold tracking-tight text-strong">
                                     Upload Document
                                 </DialogTitle>
 
@@ -195,7 +195,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                                                 <Check className="w-8 h-8 text-emerald-600" />
                                             </div>
                                             <div className="space-y-1">
-                                                <div className="font-semibold text-[#1A1A1A] text-lg max-w-62.5 truncate">
+                                                <div className="font-semibold text-strong text-lg max-w-62.5 truncate">
                                                     {selectedFile.name}
                                                 </div>
                                                 <p className="text-sm text-slate-500">
@@ -225,7 +225,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                                                 <Upload className="w-7 h-7 text-orange-600" />
                                             </div>
                                             <div className="space-y-2">
-                                                <div className="font-semibold text-[#1A1A1A] text-lg">
+                                                <div className="font-semibold text-strong text-lg">
                                                     Drop your file here
                                                 </div>
                                                 <p className="text-sm text-slate-500">
@@ -266,7 +266,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                                 !documentName.trim() ||
                                 !selectedFile
                             }
-                            className="rounded-2xl bg-[#1A1A1A] hover:bg-black text-white shadow-lg shadow-black/10 h-11 px-5">
+                            className="rounded-2xl bg-strong hover:bg-strong-dark text-white shadow-lg shadow-black/10 h-11 px-5">
                             {isUploading ? (
                                 <>
                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />

@@ -9,7 +9,7 @@ export default function AIProgressCard({
     percentage,
 }: AIProgressCardProps) {
     return (
-        <Card className="md:col-span-2 border-none bg-[#0F172A] text-white shadow-2xl relative overflow-hidden flex flex-col justify-center">
+        <Card className="md:col-span-2 border-none bg-dashboard-panel text-white shadow-2xl relative overflow-hidden flex flex-col justify-center">
             <div className="absolute -right-5 -bottom-5 opacity-10 rotate-12">
                 <Brain className="w-48 h-48" />
             </div>

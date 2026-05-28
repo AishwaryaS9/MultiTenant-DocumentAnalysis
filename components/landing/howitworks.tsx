@@ -25,7 +25,7 @@ export default function HowItWorks() {
     };
 
     return (
-        <section id="how-it-works" className="relative py-24 bg-[#F9F9F9] overflow-hidden">
+        <section id="how-it-works" className="relative py-24 bg-surface overflow-hidden">
             <div className="container max-w-7xl mx-auto px-4 relative z-10">
                 {/* Animated Top Icon */}
                 <motion.div
@@ -34,7 +34,7 @@ export default function HowItWorks() {
                     viewport={{ once: true }}
                     className="flex justify-center mb-8"
                 >
-                    <div className="w-16 h-16 bg-[#1A1A1A] rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-white">
+                    <div className="w-16 h-16 bg-strong rounded-2xl flex items-center justify-center shadow-xl ring-4 ring-white">
                         <BarChart3 className="w-8 h-8 text-orange-400" />
                     </div>
                 </motion.div>
@@ -46,7 +46,7 @@ export default function HowItWorks() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="text-4xl md:text-5xl font-bold text-[#1A1A1A] tracking-tight max-w-4xl mx-auto leading-[1.1]"
+                        className="text-4xl md:text-5xl font-bold text-strong tracking-tight max-w-4xl mx-auto leading-[1.1]"
                     >
                         Transform Complex Documents Into <br className="hidden md:block" />
                         <span className="text-orange-500">Clear, Actionable Insights</span>
@@ -90,7 +90,7 @@ export default function HowItWorks() {
 
                             {/* Content */}
                             <div className="space-y-3">
-                                <h3 className="font-bold text-[#1A1A1A] text-xl leading-tight">
+                                <h3 className="font-bold text-strong text-xl leading-tight">
                                     {step.title}
                                 </h3>
                                 <p className="text-gray-500 text-sm leading-relaxed max-w-62.5 mx-auto lg:mx-0">

@@ -39,7 +39,7 @@ export default function Footer() {
     };
 
     return (
-        <footer className="bg-[#F9F9F9] text-slate-900 border-t border-slate-50">
+        <footer className="bg-surface text-slate-900 border-t border-slate-50">
             <motion.div
                 className="max-w-7xl mx-auto px-6 py-20"
                 initial="hidden"

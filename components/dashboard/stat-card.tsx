@@ -27,7 +27,7 @@ const StatCard = ({
             "transition-all duration-500 ease-out hover:shadow-xs"
         )}>
             {/* Grid Pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#f8fafc_1px,transparent_1px),linear-gradient(to_bottom,#f8fafc_1px,transparent_1px)] bg-size-[24px_24px] opacity-40" />
+            <div className="absolute inset-0 bg-grid-pattern opacity-40" />
 
             <CardContent className="relative p-6">
                 <div className="flex items-start justify-between">
@@ -60,7 +60,7 @@ const StatCard = ({
                         "relative flex h-14 w-14 items-center justify-center rounded-2xl",
                         "border border-white/80 bg-white/80 backdrop-blur-md",
                         "shadow-sm shadow-slate-200/40",
-                        
+
                     )}>
                         <div className={cn("absolute inset-0 rounded-2xl opacity-20 blur-xl", gradient)} />
                         <div className="relative z-10">{icon}</div>

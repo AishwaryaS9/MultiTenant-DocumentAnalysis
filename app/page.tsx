@@ -9,7 +9,7 @@ import Header from "@/components/common/header";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#F9F7F2]">
+    <div className="min-h-screen bg-page">
       <Header />
       <Hero />
       <Testimonials />
