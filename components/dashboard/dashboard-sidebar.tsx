@@ -50,9 +50,19 @@ export default function Sidebar() {
             <nav className="flex-1 space-y-1">
                 {navItems.map((item) => {
                     const isDashboardPath = item.href === `/${organization?.slug}`;
+
+                    const isDocumentsTab =
+                        item.href === `/${activeSlug}/documents`;
+
                     const isActive = isDashboardPath
                         ? pathname === item.href
-                        : pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
+                        : isDocumentsTab
+                            ? pathname.startsWith(`/${activeSlug}/documents`) ||
+                            pathname.startsWith(`/${activeSlug}/search`)
+                            : pathname === item.href ||
+                            (item.href !== "/" &&
+                                pathname?.startsWith(item.href));
+
                     return (
                         <Link key={item.href} href={item.href}>
                             <Button

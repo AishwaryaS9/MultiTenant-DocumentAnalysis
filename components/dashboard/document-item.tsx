@@ -1,10 +1,11 @@
-import { Brain, Clock, FileText } from "lucide-react";
+import { Brain, Clock, FileText, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DocumentItemProps } from "@/types";
 
 export default function DocumentItem({ doc }: DocumentItemProps) {
     return (
-        <div className="group flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-all duration-200 border border-transparent hover:border-slate-100">
+        <div className="group flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-all
+         duration-200 border border-transparent hover:border-slate-100">
             <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center">
                     <FileText className="h-6 w-6 text-slate-400 group-hover:text-amber-600" />
@@ -30,16 +31,17 @@ export default function DocumentItem({ doc }: DocumentItemProps) {
             </div>
 
             {doc.aiSummary ? (
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-50 text-green-700 text-[10px] font-black border border-green-100 uppercase tracking-tighter">
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-50 text-green-700 text-[10px]
+                 font-black border border-green-100 uppercase tracking-tighter">
                     <Brain className="h-3 w-3" />
                     Analyzed
                 </div>
             ) : (
                 <Button
-                    variant="secondary"
-                    size="sm"
-                    className="rounded-lg h-8 text-xs font-bold"
-                >
+                    variant="secondary" size="sm"
+                    className="rounded-lg h-7 px-3 bg-indigo-50 text-indigo-600 text-[10px] font-bold border
+                     border-indigo-100 uppercase tracking-wider transition-all hover:bg-indigo-100/80">
+                    <RefreshCw className="h-3 w-3" />
                     Process
                 </Button>
             )}

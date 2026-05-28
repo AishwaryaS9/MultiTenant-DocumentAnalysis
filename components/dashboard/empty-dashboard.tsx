@@ -18,14 +18,8 @@ export default async function EmptyDashboard({
     return (
         <div className="min-h-screen overflow-hidden bg-linear-to-br from-slate-50 via-white to-amber-50/40 flex items-center justify-center px-4 py-4">
             <div className="w-full max-w-xl">
-                <Card className="relative overflow-hidden rounded-[28px] border border-slate-200/70 bg-white/95 shadow-[0_20px_70px_-25px_rgba(15,23,42,0.20)] backdrop-blur-xl">
-
-                    {/* Decorative Blur */}
-                    <div className="absolute -top-20 -right-20 h-44 w-44 rounded-full bg-amber-200/30 blur-3xl" />
-                    <div className="absolute -bottom-20 -left-20 h-44 w-44 rounded-full bg-slate-200/40 blur-3xl" />
-
+                <Card className="relative overflow-hidden rounded-[28px] border border-slate-50 bg-white/95 shadow-sm">
                     <CardContent className="relative p-7 sm:p-8">
-
                         {/* Header */}
                         <div className="flex flex-col items-center text-center">
 
@@ -77,7 +71,7 @@ export default async function EmptyDashboard({
                         {/* Features */}
                         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-                            <div className="group rounded-2xl border border-slate-200 bg-linear-to-b from-white to-slate-50 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                            <div className="group rounded-2xl border border-slate-200 bg-linear-to-b from-white to-slate-50 p-4 hover:shadow-xs">
                                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
                                     <Brain className="h-4.5 w-4.5" />
                                 </div>
@@ -91,7 +85,7 @@ export default async function EmptyDashboard({
                                 </p>
                             </div>
 
-                            <div className="group rounded-2xl border border-slate-200 bg-linear-to-b from-white to-slate-50 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                            <div className="group rounded-2xl border border-slate-200 bg-linear-to-b from-white to-slate-50 p-4 hover:shadow-xs">
                                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
                                     <Zap className="h-4.5 w-4.5" />
                                 </div>
@@ -105,7 +99,7 @@ export default async function EmptyDashboard({
                                 </p>
                             </div>
 
-                            <div className="group rounded-2xl border border-slate-200 bg-linear-to-b from-white to-slate-50 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                            <div className="group rounded-2xl border border-slate-200 bg-linear-to-b from-white to-slate-50 p-4 hover:shadow-xs">
                                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
                                     <Users className="h-4.5 w-4.5" />
                                 </div>

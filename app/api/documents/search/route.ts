@@ -1,164 +1,106 @@
-export const runtime = "nodejs";
-
-import { prisma } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: Request) {
     try {
+        // 1. Authenticate the user
         const { userId } = await auth();
-
         if (!userId) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 401 }
-            );
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
+        // 2. Parse search parameters from URL
         const { searchParams } = new URL(request.url);
-
+        const orgSlug = searchParams.get("orgSlug");
         const query = searchParams.get("query") || "";
-        const clerkOrgId = searchParams.get("organizationId");
-        const page = Number(searchParams.get("page") || "1");
-        const limit = Number(searchParams.get("limit") || "10");
 
-        if (!clerkOrgId) {
+        if (!orgSlug) {
             return NextResponse.json(
-                { error: "Organization ID is required" },
+                { error: "Missing required parameter: orgSlug" },
                 { status: 400 }
             );
         }
 
-        if (!query.trim()) {
-            return NextResponse.json(
-                { error: "Search query is required" },
-                { status: 400 }
-            );
-        }
-
-        // Find organization
+        // 3. Verify the organization exists
         const organization = await prisma.organization.findUnique({
             where: {
-                clerkOrgId,
+                slug: orgSlug,
             },
         });
 
         if (!organization) {
-            return NextResponse.json(
-                { error: "Organization not found" },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: "Organization not found" }, { status: 404 });
         }
 
-        // Verify user membership
-        const user = await prisma.user.findUnique({
+        // 4. Verify user membership in the organization
+        const membership = await prisma.organizationMember.findFirst({
             where: {
-                clerkUserId: userId,
-            },
-            include: {
-                memberships: {
-                    where: {
-                        organizationId: organization.id,
-                    },
+                organizationId: organization.id,
+                user: {
+                    clerkUserId: userId,
                 },
             },
         });
 
-        if (!user || user.memberships.length === 0) {
+        if (!membership) {
             return NextResponse.json(
-                {
-                    error: "You do not have permission to access this organization",
-                },
+                { error: "Forbidden: You are not a member of this organization" },
                 { status: 403 }
             );
         }
 
-        const skip = (page - 1) * limit;
-
-        // Search documents
-        const documents = await prisma.document.findMany({
-            where: {
-                organizationId: organization.id,
-                OR: [
-                    {
-                        name: {
-                            contains: query,
-                            mode: "insensitive",
+        // 5. Fetch documents matching the query (or return empty array if no query)
+        const documents = query
+            ? await prisma.document.findMany({
+                where: {
+                    organizationId: organization.id,
+                    OR: [
+                        {
+                            name: {
+                                contains: query,
+                                mode: "insensitive",
+                            },
                         },
-                    },
-                    {
-                        content: {
-                            contains: query,
-                            mode: "insensitive",
+                        {
+                            aiSummary: {
+                                contains: query,
+                                mode: "insensitive",
+                            },
                         },
-                    },
-                    {
-                        aiKeywords: {
-                            has: query,
+                        {
+                            content: {
+                                contains: query,
+                                mode: "insensitive",
+                            },
                         },
-                    },
-                ],
-            },
-            include: {
-                user: {
-                    select: {
-                        name: true,
-                        email: true,
+                        {
+                            aiKeywords: {
+                                hasSome: query.split(" "),
+                            },
+                        },
+                    ],
+                },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                            email: true,
+                        },
                     },
                 },
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-            skip,
-            take: limit,
-        });
+                orderBy: {
+                    createdAt: "desc",
+                },
+            })
+            : [];
 
-        // Total count
-        const totalDocuments = await prisma.document.count({
-            where: {
-                organizationId: organization.id,
-                OR: [
-                    {
-                        name: {
-                            contains: query,
-                            mode: "insensitive",
-                        },
-                    },
-                    {
-                        content: {
-                            contains: query,
-                            mode: "insensitive",
-                        },
-                    },
-                    {
-                        aiKeywords: {
-                            has: query,
-                        },
-                    },
-                ],
-            },
-        });
-
-        return NextResponse.json({
-            success: true,
-            query,
-            documents,
-            pagination: {
-                page,
-                limit,
-                totalDocuments,
-                totalPages: Math.ceil(totalDocuments / limit),
-            },
-        });
-
-    } catch (error: any) {
-        console.error("Search documents error:", error);
-
+        // 6. Return results
+        return NextResponse.json({ documents });
+    } catch (error) {
+        console.error("Search API Error:", error);
         return NextResponse.json(
-            {
-                error: error.message || "Failed to search documents",
-            },
+            { error: "Internal Server Error" },
             { status: 500 }
         );
     }

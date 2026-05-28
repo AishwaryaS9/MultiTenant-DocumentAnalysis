@@ -56,6 +56,7 @@ export interface DocumentItemProps {
 export interface DocumentsHeaderProps {
     organizationName?: string;
     onUploadSuccess: () => void;
+    orgSlug: string;
 }
 
 
