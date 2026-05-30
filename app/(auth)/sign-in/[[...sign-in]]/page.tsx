@@ -1,28 +1,11 @@
-import { SignIn } from '@clerk/nextjs'
+import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
     return (
-        <div className='min-h-screen flex items-center justify-center'>
-            <SignIn />
-        </div>
-    )
+        <main role="main" aria-label="Sign in page" className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+            <div role="region" aria-label="Authentication form" className="w-full max-w-md flex items-center justify-center">
+                <SignIn />
+            </div>
+        </main>
+    );
 }
-
-
-// import { SignIn } from "@clerk/nextjs";
-// import { auth } from "@clerk/nextjs/server";
-// import { redirect } from "next/navigation";
-
-// export default async function SignInPage() {
-//     const { userId } = await auth();
-
-//     if (userId) {
-//         redirect("/");
-//     }
-
-//     return (
-//         <div className="min-h-screen flex items-center justify-center">
-//             <SignIn />
-//         </div>
-//     );
-// }

@@ -1,10 +1,11 @@
+import React from "react";
+
 export type AnalysisType =
     | "summary"
     | "qa"
     | "sentiment"
     | "entities"
     | "extract";
-
 
 //Document
 export interface Document {
@@ -40,8 +41,9 @@ export interface DocumentCardProps {
 }
 
 export interface DocumentUploadDialogProps {
-    onUploadSuccess?: () => void;
-    trigger?: React.ReactNode;
+    // onUploadSuccess?: () => void;
+    onUploadSuccess?: () => Promise<void> | void;
+    children?: React.ReactNode;
 }
 
 export interface DocumentItemProps {
@@ -97,6 +99,14 @@ export interface DeleteDocumentModalProps {
     documentName?: string;
 }
 
+export interface StatCardProps {
+    title: string;
+    value: string | number;
+    icon: React.ReactNode;
+    description?: string;
+    gradient?: string;
+    progress?: number;
+};
 
 //Dashboard
 export interface DashboardHeaderProps {
@@ -104,6 +114,14 @@ export interface DashboardHeaderProps {
     role: string;
     // documentCount: number;
     orgSlug: string;
+}
+
+export interface AIProgressCardProps {
+    percentage: number;
+}
+
+export interface AIInsightCardProps {
+    role: string;
 }
 
 export interface EmptyDashboardProps {

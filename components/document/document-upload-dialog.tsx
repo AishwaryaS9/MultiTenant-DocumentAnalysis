@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useRef, useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -9,7 +10,7 @@ import { toast } from "sonner";
 import { allowedTypes } from "@/app/data/data";
 import { DocumentUploadDialogProps } from "@/types";
 
-export default function DocumentUploadDialog({ onUploadSuccess, trigger }: DocumentUploadDialogProps) {
+export default function DocumentUploadDialog({ onUploadSuccess, children }: DocumentUploadDialogProps) {
     const { organization } = useOrganization();
     const { user } = useUser();
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -19,9 +20,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
     const [isOpen, setIsOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    const handleFileSelect = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
 
         if (!file) return;
@@ -55,12 +54,9 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
 
         const formData = new FormData();
 
-        formData.append("name", documentName);
+        formData.append("name", documentName.trim());
         formData.append("organizationId", organization.id);
-
-        if (selectedFile) {
-            formData.append("file", selectedFile);
-        }
+        formData.append("file", selectedFile);
 
         try {
             const response = await fetch("/api/documents", {
@@ -68,23 +64,34 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                 body: formData,
             });
 
-            if (response.ok) {
-                toast.success("Document uploaded successfully!");
+            const data = await response.json();
 
-                setDocumentName("");
-                setSelectedFile(null);
-                setIsOpen(false);
-
-                onUploadSuccess?.();
-            } else {
-                const error = await response.json();
-
-                toast.error(error.message || "Upload failed");
+            if (!response.ok) {
+                throw new Error(data.message || "Upload failed");
             }
-        } catch (error) {
-            console.error("Upload error", error);
 
-            toast.error("Upload failed");
+            toast.success("Document uploaded successfully!");
+
+            // Refresh documents list
+            await onUploadSuccess?.();
+
+            // Reset state
+            setDocumentName("");
+            setSelectedFile(null);
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+
+            setIsOpen(false);
+        } catch (error) {
+            console.error("Upload error:", error);
+
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "Upload failed"
+            );
         } finally {
             setIsUploading(false);
         }
@@ -103,70 +110,86 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
         }
     };
 
+    const handleRemoveFile = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setSelectedFile(null);
+
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
             <DialogTrigger asChild>
-                {trigger || (
-                    <Button
-                        className="rounded-2xl bg-strong hover:bg-strong-dark text-white shadow-sm shadow-black/10 h-11 px-5 cursor-pointer" >
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload Document
-                    </Button>
-                )}
+                {children}
+
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-140 border-white/40 bg-white/80 backdrop-blur-2xl rounded-[32px] p-0 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.12)]">
-                {/* Glow */}
-                <DialogClose className="absolute right-6 top-6 z-50 rounded-full p-2 opacity-70 transition-opacity disabled:pointer-events-none">
-                    <X className="h-5 w-5 text-slate-800 hover:text-slate-600" />
-                    <span className="sr-only">Close</span>
+            <DialogContent className="sm:max-w-140 border-white/40 bg-white/80 backdrop-blur-2xl rounded-[32px] p-0 overflow-hidden shadow-[0_20px_80px_rgba(0,0,0,0.12)]"
+                aria-describedby="upload-document-description">
+                {/* Close */}
+                <DialogClose
+                    className="absolute right-4 sm:right-6 top-4 sm:top-6 z-50 rounded-full p-2 opacity-70 transition-opacity disabled:pointer-events-none
+                     focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-700"
+                    aria-label="Close upload dialog"
+                >
+                    <X className="h-5 w-5 text-slate-800 hover:text-slate-600" aria-hidden="true" />
                 </DialogClose>
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+                {/* Glow */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
                     <div className="absolute -top-24 -right-24 w-72 h-72 bg-orange-100 rounded-full blur-3xl opacity-40" />
                     <div className="absolute bottom-0 left-0 w-60 h-60 bg-blue-100 rounded-full blur-3xl opacity-30" />
                 </div>
 
-                <div className="relative z-10 p-8">
+                <div className="relative z-10 p-5 sm:p-6 lg:p-8">
                     {/* Header */}
                     <DialogHeader className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-orange-100 to-orange-50 border border-orange-200/50 flex items-center justify-center shadow-sm">
-                                <Sparkles className="w-6 h-6 text-orange-400" />
+                        <div className="flex items-start gap-4">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-linear-to-br from-orange-100 to-orange-50 border border-orange-200/50 flex 
+                            items-center justify-center shadow-sm shrink-0" aria-hidden="true">
+                                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-orange-400" />
                             </div>
 
-                            <div>
-                                <DialogTitle className="text-2xl font-semibold tracking-tight text-strong">
+                            <div className="min-w-0">
+                                <DialogTitle className="text-xl sm:text-2xl font-semibold tracking-tight text-strong wrap-break-word">
                                     Upload Document
                                 </DialogTitle>
 
-                                <DialogDescription className="text-slate-500 mt-1 text-base">
-                                    Add documents to generate AI-powered insights and
-                                    summaries.
+                                <DialogDescription id="upload-document-description" className="text-slate-500 mt-1 text-sm sm:text-base leading-relaxed">
+                                    Add documents to generate AI-powered insights and summaries.
                                 </DialogDescription>
                             </div>
                         </div>
                     </DialogHeader>
 
                     {/* Content */}
-                    <div className="mt-8 space-y-6">
+                    <div className="mt-6 sm:mt-8 space-y-6">
                         {/* Name */}
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-slate-700 pl-1">
+                            <label htmlFor="document-name" className="text-sm font-medium text-slate-700 pl-1">
                                 Document Name
                             </label>
 
                             <Input
+                                id="document-name"
                                 placeholder="Enter document name"
                                 value={documentName}
                                 onChange={(e) => setDocumentName(e.target.value)}
                                 disabled={isUploading}
-                                className="h-11 rounded-2xl border-slate-200 bg-white/80 px-4 text-[15px] shadow-sm transition-all focus-visible:ring-2
-                                 focus-visible:ring-orange-100 focus-visible:ring-offset-0 focus-visible:border-orange-200  focus-visible:shadow-[0_0_0_4px_rgba(251,146,60,0.08)]"
+                                className="h-11 rounded-2xl border-slate-200 bg-white/80 px-4 text-[15px] shadow-sm transition-all focus-visible:ring-1 
+                                focus-visible:ring-offset-1 focus-visible:ring-orange-400 focus-visible:border-orange-200
+                                 focus-visible:shadow-[0_0_0_4px_rgba(251,146,60,0.08)]"
+                                aria-label="Document name"
                             />
                         </div>
+
                         {/* Upload Box */}
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-slate-700">
+                            <label htmlFor="file-upload" className="text-sm font-medium text-slate-700">
                                 Upload File
                             </label>
 
@@ -179,65 +202,71 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                                     className="hidden"
                                     id="file-upload"
                                     disabled={isUploading}
+                                    aria-label="Choose document file"
                                 />
 
                                 <label
                                     htmlFor="file-upload"
-                                    className="group relative flex flex-col items-center justify-center gap-4 rounded-[28px] border-2 border-dashed border-slate-200 bg-white/60 px-6 py-10 text-center transition-all duration-300 hover:border-orange-300 hover:bg-orange-50/40 cursor-pointer overflow-hidden min-h-60"
+                                    className="group relative flex flex-col items-center justify-center gap-4 rounded-[28px] border-2 border-dashed border-slate-200 bg-white/60 
+                                    px-5 sm:px-6 py-8 sm:py-10 text-center transition-all duration-300 hover:border-orange-300 hover:bg-orange-50/40 cursor-pointer overflow-hidden min-h-52 sm:min-h-60"
                                 >
                                     {/* Glow */}
-                                    <div className="absolute inset-0 bg-linear-to-br from-orange-50/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute inset-0 bg-linear-to-br from-orange-50/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                                        aria-hidden="true" />
 
                                     {selectedFile ? (
-                                        /* UI STATE: FILE SELECTED */
                                         <div className="relative z-10 flex flex-col items-center animate-in fade-in zoom-in duration-300">
-                                            <div className="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shadow-sm mb-4">
-                                                <Check className="w-8 h-8 text-emerald-600" />
+                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shadow-sm mb-4"
+                                                aria-hidden="true">
+                                                <Check className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-600" />
                                             </div>
+
                                             <div className="space-y-1">
-                                                <div className="font-semibold text-strong text-lg max-w-62.5 truncate">
+                                                <div className="font-semibold text-strong text-base sm:text-lg max-w-52 sm:max-w-62.5 truncate">
                                                     {selectedFile.name}
                                                 </div>
+
                                                 <p className="text-sm text-slate-500">
                                                     {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                                                 </p>
                                             </div>
+
                                             <Button
                                                 type="button"
                                                 variant="ghost"
                                                 size="sm"
-                                                className="mt-4 rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                    setSelectedFile(null);
-                                                    if (fileInputRef.current) fileInputRef.current.value = "";
-                                                }}
+                                                className="mt-4 rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-red-500"
+                                                onClick={handleRemoveFile}
+                                                aria-label="Remove selected file"
                                             >
-                                                <X className="w-4 h-4 mr-2" />
+                                                <X className="w-4 h-4 mr-2 shrink-0" aria-hidden="true" />
                                                 Remove file
                                             </Button>
                                         </div>
                                     ) : (
-                                        /* UI STATE: EMPTY / DROPZONE */
                                         <div className="relative z-10 flex flex-col items-center">
-                                            <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-orange-100 to-orange-50 border border-orange-200/50 flex items-center justify-center shadow-sm mb-4">
-                                                <Upload className="w-7 h-7 text-orange-600" />
+                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-linear-to-br from-orange-100 to-orange-50 border
+                                             border-orange-200/50 flex items-center justify-center shadow-sm mb-4" aria-hidden="true">
+                                                <Upload className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600" />
                                             </div>
+
                                             <div className="space-y-2">
-                                                <div className="font-semibold text-strong text-lg">
+                                                <div className="font-semibold text-strong text-base sm:text-lg">
                                                     Drop your file here
                                                 </div>
+
                                                 <p className="text-sm text-slate-500">
                                                     or click to browse from your computer
                                                 </p>
+
                                                 <div className="flex flex-wrap justify-center gap-2 pt-2">
-                                                    {["PDF", "DOCX", "TXT", "MD"].map((type) => (
+                                                    {["PDF", "DOCX", "TXT", "MD", "DOC"].map((type) => (
                                                         <div key={type} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-600 shadow-sm">
                                                             {type}
                                                         </div>
                                                     ))}
                                                 </div>
+
                                                 <p className="text-xs text-slate-400 pt-2">
                                                     Maximum file size: 10MB
                                                 </p>
@@ -250,31 +279,33 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
                     </div>
 
                     {/* Footer */}
-                    <DialogFooter className="mt-8 flex-row justify-end gap-3">
+                    <DialogFooter className="mt-6 sm:mt-8 flex-col-reverse sm:flex-row justify-end gap-3">
                         <Button
                             variant="outline"
                             onClick={() => setIsOpen(false)}
                             disabled={isUploading}
-                            className=" rounded-2xl border-slate-200 hover:bg-slate-50 h-11 px-5">
+                            className="w-full sm:w-auto rounded-2xl border-slate-200 hover:bg-slate-50 h-11 px-5 focus-visible:ring-1
+                             focus-visible:ring-offset-1 focus-visible:ring-slate-400"
+                            aria-label="Cancel document upload"
+                        >
                             Cancel
                         </Button>
 
                         <Button
                             onClick={handleUpload}
-                            disabled={
-                                isUploading ||
-                                !documentName.trim() ||
-                                !selectedFile
-                            }
-                            className="rounded-2xl bg-strong hover:bg-strong-dark text-white shadow-lg shadow-black/10 h-11 px-5">
+                            disabled={isUploading || !documentName.trim() || !selectedFile}
+                            className="w-full sm:w-auto rounded-2xl bg-strong hover:bg-strong-dark text-white shadow-lg shadow-black/10 h-11 px-5
+                             focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-900"
+                            aria-label={isUploading ? "Uploading document" : "Upload document"}
+                        >
                             {isUploading ? (
                                 <>
-                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                    <Loader2 className="h-4 w-4 mr-2 animate-spin shrink-0" aria-hidden="true" />
                                     Uploading...
                                 </>
                             ) : (
                                 <>
-                                    <Upload className="h-4 w-4 mr-2" />
+                                    <Upload className="h-4 w-4 mr-2 shrink-0" aria-hidden="true" />
                                     Upload Document
                                 </>
                             )}
@@ -285,4 +316,3 @@ export default function DocumentUploadDialog({ onUploadSuccess, trigger }: Docum
         </Dialog>
     );
 }
-

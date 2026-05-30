@@ -1,31 +1,42 @@
 import { testimonials } from '@/app/data/data'
+import TestimonialCard from '../common/testimonial-card'
 
 const Testimonials = () => {
     return (
-        <section id='testimonials' className="py-20 overflow-hidden bg-surface">
-            <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <section id='testimonials'
+            aria-labelledby='testimonials-heading'
+            className="py-16 sm:py-20 overflow-hidden bg-surface">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-10 sm:mb-12 text-center">
+                <h2 id='testimonials-heading'
+                    className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-balance">
                     Trusted by industry leaders
                 </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
+
+                <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed text-pretty">
                     See what our users are saying about how Docinate AI has transformed their document workflow.
                 </p>
             </div>
 
-            <div className="relative flex flex-col gap-8">
-                {/* Gradient Overlays for the "Fade" effect */}
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-testimonial-fade-right z-10" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-testimonial-fade-left z-10" />
+            <div className="relative flex flex-col gap-5 sm:gap-8"
+                aria-label="Customer testimonials">
 
-                {/* Row 1 */}
-                <div className="flex whitespace-nowrap animate-marquee hover:paused cursor-pointer">
+                <div aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-20 lg:w-32 bg-testimonial-fade-right z-10" />
+
+                <div aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-20 lg:w-32 bg-testimonial-fade-left z-10" />
+
+                <div className="flex whitespace-nowrap animate-marquee hover:paused"
+                    role="list"
+                    aria-label="Scrolling testimonials row one">
                     {[...testimonials, ...testimonials].map((t, i) => (
                         <TestimonialCard key={`row1-${i}`} t={t} />
                     ))}
                 </div>
 
-                {/* Row 2 (Reverse) */}
-                <div className="flex whitespace-nowrap animate-marquee-reverse hover:paused cursor-pointer">
+                <div className="flex whitespace-nowrap animate-marquee-reverse hover:paused"
+                    role="list"
+                    aria-label="Scrolling testimonials row two">
                     {[...testimonials, ...testimonials].reverse().map((t, i) => (
                         <TestimonialCard key={`row2-${i}`} t={t} />
                     ))}
@@ -35,16 +46,5 @@ const Testimonials = () => {
     )
 }
 
-const TestimonialCard = ({ t }: { t: any }) => (
-    <div className="flex items-center gap-4 bg-white px-8 py-4 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 mx-4 transition-transform duration-300 hover:scale-105">
-        <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-lg border border-orange-200">
-            {t.avatar}
-        </div>
-        <div className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-800">{t.text}</span>
-            <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Verified User</span>
-        </div>
-    </div>
-)
 
 export default Testimonials
