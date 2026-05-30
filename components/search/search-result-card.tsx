@@ -60,7 +60,7 @@ export function SearchResultCard({ document }: SearchResultProps) {
                             </div>
 
                             <div className="flex flex-wrap items-center gap-2 max-w-full">
-                                <Badge className="rounded-full border-0 bg-amber-100 px-2.5 py-0.5 sm:px-3 sm:py-1 text-xs font-semibold text-amber-700">
+                                <Badge className="rounded-full border-0 bg-orange-100 px-2.5 py-0.5 sm:px-3 sm:py-1 text-xs font-semibold text-orange-700">
                                     {document.fileType}
                                 </Badge>
 
@@ -124,11 +124,11 @@ export function SearchResultCard({ document }: SearchResultProps) {
                 {summary ? (
                     <section className="mt-6 sm:mt-7 rounded-2xl sm:rounded-3xl border border-slate-50 bg-gray-50/50 p-4 sm:p-5">
                         <div className="mb-3 flex items-center gap-2">
-                            <div className="rounded-full bg-amber-100 p-1.5" aria-hidden="true">
-                                <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                            <div className="rounded-full bg-orange-100 p-1.5" aria-hidden="true">
+                                <Sparkles className="h-3.5 w-3.5 text-orange-500" />
                             </div>
 
-                            <span className="text-xs font-semibold uppercase tracking-wide text-amber-700">
+                            <span className="text-xs font-semibold uppercase tracking-wide text-orange-600">
                                 AI Summary
                             </span>
                         </div>
@@ -145,7 +145,7 @@ export function SearchResultCard({ document }: SearchResultProps) {
                                 {document.status === "failed" ? (
                                     <FileText className="h-5 w-5 text-rose-500" />
                                 ) : (
-                                    <Sparkles className="h-5 w-5 animate-pulse text-amber-500" />
+                                    <Sparkles className="h-5 w-5 animate-pulse text-orange-500" />
                                 )}
                             </div>
 
@@ -198,7 +198,7 @@ export function SearchResultCard({ document }: SearchResultProps) {
                         </div>
                     </div>
 
-                    <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-amber-700 w-fit">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 border border-orange-100 text-orange-600 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold w-fit">
                         <Sparkles className="h-3.5 w-3.5" />
                         AI Enhanced Search
                     </div>

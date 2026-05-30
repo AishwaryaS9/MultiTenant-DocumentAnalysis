@@ -7,12 +7,9 @@ export function SearchHeader({ query, resultsCount }: SearchHeaderProps) {
             {/* Left Content */}
             <div className="space-y-4">
                 {/* Badge */}
-                <div className="inline-flex items-center gap-2 rounded-full border border-amber-100 bg-amber-50/80
-                 px-3.5 py-1.5 text-xs font-semibold text-amber-700 shadow-sm backdrop-blur">
-                    <Sparkles
-                        className="h-3.5 w-3.5"
-                        aria-hidden="true"
-                    />
+                <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 border border-orange-100 text-orange-600
+                 px-3.5 py-1.5 text-xs font-semibold shadow-sm backdrop-blur">
+                    <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                     <span>AI Powered Search</span>
                 </div>
 
@@ -39,9 +36,9 @@ export function SearchHeader({ query, resultsCount }: SearchHeaderProps) {
                     aria-live="polite"
                 >
                     {/* Icon */}
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-amber-100 bg-amber-50">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-orange-100 bg-orange-50">
                         <Search
-                            className="h-5 w-5 text-amber-600"
+                            className="h-5 w-5 text-orange-600"
                             aria-hidden="true"
                         />
                     </div>

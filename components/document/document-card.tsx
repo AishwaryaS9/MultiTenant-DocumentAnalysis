@@ -317,7 +317,7 @@ export default function DocumentCard({
                                 {doc.status === "failed" ? (
                                     <FileText className="h-5 w-5 text-rose-500" />
                                 ) : (
-                                    <Sparkles className="h-5 w-5 animate-pulse text-amber-500" />
+                                    <Sparkles className="h-5 w-5 animate-pulse text-orange-500" />
                                 )}
                             </div>
 
@@ -382,7 +382,7 @@ export default function DocumentCard({
                                 )
                             }
                             aria-label={`Export AI insights for ${doc.name}`}
-                            className="h-10 sm:h-9 w-full justify-center rounded-xl border-orange-200/60 bg-orange-50/20 px-4 text-sm font-semibold text-orange-700 transition-all hover:bg-orange-50 active:scale-[0.99] focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-orange-300"
+                            className="h-10 sm:h-9 w-full justify-center rounded-xl  border-orange-200/60 bg-orange-50/20 px-4 text-sm font-semibold text-orange-600 transition-all hover:bg-orange-50 active:scale-[0.99] focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-orange-300"
                         >
                             <Sparkles
                                 className="mr-2.5 h-4 w-4 shrink-0 text-orange-500"

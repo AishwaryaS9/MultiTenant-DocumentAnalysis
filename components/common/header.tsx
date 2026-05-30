@@ -166,8 +166,9 @@ export default function Header() {
                     {/* Logo */}
                     <Link href="/" prefetch
                         aria-label="Docinate AI homepage"
-                        className="flex items-center gap-2 font-bold text-lg min-w-0 rounded-md focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500 focus-visible:ring-offset-1">
-                        <div className="bg-amber-500 p-1.5 rounded-lg shrink-0">
+                        className="flex items-center gap-2 font-bold text-lg min-w-0 rounded-md focus:outline-none focus-visible:ring-1 
+                        focus-visible:ring-orange-500 focus-visible:ring-offset-1">
+                        <div className="bg-orange-500 p-1.5 rounded-lg shrink-0">
                             <Brain
                                 className="h-5 w-5 text-white"
                                 aria-hidden="true"
@@ -200,8 +201,9 @@ export default function Header() {
                                     }
                                     aria-label={`Navigate to ${item.label}`}
                                     className={`rounded-full px-4 py-2 min-h-11 inline-flex items-center justify-center text-sm font-medium transition-all duration-200
-                                         motion-reduce:transition-none ease-in-out focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500 
-                                         focus-visible:ring-offset-1 active:opacity-80 ${isActive ? "text-amber-700 font-semibold" : "text-slate-600 hover:text-amber-600"}`}>
+                                         motion-reduce:transition-none ease-in-out focus:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 
+                                         focus-visible:ring-offset-1 active:opacity-80 
+                                         ${isActive ? "text-orange-700 font-semibold" : "text-slate-600 hover:text-orange-600"}`}>
                                     {item.label}
                                 </Link>
                             )
@@ -268,7 +270,7 @@ export default function Header() {
                                         aria-expanded={isOpen}
                                         aria-controls="mobile-navigation"
                                         className="rounded-full hover:bg-slate-100/80 transition motion-reduce:transition-none focus-visible:ring-1 
-                                        focus-visible:ring-amber-500 focus-visible:ring-offset-1">
+                                        focus-visible:ring-orange-500 focus-visible:ring-offset-1">
                                         <Menu
                                             className="h-5 w-5 text-slate-700"
                                             aria-hidden="true"
@@ -299,8 +301,8 @@ export default function Header() {
                                                 onClick={() => setIsOpen(false)}
                                                 aria-label="Docinate AI homepage"
                                                 className="flex items-center gap-2 font-bold text-lg rounded-md focus:outline-none focus-visible:ring-1 
-                                                focus-visible:ring-amber-500 focus-visible:ring-offset-1">
-                                                <div className="bg-amber-500 p-1.5 rounded-lg">
+                                                focus-visible:ring-orange-500 focus-visible:ring-offset-1">
+                                                <div className="bg-orange-500 p-1.5 rounded-lg">
                                                     <Brain
                                                         className="h-5 w-5 text-white"
                                                         aria-hidden="true"
@@ -335,8 +337,8 @@ export default function Header() {
                                                         onClick={() => setIsOpen(false)}
                                                         aria-current={isActive ? "location" : undefined}
                                                         className={`flex items-center gap-3 rounded-xl px-4 py-3 min-h-11 transition-all duration-200 motion-reduce:transition-none 
-                                                            focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500 focus-visible:ring-offset-1
-                                                             ${isActive ? "text-amber-700 font-semibold" : "text-slate-600 hover:text-amber-600"}`}
+                                                            focus:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 focus-visible:ring-offset-1
+                                                             ${isActive ? "text-orange-700 font-semibold" : "text-slate-600 hover:text-orange-600"}`}
                                                     >
                                                         <span className="text-sm font-medium">
                                                             {item.label}

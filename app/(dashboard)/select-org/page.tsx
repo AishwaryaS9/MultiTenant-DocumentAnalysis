@@ -84,7 +84,7 @@ export default function SelectOrgPage() {
                     <section aria-label="Create workspace section" className="lg:col-span-5 flex flex-col justify-center space-y-6 sm:space-y-8">
                         <div className="flex">
                             <div tabIndex={0}
-                                className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-100 bg-amber-50 px-3.5 py-1.5 text-xs font-semibold text-orange-600
+                                className="mb-4 inline-flex items-center gap-2 rounded-full bg-orange-50 border border-orange-100 text-orange-600 px-3.5 py-1.5 text-xs font-semibold 
                                 shadow-xs transition-all hover:border-orange-200 focus:outline-none focus:ring-1 focus:ring-orange-300 focus:ring-offset-1"
                                 role="status"
                                 aria-label="AI powered badge"
@@ -150,7 +150,7 @@ export default function SelectOrgPage() {
                                         </>
                                     ) : (
                                         <>
-                                            <Sparkles className="w-4 h-4 mr-2 text-amber-400 fill-amber-400" />
+                                            <Sparkles className="w-4 h-4 mr-2 text-orange-400" />
                                             Create Workspace
                                         </>
                                     )}
