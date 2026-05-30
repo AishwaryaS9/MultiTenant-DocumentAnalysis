@@ -22,7 +22,7 @@ export default function DashboardHeader({ orgName, role, orgSlug }: DashboardHea
                             {orgName}
                         </h1>
 
-                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200/60 shadow-sm shrink-0"
+                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-orange-600 border border-orange-200/60 shadow-sm shrink-0"
                             role="status"
                             aria-label={`Your role is ${role}`}>
                             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">

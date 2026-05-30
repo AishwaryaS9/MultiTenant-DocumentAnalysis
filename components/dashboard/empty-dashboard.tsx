@@ -19,7 +19,7 @@ export default async function EmptyDashboard({ orgName, orgSlug, role }: EmptyDa
                         {/* Header */}
                         <div className="flex flex-col items-center text-center">
                             {/* Badge */}
-                            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1 text-xs font-medium text-amber-700 shadow-sm"
+                            <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-orange-50 border-orange-100 text-orange-600  px-3.5 py-1 text-xs font-medium shadow-sm"
                                 role="status"
                                 aria-label="AI workspace ready">
                                 <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />

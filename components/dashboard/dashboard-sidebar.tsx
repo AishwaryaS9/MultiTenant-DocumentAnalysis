@@ -45,7 +45,7 @@ export default function Sidebar() {
                 aria-label="Go to homepage"
                 className="flex items-center gap-3 px-2 mb-10 rounded-xl focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-amber-200 w-fit"
             >
-                <div className="bg-amber-500 p-2 rounded-xl shadow-sm shadow-amber-200">
+                <div className="bg-orange-500 p-2 rounded-xl shadow-sm shadow-orange-100">
                     <Brain className='h-6 w-6 text-white' aria-hidden="true" />
                 </div>
 
@@ -83,7 +83,7 @@ export default function Sidebar() {
                                 variant="ghost"
                                 className={`w-full justify-start gap-4 rounded-xl py-6 mb-1 transition-all motion-reduce:transition-none 
                                     min-h-12 focus-visible:ring-1 focus-visible:ring-offset-1 
-                                    ${isActive ? "bg-amber-50 text-amber-600 font-bold border-r-4 border-amber-500 rounded-r-none focus-visible:ring-amber-200"
+                                    ${isActive ? "bg-orange-50/50 text-orange-600 font-bold border-r-4 border-orange-500 hover:bg-orange-50 hover:text-orange-600 rounded-r-none focus-visible:ring-orange-200"
                                         : "text-slate-500 hover:bg-slate-50 focus-visible:ring-slate-300"}`}
                             >
                                 {item.icon}

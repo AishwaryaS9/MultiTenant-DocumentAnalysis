@@ -12,8 +12,8 @@ export default function AIInsightCard({ role }: AIInsightCardProps) {
                 aria-label="AI productivity insights">
                 <CardHeader className="pb-3 flex flex-row items-start justify-between gap-4">
                     <div className="flex items-center gap-3 min-w-0">
-                        <div className="p-2.5 rounded-2xl bg-amber-100 shrink-0" aria-hidden="true">
-                            <Zap className="w-5 h-5 text-amber-600" />
+                        <div className="p-2.5 rounded-2xl bg-orange-100 shrink-0" aria-hidden="true">
+                            <Zap className="w-5 h-5 text-orange-600" />
                         </div>
 
                         <div className="min-w-0">
@@ -27,7 +27,7 @@ export default function AIInsightCard({ role }: AIInsightCardProps) {
                         </div>
                     </div>
 
-                    <div className="px-3 py-1 rounded-full bg-amber-50 border border-amber-100 text-xs font-semibold text-amber-700 whitespace-nowrap"
+                    <div className="px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-xs font-semibold text-orange-600 whitespace-nowrap"
                         role="status"
                         aria-label="Four times faster productivity">
                         4x Faster
@@ -37,7 +37,7 @@ export default function AIInsightCard({ role }: AIInsightCardProps) {
                 <CardContent className="space-y-5">
                     <p className="text-sm leading-relaxed text-slate-600 font-medium">
                         Documents analyzed with{" "}
-                        <span className="font-semibold text-amber-700">
+                        <span className="font-semibold text-orange-600">
                             Docinate AI
                         </span>{" "}
                         are significantly easier to search, summarize, and organize.
@@ -68,8 +68,8 @@ export default function AIInsightCard({ role }: AIInsightCardProps) {
                     {role === "admin" && (
                         <InviteTeamModal>
                             <Button
-                                className="w-full h-11 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-semibold transition-all duration-200 
-                                shadow-xs hover:shadow-sm cursor-pointer focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-amber-500"
+                                className="w-full h-11 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold transition-all duration-200 
+                                shadow-xs hover:shadow-sm cursor-pointer focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-orange-500"
                                 aria-label="Invite team members to organization"
                             >
                                 <span className="flex items-center justify-center gap-2">

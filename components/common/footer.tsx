@@ -53,8 +53,9 @@ export default function Footer() {
 
                     {/* Section 1: Identity */}
                     <motion.div variants={itemVariants} className="md:col-span-5 space-y-5 sm:space-y-6">
-                        <Link href="/" aria-label="Go to Docinate AI homepage" className="flex items-center gap-2.5 font-bold text-lg rounded-lg focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-amber-200 w-fit">
-                            <div className="bg-amber-500 p-1.5 rounded-lg">
+                        <Link href="/" aria-label="Go to Docinate AI homepage" className="flex items-center gap-2.5 font-bold text-lg rounded-lg 
+                        focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-orange-200 w-fit">
+                            <div className="bg-orange-500 p-1.5 rounded-lg">
                                 <Brain className='h-5 w-5 text-white' aria-hidden="true" />
                             </div>
 

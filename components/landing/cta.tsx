@@ -47,7 +47,7 @@ export default function CTASection() {
         {/* Badge */}
         <motion.div
           variants={itemVariants}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-orange-400 mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-orange-500 mb-6 sm:mb-8"
         >
           <Sparkles className="w-3 h-3 shrink-0" aria-hidden="true" />
           <span>Supercharge your workflow</span>
