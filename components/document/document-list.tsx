@@ -13,7 +13,7 @@ export default function DocumentList({
     onAnalysisTypeChange,
 }: DocumentsListProps) {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6" aria-label="Organization documents list">
             {documents.map((doc) => (
                 <DocumentCard
                     key={doc.id}
