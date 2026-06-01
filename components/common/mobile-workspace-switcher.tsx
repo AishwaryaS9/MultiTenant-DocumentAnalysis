@@ -4,14 +4,14 @@ import { Check, ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { MobileWorkspaceSwitcherProps } from "@/types";
+import { MobileWorkspaceSwitcherProps, Organization } from "@/types";
 
 export function MobileWorkspaceSwitcher({ organization, user, memberships, setActive, onSwitch }: MobileWorkspaceSwitcherProps) {
     const router = useRouter();
 
     const [open, setOpen] = useState(false);
 
-    const handleSwitchOrganization = async (org: any) => {
+    const handleSwitchOrganization = async (org: Organization) => {
         try {
             if (setActive) {
                 await setActive({

@@ -168,16 +168,18 @@ export async function POST(request: Request) {
                 "Workspace created successfully",
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(
             "Organization POST Error:",
             error
         );
 
+        const err = error as any;
+
         /**
          * UNIQUE CONSTRAINT
          */
-        if (error.code === "P2002") {
+        if (err?.code === "P2002") {
             return NextResponse.json(
                 {
                     error:
@@ -190,7 +192,8 @@ export async function POST(request: Request) {
         return NextResponse.json(
             {
                 error:
-                    error.message ||
+                    err?.message ||
+                    String(error) ||
                     "Failed to create workspace",
             },
             { status: 500 }

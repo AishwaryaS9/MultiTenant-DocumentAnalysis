@@ -51,10 +51,11 @@ export default function InviteTeamModal({ children }: InviteTeamModalProps) {
             setRole("org:member");
 
             setOpen(false);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
+            const msg = error instanceof Error ? error.message : String(error);
 
-            toast.error(error.message || "Failed to send invitation");
+            toast.error(msg || "Failed to send invitation");
         } finally {
             setLoading(false);
         }

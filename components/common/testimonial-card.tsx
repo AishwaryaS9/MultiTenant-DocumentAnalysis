@@ -1,5 +1,7 @@
 
-export default function TestimonialCard({ t }: { t: any }) {
+import { Testimonial } from "@/types";
+
+export default function TestimonialCard({ t }: { t: Testimonial }) {
     return (
         <article role="listitem"
             tabIndex={0}
@@ -8,7 +10,7 @@ export default function TestimonialCard({ t }: { t: any }) {
             sm:mx-4 min-w-65 sm:min-w-fit transition-transform duration-300 motion-reduce:transition-none hover:scale-[1.02] motion-reduce:hover:scale-100 
             focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-orange-200">
             <div aria-hidden="true"
-             className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-lg border border-orange-200 shrink-0">
+                className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-lg border border-orange-200 shrink-0">
                 {t.avatar}
             </div>
 

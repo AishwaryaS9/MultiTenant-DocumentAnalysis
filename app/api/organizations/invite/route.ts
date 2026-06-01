@@ -101,14 +101,16 @@ export async function POST(req: Request) {
             invitation,
             message: "Invitation sent successfully",
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("INVITE_API_ERROR", error);
+        const err = error as any;
 
         return NextResponse.json(
             {
                 error:
-                    error?.errors?.[0]?.longMessage ||
-                    error?.message ||
+                    err?.errors?.[0]?.longMessage ||
+                    err?.message ||
+                    String(error) ||
                     "Failed to send invitation",
             },
             { status: 500 }

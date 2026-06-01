@@ -12,7 +12,7 @@ export default function DocumentItem({ doc }: DocumentItemProps) {
             <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center shrink-0"
                     aria-hidden="true">
-                    <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-slate-400 group-hover:text-amber-600 transition-colors duration-200" />
+                    <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-slate-400 group-hover:text-orange-600 transition-colors duration-200" />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -39,7 +39,7 @@ export default function DocumentItem({ doc }: DocumentItemProps) {
             {doc.aiSummary ? (
                 <div
                     className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-50 text-green-700 text-[10px] font-black border
-                     border-green-100 uppercase tracking-tighter whitespace-nowrap shrink-0"
+                     border-green-100 hover:bg-green-100/80 uppercase tracking-tighter whitespace-nowrap shrink-0"
                     role="status"
                     aria-label="Document analyzed successfully">
                     <Brain className="h-3 w-3 shrink-0" aria-hidden="true" />

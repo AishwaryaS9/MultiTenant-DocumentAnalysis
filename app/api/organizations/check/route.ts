@@ -30,7 +30,7 @@ export async function POST(request: Request) {
             normalizeOrgName(name);
 
         const slug = generateSlug(name);
-        
+
         const existing =
             await prisma.organization.findUnique({
                 where: {
@@ -52,11 +52,13 @@ export async function POST(request: Request) {
             success: true,
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const err = error as any;
         return NextResponse.json(
             {
                 error:
-                    error.message ||
+                    err?.message ||
+                    String(error) ||
                     "Something went wrong",
             },
             { status: 500 }
