@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { allowedTypes } from "@/app/data/data";
 import { DocumentUploadDialogProps } from "@/types";
+import { cn } from "@/lib/utils";
 
 export default function DocumentUploadDialog({ onUploadSuccess, children }: DocumentUploadDialogProps) {
     const { organization } = useOrganization();
@@ -19,12 +20,9 @@ export default function DocumentUploadDialog({ onUploadSuccess, children }: Docu
     const [documentName, setDocumentName] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
 
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-
-        if (!file) return;
-
+    const processFile = (file: File) => {
         if (file.size > 10 * 1024 * 1024) {
             toast.error("File size exceeds 10MB");
             return;
@@ -37,6 +35,46 @@ export default function DocumentUploadDialog({ onUploadSuccess, children }: Docu
 
         setDocumentName(file.name.replace(/\.[^/.]+$/, ""));
         setSelectedFile(file);
+    };
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+
+        if (!file) return;
+
+        processFile(file);
+    };
+
+    const handleDragEnter = (e: React.DragEvent<HTMLLabelElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (e.currentTarget === e.target) {
+            setIsDragging(false);
+        }
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setIsDragging(false);
+
+        const file = e.dataTransfer.files?.[0];
+
+        if (!file) return;
+
+        processFile(file);
     };
 
     const handleUpload = async () => {
@@ -103,6 +141,7 @@ export default function DocumentUploadDialog({ onUploadSuccess, children }: Docu
         if (!open) {
             setDocumentName("");
             setSelectedFile(null);
+            setIsDragging(false);
 
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
@@ -207,8 +246,16 @@ export default function DocumentUploadDialog({ onUploadSuccess, children }: Docu
 
                                 <label
                                     htmlFor="file-upload"
-                                    className="group relative flex flex-col items-center justify-center gap-4 rounded-[28px] border-2 border-dashed border-slate-200 bg-white/60 
-                                    px-5 sm:px-6 py-8 sm:py-10 text-center transition-all duration-300 hover:border-orange-300 hover:bg-orange-50/40 cursor-pointer overflow-hidden min-h-52 sm:min-h-60"
+                                    onDragEnter={handleDragEnter}
+                                    onDragLeave={handleDragLeave}
+                                    onDragOver={handleDragOver}
+                                    onDrop={handleDrop}
+                                    className={cn(
+                                        "group relative flex flex-col items-center justify-center gap-4 rounded-[28px] border-2 border-dashed px-5 sm:px-6 py-8 sm:py-10 text-center transition-all duration-300 cursor-pointer overflow-hidden min-h-52 sm:min-h-60",
+                                        isDragging
+                                            ? "border-orange-500 bg-orange-50 shadow-[0_0_0_4px_rgba(251,146,60,0.12)]"
+                                            : "border-slate-200 bg-white/60 hover:border-orange-300 hover:bg-orange-50/40"
+                                    )}
                                 >
                                     {/* Glow */}
                                     <div className="absolute inset-0 bg-linear-to-br from-orange-50/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
@@ -245,16 +292,20 @@ export default function DocumentUploadDialog({ onUploadSuccess, children }: Docu
                                         </div>
                                     ) : (
                                         <div className="relative z-10 flex flex-col items-center">
-                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-linear-to-br from-orange-100 to-orange-50 border
-                                             border-orange-200/50 flex items-center justify-center shadow-sm mb-4" aria-hidden="true">
+                                            <div className={cn(
+                                                "w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border flex items-center justify-center shadow-sm mb-4 transition-all duration-300",
+                                                isDragging
+                                                    ? "bg-orange-100 border-orange-400 scale-110"
+                                                    : "bg-linear-to-br from-orange-100 to-orange-50 border-orange-200/50"
+                                            )}
+                                                aria-hidden="true">
                                                 <Upload className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600" />
                                             </div>
 
                                             <div className="space-y-2">
                                                 <div className="font-semibold text-strong text-base sm:text-lg">
-                                                    Drop your file here
+                                                    {isDragging ? "Release to upload" : "Drag & drop your file here"}
                                                 </div>
-
                                                 <p className="text-sm text-slate-500">
                                                     or click to browse from your computer
                                                 </p>
