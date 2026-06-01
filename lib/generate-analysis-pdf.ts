@@ -1,25 +1,7 @@
+import { GenerateAnalysisPDFParams } from "@/types";
 import { jsPDF } from "jspdf";
 
-interface GenerateAnalysisPDFParams {
-    name: string;
-    createdAt: string | Date;
-    aiSummary?: string;
-    aiKeywords?: string[];
-    sentiment?: string | null;
-    user: {
-        name?: string | null;
-        email?: string | null;
-    };
-}
-
-export const generateAnalysisPDF = ({
-    name,
-    createdAt,
-    aiSummary,
-    aiKeywords = [],
-    sentiment,
-    user,
-}: GenerateAnalysisPDFParams) => {
+export const generateAnalysisPDF = ({ name, createdAt, aiSummary, aiKeywords = [], sentiment, user }: GenerateAnalysisPDFParams) => {
     const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
@@ -66,7 +48,7 @@ export const generateAnalysisPDF = ({
     currentY += 6;
 
     pdf.text(
-        `Uploaded By: ${user.name || user.email || "Unknown User"}`,
+        `Uploaded By: ${user?.name || user?.email || "Unknown User"}`,
         margin,
         currentY
     );

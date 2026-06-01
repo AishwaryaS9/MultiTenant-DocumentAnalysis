@@ -5,8 +5,8 @@ export async function syncUserToDatabase() {
     let clerkUser;
     try {
         clerkUser = await currentUser();
-    } catch (err: any) {
-        if (err?.errors?.[0]?.code === 'resource_not_found') return null;
+    } catch (err: unknown) {
+        if ((err as any)?.errors?.[0]?.code === 'resource_not_found') return null;
         throw err;
     }
 
@@ -49,7 +49,7 @@ export async function syncUserToDatabase() {
         console.log(`New user created: ${email}`);
         return newUser;
 
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error syncing user to database:", error);
         throw error;
     }

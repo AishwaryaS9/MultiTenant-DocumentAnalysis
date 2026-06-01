@@ -62,9 +62,10 @@ export async function POST(request: Request) {
             }
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Analysis error", error);
-        return NextResponse.json({ error: error.message || "Analysis failed" }, { status: 500 });
+        const msg = error instanceof Error ? error.message : String(error);
+        return NextResponse.json({ error: msg || "Analysis failed" }, { status: 500 });
     }
 
 }

@@ -4,12 +4,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Check, ChevronDown, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { DesktopWorkspaceSwitcherProps } from "@/types";
+import { DesktopWorkspaceSwitcherProps, Organization } from "@/types";
 
 export function DesktopWorkspaceSwitcher({ organization, user, memberships, setActive, onSwitch }: DesktopWorkspaceSwitcherProps) {
     const router = useRouter();
 
-    const handleSwitchOrganization = async (org: any) => {
+    const handleSwitchOrganization = async (org: Organization) => {
         try {
             if (setActive) {
                 await setActive({

@@ -112,9 +112,10 @@ export async function POST(request: Request) {
             }
         }
         )
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Document upload error", error);
-        return NextResponse.json({ error: error.message || "Failed to upload document" }, { status: 500 });
+        const msg = error instanceof Error ? error.message : String(error);
+        return NextResponse.json({ error: msg || "Failed to upload document" }, { status: 500 });
     }
 }
 
@@ -184,8 +185,9 @@ export async function GET(request: Request) {
             }
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Get documents error", error);
-        return NextResponse.json({ error: error.message || "Failed to get documents" }, { status: 500 });
+        const msg = error instanceof Error ? error.message : String(error);
+        return NextResponse.json({ error: msg || "Failed to get documents" }, { status: 500 });
     }
 }

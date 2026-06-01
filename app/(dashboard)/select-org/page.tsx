@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOrganizationList, useUser } from "@clerk/nextjs";
+import { Organization } from "@/types";
 import { ArrowRight, Building2, Loader2, Plus, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -45,19 +46,25 @@ export default function SelectOrgPage() {
             toast.success("Workspace created");
             setOrgName("");
             router.push(`/${data.organization.slug}`);
-        } catch (error: any) {
-            toast.error(error.message || "Something went wrong");
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            toast.error(msg || "Something went wrong");
             setOrgName("");
         } finally {
             setIsCreating(false);
         }
     };
 
-    const handleSelectOrg = async (organization: any) => {
+    const handleSelectOrg = async (organization: Organization) => {
         try {
             if (setActive) {
                 await setActive({ organization: organization.id });
             }
+            if (!organization.slug) {
+                toast.error("Organization slug missing");
+                return;
+            }
+
             router.push(`/${organization.slug}`);
         } catch {
             toast.error("Failed to switch workspace");

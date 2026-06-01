@@ -53,8 +53,9 @@ export async function DELETE(request: Request, { params }: RouteParams) {
             where: { id: documentId },
         });
         return NextResponse.json({ success: true, message: "Document deleted successfully" })
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Delete document error", error);
-        return NextResponse.json({ error: error.message || "Failed to delete document" }, { status: 500 });
+        const msg = error instanceof Error ? error.message : String(error);
+        return NextResponse.json({ error: msg || "Failed to delete document" }, { status: 500 });
     }
 }

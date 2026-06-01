@@ -344,7 +344,12 @@ export default function DocumentCard({
                         <Button
                             variant="outline"
                             size="default"
-                            onClick={() => window.open(doc.fileUrl, "_blank")}
+                            // onClick={() => window.open(doc.fileUrl, "_blank")}
+                            onClick={() => {
+                                if (doc.fileUrl) {
+                                    window.open(doc.fileUrl, "_blank");
+                                }
+                            }}
                             aria-label={`Download ${doc.name}`}
                             className="h-10 sm:h-9 w-full justify-center rounded-xl border-slate-200/80 px-4 text-sm font-semibold text-slate-700
                              transition-all hover:bg-slate-50 active:scale-[0.99] focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-300"

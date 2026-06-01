@@ -12,15 +12,15 @@ export interface Document {
     id: string;
     name: string;
     status?: 'idle' | 'analyzing' | 'failed' | 'success';
-    fileUrl?: string;
-    fileSize?: number;
-    fileType?: string;
-    aiSummary?: string;
+    fileUrl?: string | null;
+    fileSize?: number | null;
+    fileType?: string | null;
+    aiSummary?: string | null;
     aiKeywords: string[];
-    sentiment?: string;
-    createdAt: string;
+    sentiment?: string | null;
+    createdAt: string | Date;
     user: {
-        name?: string;
+        name?: string | null;
         email: string;
     };
 }
@@ -50,8 +50,8 @@ export interface DocumentItemProps {
     doc: {
         id: string;
         name: string;
-        createdAt: Date;
-        aiSummary: string | null;
+        createdAt: string | Date;
+        aiSummary?: string | null;
     };
 }
 
@@ -63,9 +63,10 @@ export interface DocumentsHeaderProps {
 
 
 export interface RecentDocumentsProps {
-    documents: any[];
+    documents: Document[];
     orgSlug: string;
 }
+
 
 export interface DocumentsListProps {
     documents: Document[];
@@ -145,7 +146,7 @@ export interface NoResultsStateProps {
 }
 
 export interface SearchResultProps {
-    document: any;
+    document: Document;
 }
 
 export interface SearchPageProps {
@@ -160,17 +161,80 @@ export interface SearchPageProps {
 
 //Workspace
 export interface DesktopWorkspaceSwitcherProps {
-    organization: any;
-    user: any;
-    memberships: any[];
+    organization?: Organization | null;
+    user?: User | null;
+    memberships: Membership[];
     setActive?: (params: { organization: string }) => Promise<void>;
     onSwitch?: () => void;
 }
 
 export interface MobileWorkspaceSwitcherProps {
-    organization: any;
-    user: any;
-    memberships: any[];
+    organization?: Organization | null;
+    user?: User | null;
+    memberships: Membership[];
     setActive?: (params: { organization: string }) => Promise<void>;
     onSwitch?: () => void;
+}
+
+export interface Organization {
+    id: string;
+    name: string;
+    // slug?: string;
+    slug?: string | null;
+    clerkOrgId?: string;
+}
+
+export interface User {
+    id?: string;
+    name?: string | null;
+    firstName?: string | null;
+    email?: string | null;
+}
+
+export interface Membership {
+    id?: string;
+    role: string;
+    organization: Organization;
+}
+
+export interface Testimonial {
+    text: string;
+    avatar?: React.ReactNode;
+}
+
+export interface ClerkWebhookEventData {
+    id?: string;
+    email_addresses?: Array<{ email_address?: string }>;
+    first_name?: string;
+    last_name?: string;
+    organization?: {
+        id?: string;
+    };
+    organization_id?: string;
+    public_user_data?: {
+        user_id?: string;
+        identifier?: string;
+        first_name?: string;
+        last_name?: string;
+    };
+    user_id?: string;
+    email_address?: string;
+    role?: string;
+}
+
+export interface ClerkWebhookEvent {
+    type: string;
+    data: ClerkWebhookEventData;
+}
+
+export interface GenerateAnalysisPDFParams {
+    name: string;
+    createdAt: string | Date;
+    aiSummary?: string | null;
+    aiKeywords?: string[];
+    sentiment?: string | null;
+    user?: {
+        name?: string | null;
+        email: string;
+    };
 }

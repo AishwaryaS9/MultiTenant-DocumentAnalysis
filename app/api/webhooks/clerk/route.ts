@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { Webhook } from "svix";
 import { prisma } from "@/lib/prisma";
+import { ClerkWebhookEvent } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -22,20 +23,22 @@ export async function POST(req: Request) {
 
     const payload = await req.text();
     const wh = new Webhook(WEBHOOK_SECRET);
-    let evt: any;
+
+    let evt: ClerkWebhookEvent;
 
     try {
         evt = wh.verify(payload, {
             "svix-id": svix_id,
             "svix-timestamp": svix_timestamp,
             "svix-signature": svix_signature,
-        });
+        }) as ClerkWebhookEvent;
 
-        console.log('EVENT-CLERK', JSON.stringify(evt))
+        console.log("EVENT-CLERK", JSON.stringify(evt));
     } catch (err) {
         console.error("Webhook verification failed", err);
         return new Response("Invalid signature", { status: 400 });
     }
+
 
     const eventType = evt.type;
     console.log("CLERK WEBHOOK RECEIVED:", eventType);
@@ -49,20 +52,25 @@ export async function POST(req: Request) {
             return new Response("No email found in user payload", { status: 400 });
         }
 
+        const clerkUserId = data.id;
+        if (!clerkUserId) {
+            return new Response("No user id found in user payload", { status: 400 });
+        }
+
         await prisma.user.upsert({
-            where: { clerkUserId: data.id },
+            where: { clerkUserId },
             update: {
                 email,
                 name: `${data.first_name || ""} ${data.last_name || ""}`.trim(),
             },
             create: {
-                clerkUserId: data.id,
+                clerkUserId,
                 email,
                 name: `${data.first_name || ""} ${data.last_name || ""}`.trim(),
             },
         });
 
-        console.log(`User ${data.id} synchronized successfully.`);
+        console.log(`User ${clerkUserId} synchronized successfully.`);
     }
 
 

@@ -33,6 +33,14 @@ export default async function OrgDashboardPage({
             documents: {
                 take: 5,
                 orderBy: { createdAt: "desc" },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                            email: true,
+                        },
+                    },
+                },
             },
         },
     });

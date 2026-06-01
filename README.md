@@ -4,7 +4,7 @@
 
 Docinate AI lets teams create workspaces, upload documents, and run AI analyses (summaries, QA, sentiment, entities, structured extraction) using Google Gemini. It stores results in a Prisma-backed PostgreSQL database, supports file storage via Vercel Blob, and synchronizes users and organizations with Clerk.
 
-## 🌐 Live URL & Repository
+## Live URL & Repository
 
 - **Live Application**: [https://multi-tenant-document-analysis-three.vercel.app/](https://multi-tenant-document-analysis-three.vercel.app/)
 
@@ -111,7 +111,6 @@ MultiTenant-DocumentAnalysis/
 ├── README.md
 ├── tsconfig.json
 ├── types/
-
 ```
 
 ## Getting Started
