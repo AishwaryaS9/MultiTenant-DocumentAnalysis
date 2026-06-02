@@ -1,8 +1,9 @@
 "use client";
 
-import { Brain } from 'lucide-react';
 import Link from 'next/link';
 import { motion, Variants, useReducedMotion } from 'framer-motion';
+import Image from 'next/image';
+import { images } from '@/assets';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -55,13 +56,16 @@ export default function Footer() {
                     <motion.div variants={itemVariants} className="md:col-span-5 space-y-5 sm:space-y-6">
                         <Link href="/" aria-label="Go to Docinate AI homepage" className="flex items-center gap-2.5 font-bold text-lg rounded-lg 
                         focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-orange-200 w-fit">
-                            <div className="bg-orange-500 p-1.5 rounded-lg">
-                                <Brain className='h-5 w-5 text-white' aria-hidden="true" />
+                            <div className="p-1.5 shrink-0">
+                                <Image
+                                    src={images.logo_full}
+                                    alt="logo"
+                                    width={110}
+                                    height={110}
+                                    className="object-contain"
+                                />
                             </div>
 
-                            <span className="tracking-tight text-slate-900">
-                                Docinate AI
-                            </span>
                         </Link>
 
                         <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-sm text-pretty">

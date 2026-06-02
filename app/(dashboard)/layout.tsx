@@ -1,6 +1,7 @@
+import { images } from "@/assets";
 import DashboardSidebar from "@/components/dashboard/dashboard-sidebar";
 import { UserButton } from "@clerk/nextjs";
-import { Brain } from "lucide-react";
+import Image from "next/image";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -12,12 +13,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {/* Mobile Top Bar */}
                 <header className="md:hidden sticky top-0 z-40 flex items-center justify-between gap-4 p-2 bg-white/95 backdrop-blur-sm border-b border-slate-200">
                     <div className="flex items-center gap-2">
-                        <div className="bg-amber-500 p-1.5 rounded-lg">
-                            <Brain className="text-white w-5 h-5" aria-hidden="true" />
+                        <div className=" shrink-0">
+                            <Image
+                                src={images.logo_full}
+                                alt="logo"
+                                width={110}
+                                height={110}
+                                className="object-contain"
+                            />
                         </div>
-                        <span className="text-sm font-semibold text-slate-900 tracking-tight">
-                            Docinate AI
-                        </span>
                     </div>
 
                     <div aria-label="User account menu">

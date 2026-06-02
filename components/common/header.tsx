@@ -1,6 +1,6 @@
 "use client"
 
-import { Brain, Home, Menu, Settings, Star, Users, Zap } from "lucide-react"
+import { Home, Menu, Settings, Star, Users, Zap } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "../ui/button"
@@ -9,6 +9,8 @@ import { useEffect, useState } from "react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "../ui/sheet"
 import { DesktopWorkspaceSwitcher } from "./desktop-workspace-switcher"
 import { MobileWorkspaceSwitcher } from "./mobile-workspace-switcher"
+import Image from "next/image"
+import { images } from "@/assets"
 
 export default function Header() {
     const pathname = usePathname()
@@ -166,18 +168,17 @@ export default function Header() {
                     {/* Logo */}
                     <Link href="/" prefetch
                         aria-label="Docinate AI homepage"
-                        className="flex items-center gap-2 font-bold text-lg min-w-0 rounded-md focus:outline-none focus-visible:ring-1 
-                        focus-visible:ring-orange-500 focus-visible:ring-offset-1">
-                        <div className="bg-orange-500 p-1.5 rounded-lg shrink-0">
-                            <Brain
-                                className="h-5 w-5 text-white"
-                                aria-hidden="true"
+                        className="flex items-center gap-2 font-bold text-lg min-w-0 rounded-md focus:outline-none 
+                        focus-visible:ring-1 focus-visible:ring-orange-500 focus-visible:ring-offset-1">
+                        <div className="p-1.5 shrink-0">
+                            <Image
+                                src={images.logo_full}
+                                alt="logo"
+                                width={110}
+                                height={110}
+                                className="object-contain"
                             />
                         </div>
-
-                        <span className="tracking-tight text-slate-900 truncate">
-                            Docinate AI
-                        </span>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -302,16 +303,21 @@ export default function Header() {
                                                 aria-label="Docinate AI homepage"
                                                 className="flex items-center gap-2 font-bold text-lg rounded-md focus:outline-none focus-visible:ring-1 
                                                 focus-visible:ring-orange-500 focus-visible:ring-offset-1">
-                                                <div className="bg-orange-500 p-1.5 rounded-lg">
-                                                    <Brain
+                                                <div className="p-1.5">
+                                                    {/* <Brain
                                                         className="h-5 w-5 text-white"
                                                         aria-hidden="true"
-                                                    />
+                                                    /> */}
+                                                    <div className="p-1.5 shrink-0">
+                                                        <Image
+                                                            src={images.logo_full}
+                                                            alt="logo"
+                                                            width={110}
+                                                            height={110}
+                                                            className="object-contain"
+                                                        />
+                                                    </div>
                                                 </div>
-
-                                                <span className="tracking-tight text-slate-900">
-                                                    Docinate AI
-                                                </span>
                                             </Link>
                                         </div>
 
