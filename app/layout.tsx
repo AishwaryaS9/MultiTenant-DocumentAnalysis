@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Docinate AI - AI Powered Multi-tenant Document Analysis",
   description: "Analyze and collaborate on documents with Google Gemini AI",
   applicationName: "Docinate AI",
+  icons: { icon: "/favicon.svg" },
   keywords: [
     "AI document analysis",
     "multi-tenant SaaS",

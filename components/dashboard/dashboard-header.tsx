@@ -17,7 +17,7 @@ export default function DashboardHeader({ orgName, role, orgSlug }: DashboardHea
                 </div>
 
                 <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <div className="flex flex-wrap items-center gap-2 py-2 sm:gap-3">
                         <h1 className="text-lg sm:text-xl font-extrabold text-slate-700 tracking-tight truncate" aria-label={`Organization name ${orgName}`}>
                             {orgName}
                         </h1>

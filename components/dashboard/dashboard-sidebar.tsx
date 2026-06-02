@@ -1,11 +1,13 @@
 "use client";
 
-import { Brain, Building, FileText, Home, Menu, Users } from 'lucide-react';
+import { Building, FileText, Menu, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useOrganization, UserButton, useUser } from '@clerk/nextjs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import Image from 'next/image';
+import { images } from '@/assets';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -15,7 +17,6 @@ export default function Sidebar() {
     const activeSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
 
     const navItems = [
-        { href: "/", label: "Home", icon: <Home className='w-5 h-5' aria-hidden="true" /> },
         ...(activeSlug
             ? [
                 {
@@ -43,15 +44,17 @@ export default function Sidebar() {
             <Link
                 href="/"
                 aria-label="Go to homepage"
-                className="flex items-center gap-3 px-2 mb-10 rounded-xl focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-amber-200 w-fit"
-            >
-                <div className="bg-orange-500 p-2 rounded-xl shadow-sm shadow-orange-100">
-                    <Brain className='h-6 w-6 text-white' aria-hidden="true" />
+                className="flex items-center gap-3 px-2 mb-10 rounded-xl focus:outline-none focus-visible:ring-1 
+                focus-visible:ring-offset-1 focus-visible:ring-amber-200 w-fit">
+                <div className="p-1.5 shrink-0">
+                    <Image
+                        src={images.logo_full}
+                        alt="logo"
+                        width={110}
+                        height={110}
+                        className="object-contain"
+                    />
                 </div>
-
-                <span className="font-black text-xl tracking-tight text-slate-900">
-                    Docinate AI
-                </span>
             </Link>
 
 
@@ -136,13 +139,17 @@ export default function Sidebar() {
                 <Link
                     href="/"
                     aria-label="Go to homepage"
-                    className="flex items-center gap-2 rounded-lg focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-amber-200 min-w-0"
-                >
-                    <Brain className="h-6 w-6 text-amber-500 shrink-0" aria-hidden="true" />
-
-                    <span className="font-bold text-slate-900 truncate">
-                        Docinate AI
-                    </span>
+                    className="flex items-center gap-2 rounded-lg focus:outline-none focus-visible:ring-1 
+                    focus-visible:ring-offset-1 focus-visible:ring-amber-200 min-w-0">
+                    <div className="shrink-0">
+                        <Image
+                            src={images.logo_full}
+                            alt="logo"
+                            width={110}
+                            height={110}
+                            className="object-contain"
+                        />
+                    </div>
                 </Link>
 
                 <Sheet>

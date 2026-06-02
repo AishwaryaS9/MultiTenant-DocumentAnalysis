@@ -36,7 +36,7 @@ export default function Features() {
                         viewport={{ once: true }}
                         className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-feature-pill mb-4"
                     >
-                        <span className="text-[12px] font-bold tracking-widest text-feature-accent uppercase">
+                        <span className="text-[12px] font-bold tracking-widest text-orange-600 uppercase">
                             ✦ Feature
                         </span>
                     </motion.div>
