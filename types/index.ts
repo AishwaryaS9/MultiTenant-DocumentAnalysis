@@ -208,6 +208,19 @@ export interface OrganizationMembersProps {
     }>;
 }
 
+export interface OrganizationMember {
+    id?: string;
+    organizationId?: string;
+    role: string;
+    user: {
+        clerkUserId: string;
+        createdAt: string | Date;
+        email?: string | null;
+        name?: string | null;
+        id: string;
+    };
+}
+
 
 export interface Testimonial {
     text: string;

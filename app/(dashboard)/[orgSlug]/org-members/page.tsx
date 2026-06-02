@@ -1,60 +1,38 @@
 import MembersToolbar from "@/components/org-members/members-toolbar";
-import Pagination from "@/components/org-members/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Users, ShieldCheck, User } from "lucide-react";
-import { OrganizationMembersProps } from "@/types";
-
-const PAGE_SIZE = 5;
+import { OrganizationMember, OrganizationMembersProps } from "@/types";
 
 export default async function OrganizationMembers({ params, searchParams }: OrganizationMembersProps) {
   const { orgSlug } = await params;
-  const { search = "", role = "", sort = "newest", page = "1" } = await searchParams;
 
-  const currentPage = Number(page) || 1;
+  const { search = "", role = "", sort = "newest" } = await searchParams;
 
-  const organization = await prisma.organization.findUnique({
-    where: { slug: orgSlug },
-    select: { id: true, name: true },
-  });
+  const query = new URLSearchParams({ search, role, sort });
 
-  if (!organization) notFound();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/organizations/${orgSlug}/members?${query.toString()}`,
+    {
+      cache: "no-store",
+    }
+  );
 
-  const where = {
-    organizationId: organization.id,
-    ...(role && role !== "all" && { role }),
-    ...(search && {
-      user: {
-        OR: [
-          { name: { contains: search, mode: "insensitive" as const } },
-          { email: { contains: search, mode: "insensitive" as const } },
-        ],
-      },
-    }),
-  };
+  if (response.status === 404) {
+    notFound();
+  }
 
-  const orderBy =
-    sort === "name"
-      ? { user: { name: "asc" as const } }
-      : sort === "oldest"
-        ? { user: { createdAt: "asc" as const } }
-        : { user: { createdAt: "desc" as const } };
+  if (!response.ok) {
+    throw new Error("Failed to fetch organization members");
+  }
 
-  const [members, totalCount] = await Promise.all([
-    prisma.organizationMember.findMany({
-      where,
-      include: { user: true },
-      orderBy,
-      skip: (currentPage - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-    }),
-    prisma.organizationMember.count({ where }),
-  ]);
-
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  const data = await response.json();
+  const organization = data.organization;
+  const members = data.members;
+  console.log("members", members)
+  const totalCount = data.totalCount;
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-6">
@@ -117,7 +95,7 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
                   </TableCell>
                 </TableRow>
               ) : (
-                members.map((member) => (
+                members.map((member: OrganizationMember) => (
                   <TableRow key={member.id} className="group hover:bg-slate-50/50 transition-colors">
 
                     {/* Member ID (Monospaced, clean and truncated if too long) */}
@@ -171,8 +149,6 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
           </Table>
         </div>
       </Card>
-
-      <Pagination page={currentPage} totalPages={totalPages} />
     </div>
   );
 }
