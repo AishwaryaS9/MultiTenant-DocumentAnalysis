@@ -308,3 +308,7 @@
 .cl-userButtonPopoverCard * {
   pointer-events: auto !important;
 }
+
+.table-head {
+  @apply font-semibold uppercase text-[12px] tracking-wider text-slate-800/90;
+}

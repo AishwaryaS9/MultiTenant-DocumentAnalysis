@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { LogIn, Sparkles } from "lucide-react";
 import { motion, Variants, useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import { images } from "@/assets";
 
 const Hero = () => {
     const { user, isLoaded } = useUser();
@@ -39,6 +41,16 @@ const Hero = () => {
                     duration: 0.8,
                     ease: [0.16, 1, 0.3, 1]
                 }
+        }
+    };
+
+    const imageVariants: Variants = {
+        hidden: { opacity: 0, y: 40, scale: 0.95 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: { duration: 1.2, delay: 0.6 }
         }
     };
 
@@ -136,6 +148,52 @@ const Hero = () => {
                             </Button>
                         </Link>
                     )}
+                </motion.div>
+
+                <div className="mt-14 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+                    <div className="text-center">
+                        <div className="text-3xl font-bold">10x</div>
+                        <div className="text-gray-500 text-sm">
+                            Faster Analysis
+                        </div>
+                    </div>
+
+                    <div className="text-center">
+                        <div className="text-3xl font-bold">98%</div>
+                        <div className="text-gray-500 text-sm">
+                            Accuracy
+                        </div>
+                    </div>
+
+                    <div className="text-center">
+                        <div className="text-3xl font-bold">24/7</div>
+                        <div className="text-gray-500 text-sm">
+                            AI Assistance
+                        </div>
+                    </div>
+                </div>
+
+             
+                <motion.div
+                    variants={imageVariants}
+                    className="relative mt-8 flex justify-center"
+                >
+                    <div
+                        className="relative w-full max-w-5xl mx-auto"
+                        style={{
+                            maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
+                            WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)"
+                        }}
+                    >
+                        <Image
+                            src={images.dashboard}
+                            alt="Hero section preview"
+                            priority
+                            fetchPriority="high"
+                            sizes="(max-width: 768px) 100vw, 896px"
+                            className="w-full h-auto drop-shadow-2xl rotate-x-6 hover:rotate-x-0 transition-all duration-700"
+                        />
+                    </div>
                 </motion.div>
             </motion.div>
         </section>

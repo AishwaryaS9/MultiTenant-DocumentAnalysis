@@ -119,7 +119,7 @@ export default async function OrgDashboardPage({
                     />
 
                     <StatCard
-                        title="Active Seats"
+                        title="Active Members"
                         value={organization._count.members}
                         icon={<Users className="text-indigo-500" />}
                         description="Team collaborators"
