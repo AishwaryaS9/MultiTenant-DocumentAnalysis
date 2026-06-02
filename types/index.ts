@@ -176,6 +176,7 @@ export interface MobileWorkspaceSwitcherProps {
     onSwitch?: () => void;
 }
 
+//Organization
 export interface Organization {
     id: string;
     name: string;
@@ -196,6 +197,30 @@ export interface Membership {
     role: string;
     organization: Organization;
 }
+
+export interface OrganizationMembersProps {
+    params: Promise<{ orgSlug: string }>;
+    searchParams: Promise<{
+        search?: string;
+        role?: string;
+        sort?: string;
+        page?: string;
+    }>;
+}
+
+export interface OrganizationMember {
+    id?: string;
+    organizationId?: string;
+    role: string;
+    user: {
+        clerkUserId: string;
+        createdAt: string | Date;
+        email?: string | null;
+        name?: string | null;
+        id: string;
+    };
+}
+
 
 export interface Testimonial {
     text: string;

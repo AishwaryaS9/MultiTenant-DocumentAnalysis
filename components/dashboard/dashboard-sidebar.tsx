@@ -28,6 +28,11 @@ export default function Sidebar() {
                     href: `/${activeSlug}/documents`,
                     label: "Documents",
                     icon: <FileText className='w-5 h-5' aria-hidden="true" />
+                },
+                {
+                    href: `/${activeSlug}/org-members`,
+                    label: "Organization Members",
+                    icon: <Users className='w-5 h-5' aria-hidden="true" />
                 }
             ]
             : []),
