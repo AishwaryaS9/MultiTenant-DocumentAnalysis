@@ -47,12 +47,12 @@ export default function DocumentsChart({ data }: DocumentsChartProps) {
 
                             <XAxis
                                 dataKey="day"
-                                tick={{ fontSize: 12 }}
+                                tick={{ fontSize: 13 }}
                             />
 
                             <YAxis
                                 allowDecimals={false}
-                                tick={{ fontSize: 12 }}
+                                tick={{ fontSize: 13 }}
                             />
 
                             <Tooltip
