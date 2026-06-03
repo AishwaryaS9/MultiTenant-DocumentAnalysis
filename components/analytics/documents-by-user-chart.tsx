@@ -55,13 +55,16 @@ export default function DocumentsByUserChart({ data }: DocumentsByUserChartProps
                                     value: "Uploads",
                                     position: "insideBottom",
                                     offset: -15,
+                                    fontSize: 12
                                 }}
+                                tick={{ fontSize: 13 }}
                             />
 
                             <YAxis
                                 type="category"
                                 dataKey="user"
                                 width={120}
+                                tick={{ fontSize: 13 }}
                             />
 
                             <Tooltip

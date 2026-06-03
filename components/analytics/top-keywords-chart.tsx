@@ -51,7 +51,7 @@ export default function TopKeywordsChart({ data }: TopKeywordsChartProps) {
                             margin={{
                                 top: 5,
                                 right: 20,
-                                left: -10,
+                                left: 24,
                                 bottom: 5,
                             }}
                         >
@@ -66,20 +66,19 @@ export default function TopKeywordsChart({ data }: TopKeywordsChartProps) {
                                 type="number"
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: "#94a3b8" }}
+                                tick={{ fill: "#94a3b8", fontSize: 13 }}
                             />
-
-
 
                             <YAxis
                                 dataKey="keyword"
                                 type="category"
-                                width={130}
+                                width={160}
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{
                                     fill: "#64748b",
                                     fontWeight: 500,
+                                    fontSize: 13,
                                 }}
                             />
 
@@ -128,4 +127,3 @@ export default function TopKeywordsChart({ data }: TopKeywordsChartProps) {
         </section>
     );
 }
-
