@@ -11,7 +11,7 @@ export default function RecentDocuments({ documents, orgSlug }: RecentDocumentsP
             aria-label="Recent documents section">
             <CardHeader className="flex flex-row items-center justify-between px-4 sm:px-6 lg:px-8 py-5 sm:py-6 gap-4">
                 <div className="min-w-0">
-                    <CardTitle className="text-lg sm:text-xl font-bold truncate">
+                    <CardTitle className="text-lg sm:text-xl font-semibold truncate">
                         Recent Documents
                     </CardTitle>
 

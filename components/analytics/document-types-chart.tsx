@@ -1,0 +1,159 @@
+"use client";
+
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useEffect, useState } from "react";
+import { DocumentTypesChartProps } from "@/types";
+
+const COLORS = [
+    "#3b82f6",
+    "#10b981",
+    "#6366f1",
+    "#f59e0b",
+    "#ec4899",
+    "#14b8a6",
+];
+
+export default function DocumentTypesChart({ title, data }: DocumentTypesChartProps) {
+    const totalDocs = data.reduce((sum, item) => sum + item.value, 0);
+
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 640);
+        };
+
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
+    const chartId = `chart-${title.toLowerCase().replace(/\s+/g, "-")}`;
+    const descriptionId = `${chartId}-description`;
+
+    return (
+        <section
+            role="figure"
+            aria-labelledby={chartId}
+            aria-describedby={descriptionId}
+            className="rounded-2xl border border-slate-100 bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+        >
+            <div className="mb-4 sm:mb-6 flex items-center justify-between">
+                <h3
+                    id={chartId}
+                    className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100"
+                >
+                    {title}
+                </h3>
+
+                <span
+                    aria-label={`Total documents: ${totalDocs}`}
+                    className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                >
+                    Total: {totalDocs}
+                </span>
+            </div>
+
+            {/* Screen reader summary */}
+            <div id={descriptionId} className="sr-only">
+                {title}. Total documents: {totalDocs}. Breakdown:
+                {data.map((item) => ` ${item.name}: ${item.value}.`)}
+            </div>
+
+            <div className="relative flex h-72 w-full flex-col justify-between sm:h-72">
+
+                <div className="relative h-[calc(100%-40px)] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={data}
+                                dataKey="value"
+                                nameKey="name"
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={isMobile ? 50 : 70}
+                                outerRadius={isMobile ? 70 : 95}
+                                paddingAngle={4}
+                                cornerRadius={6}
+                                animationDuration={800}
+                            >
+                                {data.map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={COLORS[index % COLORS.length]}
+                                        className="transition-all duration-300 hover:opacity-85"
+                                    />
+                                ))}
+                            </Pie>
+
+                            <Tooltip
+                                contentStyle={{
+                                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                                    borderRadius: "12px",
+                                    border: "1px solid #e2e8f0",
+                                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                                    padding: "8px 12px",
+                                }}
+                                itemStyle={{
+                                    fontSize: "13px",
+                                    color: "#1e293b",
+                                }}
+                                cursor={{ fill: "transparent" }}
+                            />
+                        </PieChart>
+                    </ResponsiveContainer>
+
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
+                    >
+                        <span className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">
+                            {totalDocs}
+                        </span>
+                        <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-slate-400">
+                            Docs
+                        </span>
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-3 mt-2">
+                    {data.map((item, index) => (
+                        <div
+                            key={item.name}
+                            className="flex items-center gap-2 text-xs"
+                        >
+                            <div
+                                className="h-3 w-3 rounded-full"
+                                style={{
+                                    backgroundColor:
+                                        COLORS[index % COLORS.length],
+                                }}
+                            />
+                            <span className="text-slate-600 dark:text-slate-400">
+                                {item.name} ({item.value})
+                            </span>
+                        </div>
+                    ))}
+                </div>
+                <div className="w-full h-10 flex items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Legend
+                                verticalAlign="middle"
+                                align="center"
+                                layout="horizontal"
+                                iconType="circle"
+                                iconSize={8}
+                                formatter={(value) => (
+                                    <span className="ml-1 text-[11px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
+                                        {value}
+                                    </span>
+                                )}
+                            />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+        </section>
+    );
+}

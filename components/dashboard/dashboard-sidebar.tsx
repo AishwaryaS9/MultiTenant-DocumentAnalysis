@@ -1,6 +1,6 @@
 "use client";
 
-import { Building, FileText, Menu, Users } from 'lucide-react';
+import { Building, ChartNoAxesCombined, FileText, Menu, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
@@ -33,6 +33,11 @@ export default function Sidebar() {
                     href: `/${activeSlug}/org-members`,
                     label: "Organization Members",
                     icon: <Users className='w-5 h-5' aria-hidden="true" />
+                },
+                {
+                    href: `/${activeSlug}/analytics`,
+                    label: "Analytics",
+                    icon: <ChartNoAxesCombined className='w-5 h-5' aria-hidden="true" />
                 }
             ]
             : []),
