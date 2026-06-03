@@ -263,3 +263,47 @@ export interface GenerateAnalysisPDFParams {
         email: string;
     };
 }
+
+//Analytics
+export interface AnalyticsCardProps {
+    totalAnalyzed: number;
+    aiCoverage: number;
+    activeUsers: number;
+    pendingAnalysis: number;
+}
+
+export interface DocumentTypesChartProps {
+    title: string;
+    data: {
+        name: string;
+        value: number;
+    }[];
+}
+
+export interface DocumentsByUserChartProps {
+    data: {
+        user: string;
+        uploads: number;
+    }[];
+}
+
+export interface DocumentsChartProps {
+    data: {
+        day: string;
+        documents: number;
+    }[];
+}
+
+export interface TopKeywordsChartProps {
+    data: {
+        keyword: string;
+        count: number;
+    }[];
+}
+
+export interface AnalysisStatusChartProps {
+    data: {
+        name: string;
+        value: number;
+    }[];
+}

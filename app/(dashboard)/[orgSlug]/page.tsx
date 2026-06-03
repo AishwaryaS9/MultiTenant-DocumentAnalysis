@@ -1,11 +1,14 @@
 import AIInsightCard from "@/components/dashboard/ai-insight-card";
 import AIProgressCard from "@/components/dashboard/ai-progress-card";
+import AnalysisStatusChart from "@/components/dashboard/analysis-status-chart";
 import DashboardHeader from "@/components/dashboard/dashboard-header";
+import DocumentsChart from "@/components/analytics/documents-chart";
 import EmptyDashboard from "@/components/dashboard/empty-dashboard";
 import RecentDocuments from "@/components/dashboard/recent-documents";
 import StatCard from "@/components/dashboard/stat-card";
 import AmbientBackground from "@/components/document/ambient-background";
 import { prisma } from "@/lib/prisma";
+import { getWeeklyDocumentStats } from "@/lib/analytics";
 import { auth } from "@clerk/nextjs/server";
 import { FileText, Users } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -72,6 +75,25 @@ export default async function OrgDashboardPage({
         },
     });
 
+    const pendingDocs =
+        organization._count.documents - analyzedDocs;
+
+    const analysisStatusData = [
+        {
+            name: "Analyzed",
+            value: analyzedDocs,
+        },
+        {
+            name: "Pending",
+            value: pendingDocs,
+        },
+    ];
+
+    const weeklyChartData =
+        await getWeeklyDocumentStats(
+            organization.id
+        );
+
     const analysisPercentage =
         organization._count.documents > 0
             ? Math.round(
@@ -128,6 +150,19 @@ export default async function OrgDashboardPage({
                     />
 
                     <AIProgressCard percentage={analysisPercentage} />
+                </section>
+
+                <section
+                    aria-label="Document analytics"
+                    className="grid grid-cols-1 xl:grid-cols-3 gap-6"
+                >
+                    <div className="xl:col-span-2">
+                        <DocumentsChart data={weeklyChartData} />
+                    </div>
+
+                    <AnalysisStatusChart
+                        data={analysisStatusData}
+                    />
                 </section>
 
                 {/* Bottom Section */}
