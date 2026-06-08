@@ -1,8 +1,7 @@
 "use client"
 
-import { Home, Menu, Settings, Star, Users, Zap } from "lucide-react"
+import { Menu } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { Button } from "../ui/button"
 import { useOrganization, UserButton, useUser, useOrganizationList } from "@clerk/nextjs"
 import { useEffect, useState } from "react"
@@ -11,16 +10,16 @@ import { DesktopWorkspaceSwitcher } from "./desktop-workspace-switcher"
 import { MobileWorkspaceSwitcher } from "./mobile-workspace-switcher"
 import Image from "next/image"
 import { images } from "@/assets"
+import { navLinks } from "@/app/data/data"
+import { useActiveSection } from "@/app/hooks/useActiveSection"
 
 export default function Header() {
-    const pathname = usePathname()
-
     const { user } = useUser()
     const { organization } = useOrganization()
+    const { activeHash, pathname } = useActiveSection();
 
     const [isOpen, setIsOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
-    const [activeHash, setActiveHash] = useState("")
 
     const { userMemberships, setActive } = useOrganizationList({
         userMemberships: {
@@ -32,126 +31,13 @@ export default function Header() {
         const handleScroll = () => {
             setScrolled(window.scrollY > 40)
         }
-
         window.addEventListener("scroll", handleScroll)
-
         return () => window.removeEventListener("scroll", handleScroll)
     }, [])
 
-    useEffect(() => {
-        if (pathname !== "/") return
-
-        const hashes = ["#testimonials", "#features", "#how-it-works", "#cta"]
-
-        const elements = hashes
-            .map(hash => document.querySelector(hash))
-            .filter(Boolean)
-
-        let hasScrolled = false
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (!hasScrolled && window.scrollY < 80) {
-                    setActiveHash("")
-                    return
-                }
-
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setActiveHash(`#${entry.target.id}`)
-                    }
-                })
-            },
-            {
-                root: null,
-                rootMargin: "-20% 0px -60% 0px",
-                threshold: 0,
-            }
-        )
-
-        elements.forEach((el) => {
-            if (el) observer.observe(el)
-        })
-
-        const handleScroll = () => {
-            hasScrolled = true
-
-            if (window.scrollY < 100) {
-                setActiveHash("")
-            }
-        }
-
-        window.addEventListener("scroll", handleScroll)
-
-        return () => {
-            elements.forEach((el) => {
-                if (el) observer.unobserve(el)
-            })
-
-            window.removeEventListener("scroll", handleScroll)
-        }
-    }, [pathname])
-
-    const getNavItems = () => {
-        return [
-            {
-                href: "/",
-                label: "Home",
-                icon: (
-                    <Home
-                        className="w-4 h-4"
-                        aria-hidden="true"
-                    />
-                )
-            },
-            {
-                href: "#testimonials",
-                label: "Testimonials",
-                icon: (
-                    <Users
-                        className="w-4 h-4"
-                        aria-hidden="true"
-                    />
-                )
-            },
-            {
-                href: "#features",
-                label: "Features",
-                icon: (
-                    <Star
-                        className="w-4 h-4"
-                        aria-hidden="true"
-                    />
-                )
-            },
-            {
-                href: "#how-it-works",
-                label: "How It Works",
-                icon: (
-                    <Settings
-                        className="w-4 h-4"
-                        aria-hidden="true"
-                    />
-                )
-            },
-            {
-                href: "#cta",
-                label: "Call To Action",
-                icon: (
-                    <Zap
-                        className="w-4 h-4"
-                        aria-hidden="true"
-                    />
-                )
-            },
-        ]
-    }
-
-    const navItems = getNavItems()
 
     return (
         <>
-            {/* Skip Navigation */}
             <a href="#main-content"
                 className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-100 focus:bg-white focus:px-4 focus:py-2 focus:rounded-md focus:shadow-md">
                 Skip to content
@@ -186,7 +72,7 @@ export default function Header() {
                         aria-label="Primary navigation"
                         className="hidden md:flex items-center gap-1"
                     >
-                        {navItems.map((item) => {
+                        {navLinks.map((item) => {
                             const isActive =
                                 item.href === "/"
                                     ? pathname === "/" && activeHash === ""
@@ -327,7 +213,7 @@ export default function Header() {
                                             aria-label="Mobile navigation"
                                             className="flex flex-col gap-1"
                                         >
-                                            {navItems.map((item) => {
+                                            {navLinks.map((item) => {
                                                 const isActive =
                                                     item.href === "/"
                                                         ? pathname === "/" &&
@@ -442,3 +328,4 @@ export default function Header() {
         </>
     )
 }
+
