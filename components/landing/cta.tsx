@@ -32,9 +32,7 @@ export default function CTASection() {
 
   return (
     <section id="cta" aria-labelledby="cta-heading" className="relative py-20 sm:py-24 lg:py-32 bg-hero overflow-hidden">
-      {/* Background Decorative Elements */}
       <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-75 rounded-full pointer-events-none" />
-
       <div aria-hidden="true" className="absolute inset-0 bg-[url('/grid.svg')] bg-center mask-[radial-gradient(white,transparent_85%)] opacity-20 pointer-events-none" />
 
       <motion.div
@@ -44,7 +42,6 @@ export default function CTASection() {
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
       >
-        {/* Badge */}
         <motion.div
           variants={itemVariants}
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-orange-500 mb-6 sm:mb-8"
@@ -80,7 +77,7 @@ export default function CTASection() {
               >
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto h-14 px-8 sm:px-10 rounded-full bg-white text-black hover:bg-white/90 text-base 
+                  className="w-full sm:w-auto h-14 px-8 sm:px-10 rounded-md bg-white text-black hover:bg-white/90 text-base 
                   sm:text-lg font-bold transition-all duration-300 motion-reduce:transition-none shadow-[0_0_20px_rgba(255,255,255,0.1)]
                    group-hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-white"
                 >
@@ -97,12 +94,9 @@ export default function CTASection() {
           {isLoaded && !user && (
             <motion.div
               variants={itemVariants}
-              className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-400 font-medium"
-            >
+              className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-400 font-medium">
               <span>No credit card required</span>
-
               <span aria-hidden="true" className="hidden sm:block w-1 h-1 rounded-full bg-gray-700" />
-
               <span>14-day free trial</span>
             </motion.div>
           )}

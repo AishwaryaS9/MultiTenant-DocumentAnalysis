@@ -1,3 +1,4 @@
+import { LucideIcon } from "lucide-react";
 import React from "react";
 
 export type AnalysisType =
@@ -6,6 +7,14 @@ export type AnalysisType =
     | "sentiment"
     | "entities"
     | "extract";
+
+//Landing section
+export interface DifferentiatorProps {
+    num: string;
+    icon: LucideIcon;
+    title: string;
+    description: string;
+}
 
 //Document
 export interface Document {
