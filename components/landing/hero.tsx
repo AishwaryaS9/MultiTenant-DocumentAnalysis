@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { LogIn, ArrowRight } from "lucide-react";
 import { motion, Variants, useReducedMotion } from "framer-motion";
 import SectionBadge from "../common/section-badge";
+import { metrics } from "@/app/data/data";
 
 const Hero = () => {
     const { user, isLoaded } = useUser();
@@ -39,8 +40,7 @@ const Hero = () => {
     };
 
     return (
-        <section
-            aria-labelledby="hero-heading"
+        <section aria-labelledby="hero-heading" aria-describedby="hero-description"
             className="relative pt-32 pb-20 overflow-hidden bg-[#FAF9F5] text-gray-900 selection:bg-orange-100"
         >
             <div aria-hidden="true" className="absolute inset-0 z-0">
@@ -55,7 +55,7 @@ const Hero = () => {
                 initial="hidden"
                 animate="visible"
             >
-                <motion.div variants={itemVariants} className="flex justify-center mb-6">
+                <motion.div variants={itemVariants} className="flex justify-center mb-6" aria-hidden="true">
                     <SectionBadge title="Next-Gen Analysis Powered by AI" />
                 </motion.div>
 
@@ -70,7 +70,7 @@ const Hero = () => {
                     </span>
                 </motion.h1>
 
-                <motion.p
+                <motion.p id="hero-description"
                     variants={itemVariants}
                     className="text-base sm:text-lg md:text-xl text-gray-600 mb-10 max-w-2xl leading-relaxed font-sans font-normal text-pretty"
                 >
@@ -89,7 +89,7 @@ const Hero = () => {
                                     className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all border border-gray-900 shadow-md shadow-gray-900/10 active:scale-[0.98]"
                                 >
                                     Start Free Trial
-                                    <ArrowRight className="w-4 h-4 ml-2 shrink-0 transition-transform group-hover:translate-x-1" />
+                                    <ArrowRight className="w-4 h-4 ml-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                                 </Button>
                             </Link>
 
@@ -111,36 +111,59 @@ const Hero = () => {
                                 className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-gray-900 text-gray-50 hover:bg-gray-800 border border-gray-900 transition-all shadow-md"
                             >
                                 Go to Dashboard
-                                <ArrowRight className="w-4 h-4 ml-2 shrink-0" />
+                                <ArrowRight className="w-4 h-4 ml-2 shrink-0" aria-hidden="true" />
                             </Button>
                         </Link>
                     )}
                 </motion.div>
 
-                <motion.div
-                    variants={itemVariants}
+                {/* <motion.div
+                    variants={itemVariants} role="list"
+                    aria-label="Performance metrics"
                     className="mt-20 w-full max-w-3xl border-t border-gray-200 pt-10 grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4"
                 >
-                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4">
+                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4" role="listitem">
                         <div className="text-4xl font-medium tracking-tight text-gray-900">10x</div>
                         <div className="text-gray-500 text-xs tracking-wider uppercase mt-1 font-sans">
                             Faster Analysis
                         </div>
                     </div>
 
-                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4">
+                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4" role="listitem">
                         <div className="text-4xl font-medium  tracking-tight text-gray-900">98%</div>
                         <div className="text-gray-500 text-xs tracking-wider uppercase mt-1 font-sans">
                             Extraction Accuracy
                         </div>
                     </div>
 
-                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4">
+                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4" role="listitem">
                         <div className="text-4xl font-medium tracking-tight text-gray-900">24/7</div>
                         <div className="text-gray-500 text-xs tracking-wider uppercase mt-1 font-sans">
                             Autonomous Engine
                         </div>
                     </div>
+                </motion.div> */}
+                <motion.div
+                    variants={itemVariants}
+                    role="list"
+                    aria-label="Performance metrics"
+                    className="mt-20 w-full max-w-3xl border-t border-gray-200 pt-10 grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4"
+                >
+                    {metrics.map((metric, index) => (
+                        <div
+                            key={metric.label}
+                            role="listitem"
+                            className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4"
+                        >
+                            <div className="text-4xl font-medium tracking-tight text-gray-900">
+                                {metric.value}
+                            </div>
+
+                            <div className="text-gray-500 text-xs tracking-wider uppercase mt-1 font-sans">
+                                {metric.label}
+                            </div>
+                        </div>
+                    ))}
                 </motion.div>
             </motion.div>
         </section>

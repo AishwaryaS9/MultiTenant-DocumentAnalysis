@@ -190,10 +190,6 @@ export default function Header() {
                                                 className="flex items-center gap-2 font-bold text-lg rounded-md focus:outline-none focus-visible:ring-1 
                                                 focus-visible:ring-orange-500 focus-visible:ring-offset-1">
                                                 <div className="p-1.5">
-                                                    {/* <Brain
-                                                        className="h-5 w-5 text-white"
-                                                        aria-hidden="true"
-                                                    /> */}
                                                     <div className="p-1.5 shrink-0">
                                                         <Image
                                                             src={images.logo_full}

@@ -2,13 +2,27 @@ import { images } from "@/assets";
 import { AnalysisType } from "@/types";
 import { Building2, FileSearch, FileUp, Hash, List, MessageCircle, MessageSquare, ShieldCheck, Sparkles, UserPlus, Zap } from "lucide-react";
 
-
 export const navLinks = [
     { label: "Home", href: "/" },
     { label: "Why Choose Us", href: "#why-choose-us" },
     { label: "Features", href: "#features" },
     { label: "How It Works", href: "#how-it-works" },
     { label: "Call To Action", href: "#cta" },
+];
+
+export const metrics = [
+    {
+        value: "10x",
+        label: "Faster Analysis",
+    },
+    {
+        value: "98%",
+        label: "Extraction Accuracy",
+    },
+    {
+        value: "24/7",
+        label: "Autonomous Engine",
+    },
 ];
 
 export const steps = [
