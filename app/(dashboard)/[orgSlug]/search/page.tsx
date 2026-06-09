@@ -62,28 +62,22 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
     return (
         <main className="min-h-screen overflow-hidden bg-slate-50/50" aria-label="Document search page">
             <div className="relative mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 space-y-8 sm:space-y-10">
-
-                {/* SEO H1 */}
                 <h1 className="sr-only">Search organization documents</h1>
 
-                {/* Header */}
                 <header aria-label="Search page header">
                     <SearchHeader query={query} resultsCount={documents.length} />
                 </header>
 
-                {/* Sticky Search */}
                 <div className="sticky top-4 z-20 sm:top-6" aria-label="Search form">
                     <SearchForm query={query} />
                 </div>
 
-                {/* Screen reader live announcement */}
                 {query && (
                     <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
                         {resultCountText}
                     </div>
                 )}
 
-                {/* States */}
                 {!query && (
                     <section aria-label="Empty search state">
                         <EmptySearchState />
@@ -96,7 +90,6 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
                     </section>
                 )}
 
-                {/* Results */}
                 {documents.length > 0 && (
                     <section aria-label="Search results" role="list" className="grid gap-4 sm:gap-6">
                         {documents.map((document: Document, index: number) => (

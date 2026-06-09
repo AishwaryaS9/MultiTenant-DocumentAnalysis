@@ -23,7 +23,7 @@ export interface Document {
     status?: 'idle' | 'analyzing' | 'failed' | 'success';
     fileUrl?: string | null;
     fileSize?: number | null;
-    fileType?: string | null;
+    fileType?: string | null | undefined;
     aiSummary?: string | null;
     aiKeywords: string[];
     sentiment?: string | null;
