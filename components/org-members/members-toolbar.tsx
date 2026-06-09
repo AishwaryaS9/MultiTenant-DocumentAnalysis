@@ -35,50 +35,63 @@ export default function MembersToolbar() {
   }, [searchTerm]);
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-slate-200/80 bg-white p-4 shadow-xs sm:flex-row sm:items-center sm:justify-between">
-      {/* Shadcn Input with prefix Search Icon alignment */}
+    <div className="flex flex-col gap-4 rounded-xl border border-slate-200/80 bg-white p-4 shadow-xs lg:flex-row lg:items-center lg:justify-between">
+      <label htmlFor="member-search" className="sr-only">
+        Search members by name or email
+      </label>
       <div className="relative w-full sm:max-w-sm">
-        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Search aria-hidden="true" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          type="text"
+          id="member-search"
+          aria-label="Search members"
+          type="search"
           placeholder="Search name or email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-9 h-10 bg-slate-50/50 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all"
+          className="h-10 bg-slate-50/50 pl-9 transition-all focus-visible:ring-1 focus-visible:ring-gray-400 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-50"
         />
       </div>
 
-      {/* Filters Group using Shadcn Select */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
         <div className="flex items-center gap-1.5 px-1 py-1.5 text-xs font-medium text-muted-foreground">
-          <SlidersHorizontal className="h-3.5 w-3.5" />
+          <SlidersHorizontal aria-hidden="true" className="h-3.5 w-3.5" />
           <span>Filters</span>
         </div>
 
-        {/* Role Select Controlled Component */}
         <Select
           value={searchParams.get("role") || "all"}
           onValueChange={(value) => updateUrl("role", value)}
         >
-          <SelectTrigger className="w-32.5 h-10 font-medium text-slate-700 bg-white">
+          <SelectTrigger
+            aria-label="Filter members by role"
+            className="h-10 w-32.5 bg-white font-medium text-slate-700"
+          >
             <SelectValue placeholder="All Roles" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper"
+            side="bottom"
+            align="start"
+            sideOffset={4}>
             <SelectItem value="all">All Roles</SelectItem>
             <SelectItem value="admin">Admin</SelectItem>
             <SelectItem value="member">Member</SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Sort Select Controlled Component */}
         <Select
           value={searchParams.get("sort") || "newest"}
           onValueChange={(value) => updateUrl("sort", value)}
         >
-          <SelectTrigger className="w-35 h-10 font-medium text-slate-700 bg-white">
+          <SelectTrigger
+            aria-label="Sort members"
+            className="h-10 w-35 bg-white font-medium text-slate-700"
+          >
             <SelectValue placeholder="Sort By" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper"
+            side="bottom"
+            align="start"
+            sideOffset={4}>
             <SelectItem value="newest">Newest First</SelectItem>
             <SelectItem value="oldest">Oldest First</SelectItem>
             <SelectItem value="name">Name A-Z</SelectItem>
