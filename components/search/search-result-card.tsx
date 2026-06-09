@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SearchResultProps } from "@/types";
 import ReactMarkdown from "react-markdown";
+import { generateAnalysisPDF } from "@/lib/generate-analysis-pdf";
 
 export function SearchResultCard({ document }: SearchResultProps) {
     const [expanded, setExpanded] = useState(false);
@@ -102,6 +103,28 @@ export function SearchResultCard({ document }: SearchResultProps) {
                             </Button>
                         )}
 
+                        {summary && (
+                            <Button
+                                variant="outline"
+                                onClick={() =>
+                                    generateAnalysisPDF({
+                                        name: document.name,
+                                        createdAt: document.createdAt,
+                                        aiSummary: document.aiSummary,
+                                        aiKeywords: document.aiKeywords || [],
+                                        sentiment: document.sentiment,
+                                        user: document.user,
+                                    })
+                                }
+                                aria-label={`Export AI insights for ${document.name}`}
+                                className="h-10 sm:h-11 w-full sm:w-auto justify-center rounded-2xl border-orange-200/60 bg-orange-50/20 px-4 sm:px-5 
+                                text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-all active:scale-[0.99]"
+                            >
+                                <Sparkles className="mr-2 h-4 w-4" />
+                                Export Insights
+                            </Button>
+                        )}
+
                         {document.fileUrl && (
                             <Button
                                 variant="outline"
@@ -116,6 +139,8 @@ export function SearchResultCard({ document }: SearchResultProps) {
                                 </Link>
                             </Button>
                         )}
+
+
                     </div>
 
                 </div>
@@ -176,6 +201,7 @@ export function SearchResultCard({ document }: SearchResultProps) {
                         ))}
                     </div>
                 )}
+
 
                 {/* FOOTER */}
                 <footer className="mt-6 sm:mt-7 flex flex-col gap-4 border-t border-slate-100 pt-5 md:flex-row md:items-center md:justify-between">

@@ -12,6 +12,8 @@ export default function DocumentsChart({ data }: DocumentsChartProps) {
         0
     );
 
+    const hasData = data.length > 0 && totalDocuments > 0;
+
     return (
         <section
             role="figure"
@@ -33,40 +35,55 @@ export default function DocumentsChart({ data }: DocumentsChartProps) {
             </div>
 
             <div className="h-64 sm:h-72">
-                <div aria-hidden="true" className="h-full w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                            data={data}
-                            margin={{
-                                top: 5,
-                                right: 20,
-                                left: 10,
-                                bottom: 5,
-                            }}>
-                            <CartesianGrid strokeDasharray="3 3" />
+                {!hasData ? (
+                    <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50">
+                        <div className="px-4 text-center">
+                            <p className="text-sm font-medium text-slate-600">
+                                No documents processed yet
+                            </p>
 
-                            <XAxis
-                                dataKey="day"
-                                tick={{ fontSize: 13 }}
-                            />
+                            <p className="mt-1 text-xs text-slate-500">
+                                Upload documents to start tracking weekly processing activity.
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    <div aria-hidden="true" className="h-full w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart
+                                data={data}
+                                margin={{
+                                    top: 5,
+                                    right: 20,
+                                    left: 10,
+                                    bottom: 5,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
 
-                            <YAxis
-                                allowDecimals={false}
-                                tick={{ fontSize: 13 }}
-                            />
+                                <XAxis
+                                    dataKey="day"
+                                    tick={{ fontSize: 13 }}
+                                />
 
-                            <Tooltip
-                                cursor={{ fill: "#FFF7ED" }}
-                            />
+                                <YAxis
+                                    allowDecimals={false}
+                                    tick={{ fontSize: 13 }}
+                                />
 
-                            <Bar
-                                dataKey="documents"
-                                radius={[8, 8, 0, 0]}
-                                fill="#F97316"
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
+                                <Tooltip
+                                    cursor={{ fill: "#FFF7ED" }}
+                                />
+
+                                <Bar
+                                    dataKey="documents"
+                                    radius={[8, 8, 0, 0]}
+                                    fill="#F97316"
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                )}
             </div>
         </section>
     );

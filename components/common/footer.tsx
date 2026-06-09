@@ -67,7 +67,8 @@ export default function Footer() {
                                 <li key={link.label}>
                                     <Link
                                         href={link.href}
-                                        className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors duration-200 outline-none rounded focus-visible:text-slate-900 focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
+                                        className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors duration-200 outline-none rounded 
+                                        focus-visible:text-slate-900 focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-4 focus-visible:ring-offset-white"
                                     >
                                         {link.label}
                                     </Link>

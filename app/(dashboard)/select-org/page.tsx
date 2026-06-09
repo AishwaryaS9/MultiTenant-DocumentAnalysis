@@ -42,7 +42,7 @@ export default function SelectOrgPage() {
             if (setActive) {
                 await setActive({ organization: data.organization.clerkOrgId });
             }
-
+            router.refresh();
             toast.success("Workspace created");
             setOrgName("");
             router.push(`/${data.organization.slug}`);

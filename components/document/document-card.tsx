@@ -58,13 +58,11 @@ export default function DocumentCard({
             />
 
             <div className="flex flex-col gap-5 lg:gap-6 xl:flex-row xl:items-start">
-
                 {/* LEFT CONTENT */}
                 <div className="flex-1 min-w-0 space-y-5">
 
                     {/* HEADER */}
                     <div className="flex items-start gap-3 sm:gap-4">
-
                         {/* FILE ICON */}
                         <div
                             className="relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl text-slate-900 shadow-sm transition-all duration-500"
@@ -79,14 +77,10 @@ export default function DocumentCard({
 
                         {/* TITLE + META */}
                         <div className="min-w-0 flex-1 space-y-1.5">
-
                             {/* TITLE */}
                             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-
-                                <h3
-                                    id={`document-title-${doc.id}`}
-                                    className="truncate text-base sm:text-lg font-bold tracking-tight text-slate-900"
-                                >
+                                <h3 id={`document-title-${doc.id}`}
+                                    className="truncate text-base sm:text-lg font-bold tracking-tight text-slate-900">
                                     {doc.name}
                                 </h3>
 
@@ -106,13 +100,11 @@ export default function DocumentCard({
                                             doc.sentiment ===
                                             "neutral" &&
                                             "border-slate-500/20 bg-slate-500/10 text-slate-700"
-                                        )}
-                                    >
+                                        )}>
                                         <Activity
                                             className="h-3 w-3"
                                             aria-hidden="true"
                                         />
-
                                         {doc.sentiment}
                                     </span>
                                 )}
@@ -122,17 +114,14 @@ export default function DocumentCard({
                             <div
                                 id={`document-meta-${doc.id}`}
                                 className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-xs sm:text-sm font-medium text-slate-500"
-                                aria-label="Document metadata"
-                            >
+                                aria-label="Document metadata">
                                 <div className="flex items-center gap-1.5">
                                     <User
                                         className="h-4 w-4 shrink-0 text-slate-400"
                                         aria-hidden="true"
                                     />
-
                                     <span className="truncate max-w-30">
-                                        {doc.user.name ||
-                                            doc.user.email}
+                                        {doc.user.name || doc.user.email}
                                     </span>
                                 </div>
 
@@ -344,7 +333,6 @@ export default function DocumentCard({
                         <Button
                             variant="outline"
                             size="default"
-                            // onClick={() => window.open(doc.fileUrl, "_blank")}
                             onClick={() => {
                                 if (doc.fileUrl) {
                                     window.open(doc.fileUrl, "_blank");

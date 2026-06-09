@@ -11,6 +11,7 @@ export default function DocumentsByUserChart({ data }: DocumentsByUserChartProps
         (sum, item) => sum + item.uploads,
         0
     );
+    const hasData = data.length > 0 && totalUploads > 0;
 
     return (
         <section
@@ -35,52 +36,67 @@ export default function DocumentsByUserChart({ data }: DocumentsByUserChartProps
             </div>
 
             <div className="h-72 sm:h-85">
-                <div aria-hidden="true" className="h-full w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                            data={data}
-                            layout="vertical"
-                            margin={{
-                                top: 5,
-                                right: 20,
-                                left: 10,
-                                bottom: 20,
-                            }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
+                {!hasData ? (
+                    <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50">
+                        <div className="px-4 text-center">
+                            <p className="text-sm font-medium text-slate-600">
+                                No user activity available
+                            </p>
 
-                            <XAxis
-                                type="number"
-                                label={{
-                                    value: "Uploads",
-                                    position: "insideBottom",
-                                    offset: -15,
-                                    fontSize: 12
+                            <p className="mt-1 text-xs text-slate-500">
+                                Upload documents to see contributor statistics.
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    <div aria-hidden="true" className="h-full w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart
+                                data={data}
+                                layout="vertical"
+                                margin={{
+                                    top: 5,
+                                    right: 20,
+                                    left: 10,
+                                    bottom: 20,
                                 }}
-                                tick={{ fontSize: 13 }}
-                            />
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
 
-                            <YAxis
-                                type="category"
-                                dataKey="user"
-                                width={120}
-                                tick={{ fontSize: 13 }}
-                            />
+                                <XAxis
+                                    type="number"
+                                    label={{
+                                        value: "Uploads",
+                                        position: "insideBottom",
+                                        offset: -15,
+                                        fontSize: 12,
+                                    }}
+                                    tick={{ fontSize: 13 }}
+                                />
 
-                            <Tooltip
-                                cursor={{ fill: "#FFF7ED" }}
-                            />
+                                <YAxis
+                                    type="category"
+                                    dataKey="user"
+                                    width={120}
+                                    tick={{ fontSize: 13 }}
+                                />
 
-                            <Bar
-                                dataKey="uploads"
-                                radius={[0, 6, 6, 0]}
-                                maxBarSize={40}
-                                fill="#F97316"
-                            />
+                                <Tooltip
+                                    cursor={{
+                                        fill: "#FFF7ED",
+                                    }}
+                                />
 
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
+                                <Bar
+                                    dataKey="uploads"
+                                    radius={[0, 6, 6, 0]}
+                                    maxBarSize={40}
+                                    fill="#F97316"
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                )}
             </div>
         </section>
     );

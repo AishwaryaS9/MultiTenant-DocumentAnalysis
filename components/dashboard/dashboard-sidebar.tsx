@@ -126,7 +126,9 @@ export default function Sidebar() {
             {/* User Profile Section */}
             <div className="pt-6 border-t border-slate-100 flex items-center justify-between px-2">
                 <div className="flex items-center gap-3 min-w-0">
-                    <UserButton />
+                    <div aria-hidden="true" className="w-6 h-6 rounded-md bg-slate-900 text-white flex items-center justify-center text-[11px] font-bold shrink-0">
+                        {(organization ? organization.name : user?.firstName)?.charAt(0)}
+                    </div>
 
                     <div className="flex flex-col min-w-0">
                         <span className="text-sm font-bold text-slate-900 truncate max-w-30">

@@ -54,105 +54,136 @@ export default function DocumentTypesChart({ title, data }: DocumentTypesChartPr
                 </span>
             </div>
 
-            {/* Screen reader summary */}
             <div id={descriptionId} className="sr-only">
                 {title}. Total documents: {totalDocs}. Breakdown:
                 {data.map((item) => ` ${item.name}: ${item.value}.`)}
             </div>
 
             <div className="relative flex h-72 w-full flex-col justify-between sm:h-72">
+                {data.length === 0 || totalDocs === 0 ? (
+                    <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50">
+                        <div className="text-center px-4">
+                            <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                                No document types available
+                            </p>
 
-                <div className="relative h-[calc(100%-40px)] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                            <Pie
-                                data={data}
-                                dataKey="value"
-                                nameKey="name"
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={isMobile ? 50 : 70}
-                                outerRadius={isMobile ? 70 : 95}
-                                paddingAngle={4}
-                                cornerRadius={6}
-                                animationDuration={800}
-                            >
-                                {data.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={COLORS[index % COLORS.length]}
-                                        className="transition-all duration-300 hover:opacity-85"
-                                    />
-                                ))}
-                            </Pie>
-
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                                    borderRadius: "12px",
-                                    border: "1px solid #e2e8f0",
-                                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                                    padding: "8px 12px",
-                                }}
-                                itemStyle={{
-                                    fontSize: "13px",
-                                    color: "#1e293b",
-                                }}
-                                cursor={{ fill: "transparent" }}
-                            />
-                        </PieChart>
-                    </ResponsiveContainer>
-
-                    <div
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
-                    >
-                        <span className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">
-                            {totalDocs}
-                        </span>
-                        <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-slate-400">
-                            Docs
-                        </span>
-                    </div>
-                </div>
-
-                <div className="flex flex-wrap justify-center gap-3 mt-2">
-                    {data.map((item, index) => (
-                        <div
-                            key={item.name}
-                            className="flex items-center gap-2 text-xs"
-                        >
-                            <div
-                                className="h-3 w-3 rounded-full"
-                                style={{
-                                    backgroundColor:
-                                        COLORS[index % COLORS.length],
-                                }}
-                            />
-                            <span className="text-slate-600 dark:text-slate-400">
-                                {item.name} ({item.value})
-                            </span>
+                            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                Upload documents to view file type distribution.
+                            </p>
                         </div>
-                    ))}
-                </div>
-                <div className="w-full h-10 flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                            <Legend
-                                verticalAlign="middle"
-                                align="center"
-                                layout="horizontal"
-                                iconType="circle"
-                                iconSize={8}
-                                formatter={(value) => (
-                                    <span className="ml-1 text-[11px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
-                                        {value}
+                    </div>
+                ) : (
+                    <>
+                        <div className="relative h-[calc(100%-40px)] w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={data}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={isMobile ? 50 : 70}
+                                        outerRadius={isMobile ? 70 : 95}
+                                        paddingAngle={4}
+                                        cornerRadius={6}
+                                        animationDuration={800}
+                                    >
+                                        {data.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={
+                                                    COLORS[
+                                                    index %
+                                                    COLORS.length
+                                                    ]
+                                                }
+                                                className="transition-all duration-300 hover:opacity-85"
+                                            />
+                                        ))}
+                                    </Pie>
+
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor:
+                                                "rgba(255, 255, 255, 0.95)",
+                                            borderRadius: "12px",
+                                            border: "1px solid #e2e8f0",
+                                            boxShadow:
+                                                "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                                            padding: "8px 12px",
+                                        }}
+                                        itemStyle={{
+                                            fontSize: "13px",
+                                            color: "#1e293b",
+                                        }}
+                                        cursor={{
+                                            fill: "transparent",
+                                        }}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+
+                            <div
+                                aria-hidden="true"
+                                className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
+                            >
+                                <span className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">
+                                    {totalDocs}
+                                </span>
+
+                                <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-slate-400">
+                                    Docs
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="mt-2 flex flex-wrap justify-center gap-3">
+                            {data.map((item, index) => (
+                                <div
+                                    key={item.name}
+                                    className="flex items-center gap-2 text-xs"
+                                >
+                                    <div
+                                        className="h-3 w-3 rounded-full"
+                                        style={{
+                                            backgroundColor:
+                                                COLORS[
+                                                index %
+                                                COLORS.length
+                                                ],
+                                        }}
+                                    />
+                                    <span className="text-slate-600 dark:text-slate-400">
+                                        {item.name} ({item.value})
                                     </span>
-                                )}
-                            />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex h-10 w-full items-center justify-center">
+                            <ResponsiveContainer
+                                width="100%"
+                                height="100%"
+                            >
+                                <PieChart>
+                                    <Legend
+                                        verticalAlign="middle"
+                                        align="center"
+                                        layout="horizontal"
+                                        iconType="circle"
+                                        iconSize={8}
+                                        formatter={(value) => (
+                                            <span className="ml-1 text-[11px] sm:text-xs font-medium text-slate-600 dark:text-slate-400">
+                                                {value}
+                                            </span>
+                                        )}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </>
+                )}
             </div>
         </section>
     );
