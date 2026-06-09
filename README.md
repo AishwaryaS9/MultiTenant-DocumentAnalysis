@@ -23,7 +23,8 @@ Docinate AI lets teams create workspaces, upload documents, and run AI analyses 
 - File storage: Vercel Blob (`@vercel/blob`)
 - Webhook verification: Svix (`svix`)
 - PDF generation: `jspdf`
-
+- Analytics: `recharts`
+- Animations: `framer-motion`
 - Other notable libs: `react`, `react-dom`, `framer-motion`, `lucide-react`, `react-markdown`, `sonner`, `clsx`, `class-variance-authority`, `shadcn`, `tailwind-merge`
 
 (Core dependencies were identified in `package.json`.)
@@ -40,6 +41,8 @@ Docinate AI lets teams create workspaces, upload documents, and run AI analyses 
 - Persist AI results (summary, keywords, sentiment) on documents in the database
 - Trigger analysis from UI hooks and API (`/api/analyze`)
 - Generate downloadable AI analysis PDF reports (`lib/generate-analysis-pdf.ts`)
+- Real-Time Analytics Dashboard provides interactive visualizations of document processing volumes, AI coverage, user uploads, and high-frequency keyword trends in real time.
+- Organization Members Dashboard manages workspace access, roles, and user profiles through a centralized member directory with search, role-based filtering, and streamlined team administration.
 - Prisma schema and migrations for `User`, `Organization`, `OrganizationMember`, and `Document`
 - Client-side hooks for documents management and toasts/UX helpers
 - Server-side route handlers (App Router route handlers) and client hooks for documents (`app/hooks/use-documents.ts`)
@@ -58,8 +61,10 @@ MultiTenant-DocumentAnalysis/
 │   │   ├── layout.tsx
 │   │   ├── select-org/
 │   │   ├── [orgSlug]/
+│   │   │   ├── analytics/
 │   │   │   ├── documents/
 │   │   │   ├── layout.tsx
+│   │   │   ├── org-members/
 │   │   │   ├── page.tsx
 │   │   │   ├── search/
 │   ├── api/
@@ -77,24 +82,34 @@ MultiTenant-DocumentAnalysis/
 │   │   │   ├── invite/
 │   │   │   │   ├── route.ts
 │   │   │   ├── route.ts
+│   │   │   ├── [orgSlug]/
+│   │   │   │   ├── members/
+│   │   │   │   │   ├── route.ts
 │   │   ├── webhooks/
 │   │   │   ├── clerk/
 │   │   │   │   ├── route.ts
 │   ├── data/
+│   │   ├── data.ts
 │   ├── globals.css
 │   ├── hooks/
+│   │   ├── use-documents.ts
+│   │   ├── useActiveSection.ts
 │   ├── layout.tsx
 │   ├── page.tsx
 ├── assets/
+│   ├── features/
 │   ├── index.ts
 ├── components/
+│   ├── analytics/
 │   ├── common/
 │   ├── dashboard/
 │   ├── document/
 │   ├── landing/
+│   ├── org-members/
 │   ├── search/
 │   ├── ui/
 ├── lib/
+│   ├── analytics.ts
 │   ├── blob.ts
 │   ├── gemini.ts
 │   ├── generate-analysis-pdf.ts
@@ -102,7 +117,6 @@ MultiTenant-DocumentAnalysis/
 │   ├── sync-user.ts
 │   ├── utils.ts
 ├── middleware.ts
-├── next.config.ts
 ├── package.json
 ├── prisma/
 │   ├── migrations/

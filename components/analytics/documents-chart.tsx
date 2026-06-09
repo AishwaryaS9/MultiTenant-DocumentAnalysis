@@ -48,7 +48,7 @@ export default function DocumentsChart({ data }: DocumentsChartProps) {
                         </div>
                     </div>
                 ) : (
-                    <div aria-hidden="true" className="h-full w-full">
+                    <div aria-hidden="true" className="h-full w-full my-12">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={data}

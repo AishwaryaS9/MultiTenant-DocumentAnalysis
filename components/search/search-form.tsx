@@ -50,19 +50,18 @@ export function SearchForm({ query }: SearchFormProps) {
             onSubmit={handleSubmit}
             role="search"
             aria-label="Search documents form"
-            className="relative w-full max-w-full p-4">
+            className="relative w-full p-2 sm:p-4">
             <label htmlFor="document-search" className="sr-only">
                 Search documents
             </label>
 
             <div className="group relative">
-                <div className="relative overflow-hidden rounded-[32px] border border-slate-100 bg-white p-3 shadow-md md:border-white/60 md:bg-white/80 md:p-0 md:shadow-sm">
+                <div className="relative overflow-hidden rounded-[24px] border border-slate-100 bg-white p-3 shadow-md md:border-white/60 md:bg-white/80 md:p-0 md:shadow-sm">
                     <div className="relative flex flex-col sm:flex-row sm:items-center">
                         {/* Search Input */}
                         <div className="relative w-full border-b border-transparent pb-2 transition-colors duration-200 group-focus-within:border-orange-400 sm:border-b-0 sm:pb-0">
                             <Search
-                                className="absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-orange-400"
-                                aria-hidden="true"
+                                className="absolute left-3 sm:left-4 top-1/2 z-10 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-orange-400" aria-hidden="true"
                             />
 
                             <Input
@@ -75,7 +74,7 @@ export function SearchForm({ query }: SearchFormProps) {
                                 autoComplete="off"
                                 spellCheck={false}
                                 aria-label="Search documents input"
-                                className="h-14 w-full border-0 bg-transparent pl-12 pr-12 text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 sm:h-16 sm:pr-4"
+                                className="h-12 sm:h-14 md:h-16 w-full border-0 bg-transparent pl-11 sm:pl-12 pr-11 sm:pr-4 text-sm sm:text-base shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
 
                             {/* Mobile Clear Button */}
@@ -92,7 +91,7 @@ export function SearchForm({ query }: SearchFormProps) {
                         </div>
 
                         {/* Actions */}
-                        <div className="mt-3 flex w-full flex-col items-center gap-2 sm:absolute sm:right-3 sm:top-1/2 sm:mt-0 sm:w-auto sm:-translate-y-1/2 sm:flex-row">
+                        <div className="mt-2 flex w-full flex-col items-center gap-2 sm:absolute sm:right-3 sm:top-1/2 sm:mt-0 sm:w-auto sm:-translate-y-1/2 sm:flex-row">
                             {/* Desktop Clear Button */}
                             {value && (
                                 <button

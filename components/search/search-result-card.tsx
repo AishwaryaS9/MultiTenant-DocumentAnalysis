@@ -9,6 +9,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SearchResultProps } from "@/types";
 import ReactMarkdown from "react-markdown";
 import { generateAnalysisPDF } from "@/lib/generate-analysis-pdf";
+import { mimeTypeLabels } from "@/app/data/data";
+
 
 export function SearchResultCard({ document }: SearchResultProps) {
     const [expanded, setExpanded] = useState(false);
@@ -25,15 +27,19 @@ export function SearchResultCard({ document }: SearchResultProps) {
     const fileSize = document.fileSize ? `${(document.fileSize / 1024 / 1024).toFixed(1)} MB` : "Unknown size";
     const userInitial = document.user?.name?.charAt(0)?.toUpperCase() || "U";
 
+    const displayType = mimeTypeLabels[document.fileType ?? ""] || "FILE";
+
     return (
         <Card
             role="article"
             aria-label={`Search result card for ${document.name}`}
-            className="group relative w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[32px] border border-white/60 bg-white/75 backdrop-blur-2xl">
-            <CardContent className="relative p-4 sm:p-6 md:p-8">
+            className="group relative w-full max-w-full min-w-0 overflow-hidden rounded-[24px] sm:rounded-[32px] border border-white/60 bg-white/75 backdrop-blur-2xl"
+        >
+
+            <CardContent className="relative p-4 sm:p-5 md:p-6">
 
                 {/* HEADER */}
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
 
                     <div className="flex items-start gap-4 sm:gap-5 min-w-0 w-full">
 
@@ -48,10 +54,11 @@ export function SearchResultCard({ document }: SearchResultProps) {
                         </div>
 
                         {/* INFO */}
-                        <div className="min-w-0 w-full space-y-3">
+                        <div className="min-w-0 w-full space-y-2">
 
                             <div className="min-w-0">
-                                <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 wrap-break-word leading-tight">
+                                {/* <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 wrap-break-word leading-tight"> */}
+                                <h2 className="text-base sm:text-xl font-semibold leading-tight wrap-break-word min-w-0">
                                     {document.name}
                                 </h2>
 
@@ -61,8 +68,8 @@ export function SearchResultCard({ document }: SearchResultProps) {
                             </div>
 
                             <div className="flex flex-wrap items-center gap-2 max-w-full">
-                                <Badge className="rounded-full border-0 bg-orange-100 px-2.5 py-0.5 sm:px-3 sm:py-1 text-xs font-semibold text-orange-700">
-                                    {document.fileType}
+                                <Badge className="rounded-full border-0 bg-orange-100 px-2.5 py-0.5 sm:px-3 sm:py-1 text-xs font-semibold text-orange-700 whitespace-normal">
+                                    {displayType}
                                 </Badge>
 
                                 <Badge variant="secondary" className="rounded-full bg-slate-100 px-2.5 py-0.5 sm:px-3 sm:py-1 text-xs text-slate-600">
@@ -74,7 +81,7 @@ export function SearchResultCard({ document }: SearchResultProps) {
                     </div>
 
                     {/* ACTIONS */}
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto"
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto"
                         role="group"
                         aria-label="Document actions">
                         {shouldShowToggle && (
@@ -147,8 +154,8 @@ export function SearchResultCard({ document }: SearchResultProps) {
 
                 {/* AI SUMMARY */}
                 {summary ? (
-                    <section className="mt-6 sm:mt-7 rounded-2xl sm:rounded-3xl border border-slate-50 bg-gray-50/50 p-4 sm:p-5">
-                        <div className="mb-3 flex items-center gap-2">
+                    <section className="mt-6 sm:mt-7 rounded-2xl sm:rounded-3xl border border-slate-50 bg-gray-50/50  p-4 sm:p-5 md:p-7">
+                        <div className="mb-4 flex items-center gap-2.5">
                             <div className="rounded-full bg-orange-100 p-1.5" aria-hidden="true">
                                 <Sparkles className="h-3.5 w-3.5 text-orange-500" />
                             </div>
@@ -158,7 +165,7 @@ export function SearchResultCard({ document }: SearchResultProps) {
                             </span>
                         </div>
 
-                        <div className={`text-xs sm:text-sm leading-6 sm:leading-8 text-slate-700 prose prose-sm max-w-none transition-all duration-300 ${expanded ? "" : "line-clamp-4"}`}
+                        <div className={`text-xs sm:text-sm leading-5 sm:leading-6 text-slate-700 prose prose-sm max-w-none transition-all duration-300 ${expanded ? "" : "line-clamp-3"}`}
                             aria-live="polite">
                             <ReactMarkdown>{summary}</ReactMarkdown>
                         </div>
@@ -189,7 +196,7 @@ export function SearchResultCard({ document }: SearchResultProps) {
 
                 {/* KEYWORDS */}
                 {document.aiKeywords?.length > 0 && (
-                    <div className="mt-5 sm:mt-6 flex flex-wrap gap-2">
+                    <div className="mt-4 sm:mt-5 flex flex-wrap gap-2">
                         {document.aiKeywords.slice(0, 8).map((keyword: string) => (
                             <Badge
                                 key={keyword}
@@ -204,8 +211,8 @@ export function SearchResultCard({ document }: SearchResultProps) {
 
 
                 {/* FOOTER */}
-                <footer className="mt-6 sm:mt-7 flex flex-col gap-4 border-t border-slate-100 pt-5 md:flex-row md:items-center md:justify-between">
-                    <div className="flex flex-wrap items-center gap-4 sm:gap-5 text-xs sm:text-sm text-slate-500">
+                <footer className="mt-5 sm:mt-6 flex flex-col gap-4 border-t border-slate-100 pt-4 sm:pt-5 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-slate-500">
                         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                             <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-slate-100 text-xs font-bold">
                                 {userInitial}

@@ -57,6 +57,12 @@ export const allowedTypes = [
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "text/markdown",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "text/csv",
+    "application/json",
 ];
 
 export const analysisTypes: {
@@ -105,6 +111,19 @@ export const formatFileSize = (bytes?: number) => {
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
 };
 
+export const mimeTypeLabels: Record<string, string> = {
+    "application/pdf": "PDF",
+    "application/msword": "DOC",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "DOCX",
+    "application/vnd.ms-excel": "XLS",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "XLSX",
+    "application/vnd.ms-powerpoint": "PPT",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": "PPTX",
+    "text/plain": "TXT",
+    "text/csv": "CSV",
+    "application/json": "JSON",
+    "text/markdown": "MD"
+};
 
 export const testimonials = [
     { text: "Such an innovative solution", avatar: "🚀" },
