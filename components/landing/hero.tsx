@@ -13,10 +13,11 @@ const Hero = () => {
     const { organization, isLoaded: isOrgLoaded } = useOrganization();
     const shouldReduceMotion = useReducedMotion();
 
-    if (!isLoaded || !isOrgLoaded) return null;
+    const clerkReady = isLoaded && isOrgLoaded;
 
     const orgSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
     const href = orgSlug ? `/${orgSlug}` : "/select-org";
+
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
@@ -81,68 +82,47 @@ const Hero = () => {
                     variants={itemVariants}
                     className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md sm:max-w-none"
                 >
-                    {!user ? (
-                        <>
-                            <Link href="/sign-up" className="w-full sm:w-auto">
-                                <Button
-                                    size="lg"
-                                    className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all border border-gray-900 shadow-md shadow-gray-900/10 active:scale-[0.98]"
-                                >
-                                    Start Free Trial
-                                    <ArrowRight className="w-4 h-4 ml-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                                </Button>
-                            </Link>
 
-                            <Link href="/sign-in" className="w-full sm:w-auto">
+                    {clerkReady ? (
+                        !user ? (
+                            <>
+                                <Link href="/sign-up" className="w-full sm:w-auto">
+                                    <Button
+                                        size="lg"
+                                        className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-gray-900 text-gray-50 hover:bg-gray-800 transition-all border border-gray-900 shadow-md shadow-gray-900/10 active:scale-[0.98]"
+                                    >
+                                        Start Free Trial
+                                        <ArrowRight className="w-4 h-4 ml-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                                    </Button>
+                                </Link>
+
+                                <Link href="/sign-in" className="w-full sm:w-auto">
+                                    <Button
+                                        variant="outline"
+                                        size="lg"
+                                        className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-transparent text-gray-900 border-gray-300 hover:bg-gray-100 hover:border-gray-400 transition-all"
+                                    >
+                                        <LogIn className="w-4 h-4 mr-2 shrink-0" aria-hidden="true" />
+                                        Sign In
+                                    </Button>
+                                </Link>
+                            </>
+                        ) : (
+                            <Link href={href} className="w-full sm:w-auto">
                                 <Button
-                                    variant="outline"
                                     size="lg"
-                                    className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-transparent text-gray-900 border-gray-300 hover:bg-gray-100 hover:border-gray-400 transition-all"
+                                    className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-gray-900 text-gray-50 hover:bg-gray-800 border border-gray-900 transition-all shadow-md"
                                 >
-                                    <LogIn className="w-4 h-4 mr-2 shrink-0" aria-hidden="true" />
-                                    Sign In
+                                    Go to Dashboard
+                                    <ArrowRight className="w-4 h-4 ml-2 shrink-0" aria-hidden="true" />
                                 </Button>
                             </Link>
-                        </>
+                        )
                     ) : (
-                        <Link href={href} className="w-full sm:w-auto">
-                            <Button
-                                size="lg"
-                                className="w-full sm:w-auto rounded-md px-8 py-6 text-base font-medium bg-gray-900 text-gray-50 hover:bg-gray-800 border border-gray-900 transition-all shadow-md"
-                            >
-                                Go to Dashboard
-                                <ArrowRight className="w-4 h-4 ml-2 shrink-0" aria-hidden="true" />
-                            </Button>
-                        </Link>
+                        <div className="h-14" />
                     )}
                 </motion.div>
 
-                {/* <motion.div
-                    variants={itemVariants} role="list"
-                    aria-label="Performance metrics"
-                    className="mt-20 w-full max-w-3xl border-t border-gray-200 pt-10 grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4"
-                >
-                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4" role="listitem">
-                        <div className="text-4xl font-medium tracking-tight text-gray-900">10x</div>
-                        <div className="text-gray-500 text-xs tracking-wider uppercase mt-1 font-sans">
-                            Faster Analysis
-                        </div>
-                    </div>
-
-                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4" role="listitem">
-                        <div className="text-4xl font-medium  tracking-tight text-gray-900">98%</div>
-                        <div className="text-gray-500 text-xs tracking-wider uppercase mt-1 font-sans">
-                            Extraction Accuracy
-                        </div>
-                    </div>
-
-                    <div className="text-center sm:border-r sm:border-gray-200 last:border-0 px-4" role="listitem">
-                        <div className="text-4xl font-medium tracking-tight text-gray-900">24/7</div>
-                        <div className="text-gray-500 text-xs tracking-wider uppercase mt-1 font-sans">
-                            Autonomous Engine
-                        </div>
-                    </div>
-                </motion.div> */}
                 <motion.div
                     variants={itemVariants}
                     role="list"
