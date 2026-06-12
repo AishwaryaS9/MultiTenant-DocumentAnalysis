@@ -50,9 +50,9 @@ export interface DocumentCardProps {
 }
 
 export interface DocumentUploadDialogProps {
+    children?: React.ReactNode;
     // onUploadSuccess?: () => void;
     onUploadSuccess?: () => Promise<void> | void;
-    children?: React.ReactNode;
 }
 
 export interface DocumentItemProps {
@@ -76,14 +76,12 @@ export interface RecentDocumentsProps {
     orgSlug: string;
 }
 
-
 export interface DocumentsListProps {
     documents: Document[];
     isAnalyzing: string | null;
     isDeleting: string | null;
     expandedSummaries: Record<string, boolean>;
-    onAnalyze: (id: string) => void;
-    // onDelete: (id: string) => void;
+    onAnalyze: (id: string) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     onToggleSummary: (id: string) => void;
     selectedAnalysisTypes: Record<string, AnalysisType>;

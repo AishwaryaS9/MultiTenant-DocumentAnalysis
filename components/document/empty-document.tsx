@@ -3,7 +3,7 @@ import DocumentUploadDialog from "@/components/document/document-upload-dialog";
 import { EmptyDocumentsProps } from "@/types";
 import { Button } from "../ui/button";
 
-export default function EmptyDocuments({ onUploadSuccess }: EmptyDocumentsProps) {
+export default function EmptyDocuments() {
     return (
         <section
             className="rounded-[28px] border border-white/40 bg-white/70 px-5 py-14 sm:px-6 sm:py-16 text-center backdrop-blur-md shadow-md"
@@ -22,7 +22,7 @@ export default function EmptyDocuments({ onUploadSuccess }: EmptyDocumentsProps)
             </p>
 
             <div className="mt-7 flex justify-center w-auto">
-                <DocumentUploadDialog onUploadSuccess={onUploadSuccess}>
+                <DocumentUploadDialog >
                     <Button
                         className="h-10 rounded-xl bg-strong hover:bg-strong-dark px-4 text-sm font-medium text-white shadow-sm 
                         shadow-black/10 cursor-pointer focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-black"

@@ -11,7 +11,7 @@ import { allowedTypes } from "@/app/data/data";
 import { DocumentUploadDialogProps } from "@/types";
 import { cn } from "@/lib/utils";
 
-export default function DocumentUploadDialog({ onUploadSuccess, children }: DocumentUploadDialogProps) {
+export default function DocumentUploadDialog({ children, onUploadSuccess }: DocumentUploadDialogProps) {
     const { organization } = useOrganization();
     const { user } = useUser();
     const fileInputRef = useRef<HTMLInputElement>(null);

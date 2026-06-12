@@ -12,20 +12,20 @@ export function useDocuments() {
     const { organization } = useOrganization();
     const organizationId = organization?.id;
 
-    const { data: documents = [], isLoading } =
-        useGetDocumentsQuery(organizationId ?? skipToken);
+    const { data: documents = [], isLoading, refetch } = useGetDocumentsQuery(organizationId ?? skipToken);
 
-    const [analyzeDocument, { isLoading: isAnalyzing }] =
-        useAnalyzeDocumentMutation();
+    const [analyzeDocument] = useAnalyzeDocumentMutation();
 
-    const [deleteDocument, { isLoading: isDeleting }] =
-        useDeleteDocumentMutation();
+    const [deleteDocument] = useDeleteDocumentMutation();
 
     const [selectedAnalysisTypes, setSelectedAnalysisTypes] =
         useState<Record<string, AnalysisType>>({});
 
     const [expandedSummaries, setExpandedSummaries] =
         useState<Record<string, boolean>>({});
+
+    const [analyzingId, setAnalyzingId] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const setDocumentAnalysisType = (
         documentId: string,
@@ -39,6 +39,8 @@ export function useDocuments() {
 
     const handleAnalyze = async (documentId: string) => {
         try {
+            setAnalyzingId(documentId);
+
             const analysisType =
                 selectedAnalysisTypes[documentId] || "summary";
 
@@ -62,15 +64,22 @@ export function useDocuments() {
             }));
         } catch {
             toast.error("Analysis failed");
+        } finally {
+            setAnalyzingId(null);
         }
     };
 
     const handleDelete = async (documentId: string) => {
         try {
+            setDeletingId(documentId);
+
             await deleteDocument({ documentId }).unwrap();
+
             toast.success("Document deleted");
         } catch {
             toast.error("Delete failed");
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -80,13 +89,13 @@ export function useDocuments() {
             [documentId]: !prev[documentId],
         }));
     };
-
-    return {
+  return {
         organization,
         documents,
         isLoading,
-        isAnalyzing,
-        isDeleting,
+        refetch,
+        analyzingId,
+        deletingId,
         selectedAnalysisTypes,
         expandedSummaries,
         setDocumentAnalysisType,
