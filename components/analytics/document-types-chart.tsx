@@ -1,8 +1,9 @@
 "use client";
 
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { DocumentTypesChartProps } from "@/types";
+import { mimeTypeLabels } from "@/app/data/data";
 
 const COLORS = [
     "#3b82f6",
@@ -38,6 +39,17 @@ export default function DocumentTypesChart({ title, data }: DocumentTypesChartPr
     const chartId = `chart-${title.toLowerCase().replace(/\s+/g, "-")}`;
     const descriptionId = `${chartId}-description`;
 
+    const formattedData = useMemo(() => {
+        return data.map((item) => {
+            const lookupKey = item.name.trim().toLowerCase();
+
+            return {
+                ...item,
+                name: mimeTypeLabels[lookupKey] ?? item.name,
+            };
+        });
+    }, [data]);
+
     return (
         <section
             role="figure"
@@ -63,11 +75,13 @@ export default function DocumentTypesChart({ title, data }: DocumentTypesChartPr
 
             <div id={descriptionId} className="sr-only">
                 {title}. Total documents: {totalDocs}. Breakdown:
-                {data.map((item) => ` ${item.name}: ${item.value}.`)}
+                {formattedData.map(
+                    (item) => ` ${item.name}: ${item.value}.`
+                )}
             </div>
 
             <div className="relative flex h-65 sm:h-80 md:h-90 w-full flex-col">
-                {data.length === 0 || totalDocs === 0 ? (
+                {formattedData.length === 0 || totalDocs === 0 ? (
                     <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50">
                         <div className="text-center px-4">
                             <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
@@ -85,7 +99,7 @@ export default function DocumentTypesChart({ title, data }: DocumentTypesChartPr
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
-                                        data={data}
+                                        data={formattedData}
                                         dataKey="value"
                                         nameKey="name"
                                         cx="50%"
@@ -108,7 +122,7 @@ export default function DocumentTypesChart({ title, data }: DocumentTypesChartPr
                                         cornerRadius={6}
                                         animationDuration={800}
                                     >
-                                        {data.map((entry, index) => (
+                                        {formattedData.map((_, index) => (
                                             <Cell
                                                 key={`cell-${index}`}
                                                 fill={
@@ -161,7 +175,7 @@ export default function DocumentTypesChart({ title, data }: DocumentTypesChartPr
                         </div>
 
                         <div className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-2 px-2">
-                            {data.map((item, index) => (
+                            {formattedData.map((item, index) => (
                                 <div
                                     key={item.name}
                                     className="flex items-center gap-2 text-xs"
@@ -182,7 +196,6 @@ export default function DocumentTypesChart({ title, data }: DocumentTypesChartPr
                                 </div>
                             ))}
                         </div>
-
                     </>
                 )}
             </div>
