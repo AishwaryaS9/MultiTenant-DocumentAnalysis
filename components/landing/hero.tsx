@@ -8,31 +8,46 @@ import { motion, Variants, useReducedMotion } from "framer-motion";
 import SectionBadge from "../common/section-badge";
 import { metrics } from "@/app/data/data";
 import { useAppDispatch } from "@/app/store/hooks";
-import { setCurrentOrg } from "@/app/store/slices/organizationSlice";
-import { setUser } from "@/app/store/slices/userSlice";
+import { clearCurrentOrg, setCurrentOrg } from "@/app/store/slices/organizationSlice";
+import { clearUser, setUser } from "@/app/store/slices/userSlice";
+import { useEffect } from "react";
 
 const Hero = () => {
     const dispatch = useAppDispatch();
     const { user, isLoaded } = useUser();
     const { organization, isLoaded: isOrgLoaded } = useOrganization();
     const shouldReduceMotion = useReducedMotion();
-    if (user) {
-        dispatch(
-            setUser({
-                id: user.id,
-                name: user.fullName,
-                firstName: user.firstName,
-                email: user.primaryEmailAddress?.emailAddress ?? null,
-            })
-        );
-    }
 
+    useEffect(() => {
+        if (!isLoaded) return;
+
+        if (user) {
+            dispatch(
+                setUser({
+                    id: user.id,
+                    name: user.fullName,
+                    firstName: user.firstName,
+                    email: user.primaryEmailAddress?.emailAddress ?? null,
+                })
+            );
+        } else {
+            dispatch(clearUser());
+        }
+    }, [user, isLoaded, dispatch]);
     const clerkReady = isLoaded && isOrgLoaded;
 
     const orgSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
-    if (orgSlug) {
-        dispatch(setCurrentOrg(orgSlug));
-    }
+
+    useEffect(() => {
+        if (!isLoaded || !isOrgLoaded) return;
+
+        if (orgSlug) {
+            dispatch(setCurrentOrg(orgSlug));
+        } else {
+            dispatch(clearCurrentOrg());
+        }
+    }, [orgSlug, isLoaded, isOrgLoaded, dispatch]);
+
     const href = orgSlug ? `/${orgSlug}` : "/select-org";
 
     const containerVariants: Variants = {
