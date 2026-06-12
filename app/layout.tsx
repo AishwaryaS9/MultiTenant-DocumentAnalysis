@@ -3,6 +3,7 @@ import { Inter, Urbanist } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Toaster } from "sonner";
+import ReduxProvider from "./store/provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const urbanist = Urbanist({ subsets: ["latin"], variable: "--font-urbanist" });
@@ -34,26 +35,26 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning className={`${urbanist.className}`}
-      // className={`${inter.variable} ${urbanist.variable}`}
-      >
-        <body className="min-h-screen flex flex-col font-sans bg-white text-slate-900 antialiased">
+      <ReduxProvider>
+        <html lang="en" suppressHydrationWarning className={`${urbanist.className}`}>
+          <body className="min-h-screen flex flex-col font-sans bg-white text-slate-900 antialiased">
 
-          <a href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-slate-900 text-white px-3 py-2 rounded-md focus:ring-1 
+            <a href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-slate-900 text-white px-3 py-2 rounded-md focus:ring-1 
             focus:ring-slate-800 focus:ring-offset-1">
-            Skip to content
-          </a>
+              Skip to content
+            </a>
 
-          <div className="min-h-screen flex flex-col">
-            <main id="main-content" role="main" className="flex-1 outline-none">
-              {children}
-            </main>
+            <div className="min-h-screen flex flex-col">
+              <main id="main-content" role="main" className="flex-1 outline-none">
+                {children}
+              </main>
 
-            <Toaster position="top-right" richColors />
-          </div>
-        </body>
-      </html>
+              <Toaster position="top-right" richColors />
+            </div>
+          </body>
+        </html>
+      </ReduxProvider>
     </ClerkProvider>
   );
 }

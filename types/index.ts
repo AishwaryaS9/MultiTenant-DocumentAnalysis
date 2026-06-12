@@ -189,7 +189,6 @@ export interface MobileWorkspaceSwitcherProps {
 export interface Organization {
     id: string;
     name: string;
-    // slug?: string;
     slug?: string | null;
     clerkOrgId?: string;
 }
