@@ -1,6 +1,5 @@
 import { FilePlus, Upload } from "lucide-react";
 import DocumentUploadDialog from "@/components/document/document-upload-dialog";
-import { EmptyDocumentsProps } from "@/types";
 import { Button } from "../ui/button";
 
 export default function EmptyDocuments() {

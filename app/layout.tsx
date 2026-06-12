@@ -34,11 +34,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
-      <ReduxProvider>
-        <html lang="en" suppressHydrationWarning className={`${urbanist.className}`}>
-          <body className="min-h-screen flex flex-col font-sans bg-white text-slate-900 antialiased">
 
+    <html lang="en" suppressHydrationWarning className={`${urbanist.className}`}>
+      <body className="min-h-screen flex flex-col font-sans bg-white text-slate-900 antialiased">
+        <ClerkProvider>
+          <ReduxProvider>
             <a href="#main-content"
               className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-slate-900 text-white px-3 py-2 rounded-md focus:ring-1 
             focus:ring-slate-800 focus:ring-offset-1">
@@ -52,9 +52,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
               <Toaster position="top-right" richColors />
             </div>
-          </body>
-        </html>
-      </ReduxProvider>
-    </ClerkProvider>
+          </ReduxProvider>
+        </ClerkProvider>
+      </body>
+    </html>
+
   );
 }

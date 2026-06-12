@@ -8,6 +8,8 @@ import { auth } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ searchParams }: SearchPageProps) {
     const { query = "" } = await searchParams;
 
