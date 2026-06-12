@@ -7,17 +7,33 @@ import { LogIn, ArrowRight } from "lucide-react";
 import { motion, Variants, useReducedMotion } from "framer-motion";
 import SectionBadge from "../common/section-badge";
 import { metrics } from "@/app/data/data";
+import { useAppDispatch } from "@/app/store/hooks";
+import { setCurrentOrg } from "@/app/store/slices/organizationSlice";
+import { setUser } from "@/app/store/slices/userSlice";
 
 const Hero = () => {
+    const dispatch = useAppDispatch();
     const { user, isLoaded } = useUser();
     const { organization, isLoaded: isOrgLoaded } = useOrganization();
     const shouldReduceMotion = useReducedMotion();
+    if (user) {
+        dispatch(
+            setUser({
+                id: user.id,
+                name: user.fullName,
+                firstName: user.firstName,
+                email: user.primaryEmailAddress?.emailAddress ?? null,
+            })
+        );
+    }
 
     const clerkReady = isLoaded && isOrgLoaded;
 
     const orgSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
+    if (orgSlug) {
+        dispatch(setCurrentOrg(orgSlug));
+    }
     const href = orgSlug ? `/${orgSlug}` : "/select-org";
-
 
     const containerVariants: Variants = {
         hidden: { opacity: 0 },

@@ -1,59 +1,31 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+
+import { useState } from "react";
 import { toast } from "sonner";
 import { useOrganization } from "@clerk/nextjs";
-import { AnalysisType, Document } from "@/types";
 import { analysisTypes } from "@/app/data/data";
+import { useGetDocumentsQuery, useAnalyzeDocumentMutation, useDeleteDocumentMutation } from "@/app/store/services/documentsApi";
+import { skipToken } from "@reduxjs/toolkit/query";
+import type { AnalysisType } from "@/types";
 
 export function useDocuments() {
     const { organization } = useOrganization();
+    const organizationId = organization?.id;
 
-    const [documents, setDocuments] = useState<Document[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isAnalyzing, setIsAnalyzing] = useState<string | null>(null);
-    const [selectedAnalysisTypes, setSelectedAnalysisTypes] = useState<Record<string, AnalysisType>>({});
-    const [expandedSummaries, setExpandedSummaries] = useState<Record<string, boolean>>({});
-    const [isDeleting, setIsDeleting] = useState<string | null>(null);
+    const { data: documents = [], isLoading, refetch } = useGetDocumentsQuery(organizationId ?? skipToken);
 
-    const fetchDocuments = useCallback(async () => {
-        if (!organization) return;
+    const [analyzeDocument] = useAnalyzeDocumentMutation();
 
-        setIsLoading(true);
+    const [deleteDocument] = useDeleteDocumentMutation();
 
-        try {
-            const response = await fetch(
-                `/api/documents?organizationId=${organization.id}`
-            );
+    const [selectedAnalysisTypes, setSelectedAnalysisTypes] =
+        useState<Record<string, AnalysisType>>({});
 
-            if (response.ok) {
-                const data = await response.json();
+    const [expandedSummaries, setExpandedSummaries] =
+        useState<Record<string, boolean>>({});
 
-                setDocuments(data.documents);
-
-                setSelectedAnalysisTypes((prev) => {
-                    const updated = { ...prev };
-
-                    data.documents.forEach((doc: Document) => {
-                        if (!updated[doc.id]) {
-                            updated[doc.id] = "summary";
-                        }
-                    });
-
-                    return updated;
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("Failed to load documents");
-        } finally {
-            setIsLoading(false);
-        }
-    }, [organization]);
-
-    useEffect(() => {
-        fetchDocuments();
-    }, [fetchDocuments]);
-
+    const [analyzingId, setAnalyzingId] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const setDocumentAnalysisType = (
         documentId: string,
@@ -65,117 +37,70 @@ export function useDocuments() {
         }));
     };
 
-    const handleAnalyze = useCallback(
-        async (documentId: string) => {
-            if (!organization) return;
+    const handleAnalyze = async (documentId: string) => {
+        try {
+            setAnalyzingId(documentId);
 
-            setIsAnalyzing(documentId);
+            const analysisType =
+                selectedAnalysisTypes[documentId] || "summary";
 
-            try {
-                const analysisType =
-                    selectedAnalysisTypes[documentId] || "summary";
+            await analyzeDocument({
+                documentId,
+                organizationId: organizationId!,
+                analysisType,
+            }).unwrap();
 
-                const response = await fetch("/api/analyze", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        documentId,
-                        organizationId: organization.id,
-                        analysisType,
-                    }),
-                });
+            const analysisTypeLabel = analysisTypes.find(
+                (type) => type.value === analysisType
+            )?.label;
 
-                if (!response.ok) {
-                    throw new Error("Analysis failed");
-                }
+            toast.success(
+                `${analysisTypeLabel || "Document"} analysis completed`
+            );
 
-                const analysisTypeLabel = analysisTypes.find(
-                    (type) => type.value === analysisType
-                )?.label;
-
-                toast.success(
-                    `${analysisTypeLabel || "Document"} analysis completed`
-                );
-
-                await fetchDocuments();
-
-                setExpandedSummaries((prev) => ({
-                    ...prev,
-                    [documentId]: true,
-                }));
-            } catch (error) {
-                console.error(error);
-                toast.error("Analysis failed");
-            } finally {
-                setIsAnalyzing(null);
-            }
-        },
-        [
-            organization,
-            selectedAnalysisTypes,
-            fetchDocuments,
-        ]
-    );
-
-    const toggleSummary = useCallback(
-        (documentId: string) => {
             setExpandedSummaries((prev) => ({
                 ...prev,
-                [documentId]: !prev[documentId],
+                [documentId]: true,
             }));
-        },
-        []
-    );
+        } catch {
+            toast.error("Analysis failed");
+        } finally {
+            setAnalyzingId(null);
+        }
+    };
 
-    const handleDelete = useCallback(
-        async (documentId: string) => {
-            try {
-                setIsDeleting(documentId);
+    const handleDelete = async (documentId: string) => {
+        try {
+            setDeletingId(documentId);
 
-                const response = await fetch(
-                    `/api/documents/${documentId}`,
-                    {
-                        method: "DELETE",
-                    }
-                );
+            await deleteDocument({ documentId }).unwrap();
 
-                if (!response.ok) {
-                    throw new Error("Delete failed");
-                }
+            toast.success("Document deleted");
+        } catch {
+            toast.error("Delete failed");
+        } finally {
+            setDeletingId(null);
+        }
+    };
 
-                toast.success("Document deleted");
-
-                setSelectedAnalysisTypes((prev) => {
-                    const updated = { ...prev };
-                    delete updated[documentId];
-                    return updated;
-                });
-
-                await fetchDocuments();
-            } catch (error) {
-                console.error(error);
-                toast.error("Delete failed");
-            } finally {
-                setIsDeleting(null);
-            }
-        },
-        [fetchDocuments]
-    );
-
-    return {
+    const toggleSummary = (documentId: string) => {
+        setExpandedSummaries((prev) => ({
+            ...prev,
+            [documentId]: !prev[documentId],
+        }));
+    };
+  return {
         organization,
         documents,
         isLoading,
-        isAnalyzing,
+        refetch,
+        analyzingId,
+        deletingId,
         selectedAnalysisTypes,
         expandedSummaries,
         setDocumentAnalysisType,
-        fetchDocuments,
         handleAnalyze,
         handleDelete,
         toggleSummary,
-        isDeleting,
     };
 }

@@ -17,6 +17,8 @@ Docinate AI lets teams create workspaces, upload documents, and run AI analyses 
 - Next.js (App Router — uses the `app/` directory)
 - TypeScript
 - Tailwind CSS
+- State Management: Redux Toolkit (`@reduxjs/toolkit`)
+- Data Fetching & Caching: RTK Query
 - Authentication: Clerk (`@clerk/nextjs`)
 - Database: Prisma with PostgreSQL (`prisma`, `@prisma/client`, `@prisma/adapter-pg`)
 - AI: Google Generative AI (`@google/generative-ai`) — Gemini integration
@@ -46,6 +48,10 @@ Docinate AI lets teams create workspaces, upload documents, and run AI analyses 
 - Prisma schema and migrations for `User`, `Organization`, `OrganizationMember`, and `Document`
 - Client-side hooks for documents management and toasts/UX helpers
 - Server-side route handlers (App Router route handlers) and client hooks for documents (`app/hooks/use-documents.ts`)
+- Centralized client-side state management using Redux Toolkit for managing authenticated user and organization state across the application.
+- RTK Query integration for document-related API operations, providing automatic caching, request deduplication, loading/error states, and cache invalidation.
+- Typed Redux hooks (`useAppDispatch`, `useAppSelector`) for type-safe state access and dispatching throughout the application.
+- Optimized API data handling with RTK Query middleware to improve performance and reduce unnecessary network requests.
 
 ## Project Structure
 
@@ -96,6 +102,15 @@ MultiTenant-DocumentAnalysis/
 │   │   ├── useActiveSection.ts
 │   ├── layout.tsx
 │   ├── page.tsx
+│   ├── store/
+│   │   ├── hooks.ts
+│   │   ├── index.ts
+│   │   ├── provider.tsx
+│   │   ├── services/
+│   │   │   ├── documentsApi.ts
+│   │   ├── slices/
+│   │   │   ├── organizationSlice.ts
+│   │   │   ├── userSlice.ts
 ├── assets/
 │   ├── features/
 │   ├── index.ts

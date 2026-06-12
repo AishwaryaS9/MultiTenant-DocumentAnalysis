@@ -2,15 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useOrganizationList, useUser } from "@clerk/nextjs";
+import { useOrganizationList } from "@clerk/nextjs";
 import { Organization } from "@/types";
 import { ArrowRight, Building2, Loader2, Plus, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAppSelector } from "@/app/store/hooks";
 
 export default function SelectOrgPage() {
-    const { user } = useUser();
+    const user = useAppSelector((state) => state.user);
+
     const router = useRouter();
 
     const { userMemberships, setActive } = useOrganizationList({
@@ -77,7 +79,6 @@ export default function SelectOrgPage() {
             aria-label="Organization selection page"
             className="relative min-h-screen w-full bg-slate-50/50 text-slate-900 overflow-x-hidden flex items-center justify-center py-8 sm:py-12 md:py-20"
         >
-            {/* Background Decorative Blobs */}
             <div aria-hidden="true" className="absolute inset-0 max-w-full overflow-hidden pointer-events-none select-none">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 sm:w-150 sm:h-150 bg-linear-to-br from-orange-200/40 to-amber-200/20 blur-[120px] rounded-full" />
                 <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-75 h-75 sm:w-112.5 sm:h-112.5 bg-linear-to-tr from-orange-100/40 to-rose-100/30 blur-[100px] rounded-full" />

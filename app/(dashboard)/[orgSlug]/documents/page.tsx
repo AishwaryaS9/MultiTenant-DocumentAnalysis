@@ -13,12 +13,12 @@ export default function DocumentsPage() {
         organization,
         documents,
         isLoading,
-        isAnalyzing,
-        isDeleting,
+        refetch,
+        analyzingId,
+        deletingId,
         selectedAnalysisTypes,
         expandedSummaries,
         setDocumentAnalysisType,
-        fetchDocuments,
         handleAnalyze,
         handleDelete,
         toggleSummary,
@@ -31,7 +31,7 @@ export default function DocumentsPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-5 lg:px-6 py-6 sm:py-8 space-y-8 sm:space-y-10">
                 <DocumentHeader
                     organizationName={organization?.name}
-                    onUploadSuccess={fetchDocuments}
+                    onUploadSuccess={refetch}
                     orgSlug={organization?.slug || ""}
                 />
 
@@ -46,13 +46,13 @@ export default function DocumentsPage() {
                         <LoadingDocuments />
                     ) : documents.length === 0 ? (
                         <EmptyDocuments
-                            onUploadSuccess={fetchDocuments}
+
                         />
                     ) : (
                         <DocumentList
                             documents={documents}
-                            isAnalyzing={isAnalyzing}
-                            isDeleting={isDeleting}
+                            isAnalyzing={analyzingId}
+                            isDeleting={deletingId}
                             selectedAnalysisTypes={selectedAnalysisTypes}
                             expandedSummaries={expandedSummaries}
                             onAnalyze={handleAnalyze}
