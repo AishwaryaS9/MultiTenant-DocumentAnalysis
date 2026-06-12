@@ -23,7 +23,6 @@ export default async function OrgDashboardPage({
     params,
 }: OrgDashboardPageProps) {
     const { userId } = await auth();
-    // const { orgSlug } = await params;
 
     if (!userId) redirect("/sign-in");
 
