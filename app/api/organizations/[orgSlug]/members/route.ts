@@ -1,10 +1,18 @@
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(
-    req: Request,
-    { params }: { params: Promise<{ orgSlug: string }> }
-) {
+
+export async function GET(req: Request, { params }: { params: Promise<{ orgSlug: string }> }) {
+    const { userId } = await auth();
+
+    if (!userId) {
+        return NextResponse.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        )
+    }
+
     const { orgSlug } = await params;
 
     const { searchParams } = new URL(req.url);
@@ -25,6 +33,24 @@ export async function GET(
         return NextResponse.json(
             { error: "Organization not found" },
             { status: 404 }
+        );
+    }
+
+    const membership = await prisma.organizationMember.findFirst({
+        where: {
+            organizationId: organization.id,
+            user: {
+                clerkUserId: userId,
+            }
+        }
+    });
+
+    if (!membership) {
+        return NextResponse.json(
+            {
+                error: "You do not have permission to access this organization",
+            },
+            { status: 403 }
         );
     }
 
@@ -61,7 +87,12 @@ export async function GET(
     const members = await prisma.organizationMember.findMany({
         where,
         include: {
-            user: true,
+            user: {
+                select: {
+                    name: true,
+                    email: true,
+                },
+            },
         },
         orderBy,
     });

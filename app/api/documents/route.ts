@@ -196,6 +196,24 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: "Organization not found" }, { status: 404 });
         }
 
+        const membership = await prisma.organizationMember.findFirst({
+            where: {
+                organizationId: organization.id,
+                user: {
+                    clerkUserId: userId,
+                },
+            },
+        });
+
+        if (!membership) {
+            return NextResponse.json(
+                {
+                    error: "You do not have permission to access this organization",
+                },
+                { status: 403 }
+            );
+        }
+
         //Get documents for organization
         const documents = await prisma.document.findMany({
             where: { organizationId: organization.id },
