@@ -2,7 +2,8 @@ import MembersToolbar from "@/components/org-members/members-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { Users, ShieldCheck, User, Sparkles } from "lucide-react";
 import { OrganizationMember, OrganizationMembersProps } from "@/types";
 
@@ -13,16 +14,21 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
 
   const query = new URLSearchParams({ search, role, sort });
 
+  const cookieStore = await cookies();
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/organizations/${orgSlug}/members?${query.toString()}`,
     {
       cache: "no-store",
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
     }
   );
 
-  if (response.status === 404) {
-    notFound();
-  }
+  if (response.status === 404) notFound();
+  if (response.status === 401) redirect("/sign-in");
+  if (response.status === 403) redirect("/select-org");
 
   if (!response.ok) {
     throw new Error("Failed to fetch organization members");
@@ -92,7 +98,6 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
                 <TableHead scope="col" className="table-head pl-6 py-3.5 w-[25%] text-slate-800">Member ID</TableHead>
                 <TableHead scope="col" className="table-head py-3.5 w-[45%] text-slate-800">Member Info</TableHead>
                 <TableHead scope="col" className="table-head py-3.5 w-[20%] text-slate-800">System Role</TableHead>
-                <TableHead scope="col" className="table-head pr-6 py-3.5 w-[20%] text-slate-800">Date Access Granted</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -147,21 +152,6 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
                           Member
                         </Badge>
                       )}
-                    </TableCell>
-
-                    <TableCell className="pr-6 py-4 text-sm text-slate-600 font-normal">
-
-                      <time dateTime={
-                        member.user.createdAt instanceof Date
-                          ? member.user.createdAt.toISOString()
-                          : member.user.createdAt
-                      }>
-                        {new Date(member.user.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </time>
                     </TableCell>
                   </TableRow>
                 ))
