@@ -73,6 +73,52 @@ export async function POST(req: Request) {
         console.log(`User ${clerkUserId} synchronized successfully.`);
     }
 
+    if (eventType === "organizationMembership.deleted") {
+        const data = evt.data;
+
+        const targetClerkOrgId = data.organization?.id || data.organization_id;
+
+        const clerkUserId = data.public_user_data?.user_id || data.user_id;
+
+        if (!targetClerkOrgId || !clerkUserId) {
+            return new Response("Missing organization or user id", {
+                status: 400,
+            });
+        }
+
+        const organization = await prisma.organization.findUnique({
+            where: {
+                clerkOrgId: targetClerkOrgId,
+            },
+        });
+
+        if (!organization) {
+            return new Response("Organization not found", {
+                status: 404,
+            });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                clerkUserId,
+            },
+        });
+
+        if (!user) {
+            return new Response("User not found", {
+                status: 404,
+            });
+        }
+        await prisma.organizationMember.deleteMany({
+            where: {
+                organizationId: organization.id,
+                userId: user.id,
+            },
+        });
+
+        console.log(`Membership removed: ${user.email} <- ${organization.name}`);
+    }
+
 
     if (
         eventType === "organizationMembership.created" ||
