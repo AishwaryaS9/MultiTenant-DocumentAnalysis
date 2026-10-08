@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth, useOrganizationList } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { Bell, CheckCheck, Loader2, MailPlus } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { toast } from "sonner";
+import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
+import { Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -15,15 +13,13 @@ import {
 import {
     NOTIFICATIONS_POLL_INTERVAL_MS,
     useGetNotificationsQuery,
-    useMarkNotificationsReadMutation,
 } from "@/app/store/services/notificationsApi";
-import type { AppNotification } from "@/types";
+import NotificationItem from "./notification-item";
+import { useNotificationActions } from "./use-notification-actions";
 
 export default function NotificationBell() {
-    const router = useRouter();
     const { isSignedIn } = useAuth();
     const [open, setOpen] = useState(false);
-    const [acceptingId, setAcceptingId] = useState<string | null>(null);
 
     const { data } = useGetNotificationsQuery(undefined, {
         skip: !isSignedIn,
@@ -32,45 +28,12 @@ export default function NotificationBell() {
         refetchOnFocus: true,
         refetchOnReconnect: true,
     });
-    const [markRead] = useMarkNotificationsReadMutation();
 
-    // Pending Clerk invitations let us accept straight from the notification
-    const { userInvitations, userMemberships } = useOrganizationList({
-        userInvitations: { status: "pending", infinite: true },
-        userMemberships: { infinite: true },
-    });
+    const { acceptingId, canAccept, accept, markOneRead, markAllRead } =
+        useNotificationActions(() => setOpen(false));
 
     const notifications = data?.notifications ?? [];
     const unreadCount = data?.unreadCount ?? 0;
-
-    const handleAccept = async (notification: AppNotification) => {
-        const invitation = userInvitations?.data?.find(
-            (inv) => inv.id === notification.invitationId
-        );
-
-        if (!invitation) {
-            toast.error("This invitation is no longer available");
-            return;
-        }
-
-        try {
-            setAcceptingId(notification.id);
-            await invitation.accept();
-            await Promise.all([
-                markRead({ ids: [notification.id] }).unwrap(),
-                userInvitations?.revalidate?.(),
-                userMemberships?.revalidate?.(),
-            ]);
-            toast.success(`You joined ${invitation.publicOrganizationData.name}`);
-            setOpen(false);
-            router.push("/select-org");
-        } catch (error: unknown) {
-            const msg = error instanceof Error ? error.message : "Failed to accept invitation";
-            toast.error(msg);
-        } finally {
-            setAcceptingId(null);
-        }
-    };
 
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -79,9 +42,7 @@ export default function NotificationBell() {
                     variant="ghost"
                     size="icon"
                     aria-label={
-                        unreadCount > 0
-                            ? `Notifications, ${unreadCount} unread`
-                            : "Notifications"
+                        unreadCount > 0 ? `Notifications, ${unreadCount} unread` : "Notifications"
                     }
                     className="relative rounded-full cursor-pointer focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-400"
                 >
@@ -107,7 +68,7 @@ export default function NotificationBell() {
                     {unreadCount > 0 && (
                         <button
                             type="button"
-                            onClick={() => markRead()}
+                            onClick={() => markAllRead()}
                             className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-900 cursor-pointer"
                         >
                             <CheckCheck className="h-3.5 w-3.5" aria-hidden="true" />
@@ -122,73 +83,28 @@ export default function NotificationBell() {
                             You&apos;re all caught up
                         </li>
                     ) : (
-                        notifications.map((n) => {
-                            const isUnread = !n.readAt;
-                            const canAccept =
-                                n.type === "ORG_INVITATION" &&
-                                !!n.invitationId &&
-                                !!userInvitations?.data?.some((inv) => inv.id === n.invitationId);
-
-                            return (
-                                <li
-                                    key={n.id}
-                                    className={`px-4 py-3 flex gap-3 ${isUnread ? "bg-orange-50/50" : ""}`}
-                                >
-                                    <div
-                                        aria-hidden="true"
-                                        className="h-9 w-9 shrink-0 rounded-xl bg-slate-900 text-white flex items-center justify-center"
-                                    >
-                                        <MailPlus className="h-4 w-4" />
-                                    </div>
-
-                                    <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-semibold text-slate-900 wrap-break-word">
-                                            {n.title}
-                                        </p>
-                                        <p className="text-xs text-slate-500 mt-0.5 wrap-break-word">
-                                            {n.message}
-                                        </p>
-                                        <p className="text-[11px] text-slate-400 mt-1">
-                                            {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
-                                        </p>
-
-                                        <div className="flex items-center gap-2 mt-2">
-                                            {canAccept && (
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => handleAccept(n)}
-                                                    disabled={acceptingId === n.id}
-                                                    className="h-8 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs cursor-pointer"
-                                                >
-                                                    {acceptingId === n.id && (
-                                                        <Loader2 className="mr-1.5 h-3 w-3 animate-spin" aria-hidden="true" />
-                                                    )}
-                                                    Accept invitation
-                                                </Button>
-                                            )}
-                                            {isUnread && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => markRead({ ids: [n.id] })}
-                                                    className="text-xs font-semibold text-slate-500 hover:text-slate-900 cursor-pointer"
-                                                >
-                                                    Mark as read
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {isUnread && (
-                                        <span
-                                            aria-label="Unread"
-                                            className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-orange-500"
-                                        />
-                                    )}
-                                </li>
-                            );
-                        })
+                        notifications.map((n) => (
+                            <NotificationItem
+                                key={n.id}
+                                notification={n}
+                                canAccept={canAccept(n)}
+                                isAccepting={acceptingId === n.id}
+                                onAccept={accept}
+                                onMarkRead={markOneRead}
+                            />
+                        ))
                     )}
                 </ul>
+
+                <div className="border-t border-slate-100 px-4 py-2.5 text-center">
+                    <Link
+                        href="/notifications"
+                        onClick={() => setOpen(false)}
+                        className="text-xs font-semibold text-slate-600 hover:text-slate-900"
+                    >
+                        View all notifications
+                    </Link>
+                </div>
             </DropdownMenuContent>
         </DropdownMenu>
     );

@@ -31,8 +31,8 @@ export async function createInvitationNotification({
                 type: NOTIFICATION_TYPES.ORG_INVITATION,
                 title: `Invitation to join ${organizationName}`,
                 message: inviterName
-                    ? `${inviterName} invited you to join the ${organizationName} workspace.`
-                    : `You have been invited to join the ${organizationName} workspace.`,
+                    ? `${inviterName} invited you to join the ${organizationName} workspace. Please check your email inbox for the invitation.`
+                    : `You have been invited to join the ${organizationName} workspace. Please check your email inbox for the invitation.`,
                 organizationId,
                 invitationId: invitationId ?? null,
             },

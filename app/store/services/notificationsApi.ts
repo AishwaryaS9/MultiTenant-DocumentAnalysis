@@ -8,8 +8,9 @@ export const notificationsApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
     tagTypes: ["Notifications"],
     endpoints: (builder) => ({
-        getNotifications: builder.query<NotificationsResponse, void>({
-            query: () => "/notifications",
+        // Optional limit (defaults to 20 on the server, max 100)
+        getNotifications: builder.query<NotificationsResponse, number | void>({
+            query: (limit) => (limit ? `/notifications?limit=${limit}` : "/notifications"),
             providesTags: ["Notifications"],
         }),
 

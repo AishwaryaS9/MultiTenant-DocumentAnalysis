@@ -1,17 +1,23 @@
-import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
+const DEFAULT_LIMIT = 20;
+const MAX_LIMIT = 100;
 
-const MAX_NOTIFICATIONS = 20;
-
-// GET /api/notifications -> latest notifications + unread count for the signed-in user
-export async function GET() {
+// GET /api/notifications?limit=20 -> latest notifications (max 100) + unread count for the signed-in user
+export async function GET(req: Request) {
     const { userId } = await auth();
 
     if (!userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const limitParam = Number(new URL(req.url).searchParams.get("limit"));
+    const limit =
+        Number.isInteger(limitParam) && limitParam > 0
+            ? Math.min(limitParam, MAX_LIMIT)
+            : DEFAULT_LIMIT;
 
     const user = await prisma.user.findUnique({
         where: { clerkUserId: userId },
@@ -27,7 +33,7 @@ export async function GET() {
         prisma.notification.findMany({
             where: { userId: user.id },
             orderBy: { createdAt: "desc" },
-            take: MAX_NOTIFICATIONS,
+            take: limit,
         }),
         prisma.notification.count({
             where: { userId: user.id, readAt: null },

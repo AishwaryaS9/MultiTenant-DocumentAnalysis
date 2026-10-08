@@ -23,6 +23,8 @@ vi.mock("@/lib/prisma", () => ({
 
 import { GET, PATCH } from "@/app/api/notifications/route";
 
+const get = (qs = "") => new Request(`http://localhost:3000/api/notifications${qs}`);
+
 const patch = (body?: unknown) =>
     new Request("http://localhost:3000/api/notifications", {
         method: "PATCH",
@@ -36,7 +38,7 @@ describe("/api/notifications", () => {
 
     it("GET returns 401 when signed out", async () => {
         mockAuth.mockResolvedValue({ userId: null });
-        const res = await GET();
+        const res = await GET(get());
         expect(res.status).toBe(401);
         expect(mockFindMany).not.toHaveBeenCalled();
     });
@@ -44,7 +46,7 @@ describe("/api/notifications", () => {
     it("GET returns an empty list when the user is not in the DB yet", async () => {
         mockAuth.mockResolvedValue({ userId: "clerk_1" });
         mockFindUser.mockResolvedValue(null);
-        const res = await GET();
+        const res = await GET(get());
         expect(await res.json()).toEqual({ notifications: [], unreadCount: 0 });
     });
 
@@ -54,12 +56,28 @@ describe("/api/notifications", () => {
         mockFindMany.mockResolvedValue([{ id: "n1" }]);
         mockCount.mockResolvedValue(1);
 
-        const res = await GET();
+        const res = await GET(get());
         const body = await res.json();
 
         expect(body).toEqual({ notifications: [{ id: "n1" }], unreadCount: 1 });
         expect(mockFindMany.mock.calls[0][0].where).toEqual({ userId: "user_1" });
         expect(mockCount.mock.calls[0][0].where).toEqual({ userId: "user_1", readAt: null });
+    });
+
+    it("GET respects ?limit and caps it at 100", async () => {
+        mockAuth.mockResolvedValue({ userId: "clerk_1" });
+        mockFindUser.mockResolvedValue({ id: "user_1" });
+        mockFindMany.mockResolvedValue([]);
+        mockCount.mockResolvedValue(0);
+
+        await GET(get("?limit=50"));
+        expect(mockFindMany.mock.calls[0][0].take).toBe(50);
+
+        await GET(get("?limit=5000"));
+        expect(mockFindMany.mock.calls[1][0].take).toBe(100);
+
+        await GET(get("?limit=abc"));
+        expect(mockFindMany.mock.calls[2][0].take).toBe(20);
     });
 
     it("PATCH returns 401 when signed out", async () => {
