@@ -2,10 +2,13 @@ import { images } from "@/assets";
 import DashboardSidebar from "@/components/dashboard/dashboard-sidebar";
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
+import NotificationBell from "@/components/notifications/notification-bell";
+import NotificationListener from "@/components/notifications/notification-listener";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex min-h-screen bg-slate-50/50">
+            <NotificationListener />
             <DashboardSidebar />
 
             {/* Content Area */}
@@ -24,7 +27,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </div>
                     </div>
 
-                    <div aria-label="User account menu">
+                    <div className="flex items-center gap-1" aria-label="User account menu">
+                        <NotificationBell />
                         <UserButton />
                     </div>
                 </header>

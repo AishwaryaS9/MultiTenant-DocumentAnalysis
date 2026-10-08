@@ -1,6 +1,7 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { createInvitationNotification } from "@/lib/notifications";
 
 export async function POST(req: Request) {
     try {
@@ -95,6 +96,20 @@ export async function POST(req: Request) {
                 emailAddress: email,
                 role,
             });
+
+        // Notify the invited user inside the app (in addition to Clerk's email)
+        const inviter = await prisma.user.findUnique({
+            where: { clerkUserId: userId },
+            select: { name: true, email: true },
+        });
+
+        await createInvitationNotification({
+            userId: existingUser.id,
+            organizationId: organization.id,
+            organizationName: organization.name,
+            invitationId: invitation.id,
+            inviterName: inviter?.name || inviter?.email,
+        });
 
         return NextResponse.json({
             success: true,

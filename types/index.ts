@@ -313,3 +313,20 @@ export interface AnalysisStatusChartProps {
         value: number;
     }[];
 }
+
+//Notifications
+export interface AppNotification {
+    id: string;
+    type: string;
+    title: string;
+    message: string;
+    organizationId?: string | null;
+    invitationId?: string | null;
+    readAt: string | null;
+    createdAt: string;
+}
+
+export interface NotificationsResponse {
+    notifications: AppNotification[];
+    unreadCount: number;
+}

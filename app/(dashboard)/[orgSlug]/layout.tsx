@@ -1,6 +1,7 @@
 import { UserButton } from "@clerk/nextjs";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 interface OrgLayoutProps {
     children: React.ReactNode;
@@ -33,6 +34,8 @@ export default async function OrgLayout({ children }: OrgLayoutProps) {
                             {user.firstName} {user.lastName}
                         </span>
                     </div>
+
+                    <NotificationBell />
 
                     <div className="p-0.5" aria-label="User account menu">
                         <UserButton />
