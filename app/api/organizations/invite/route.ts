@@ -87,6 +87,12 @@ export async function POST(req: Request) {
         // Get Clerk instance
         const client = await clerkClient();
 
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+        if (!appUrl) {
+            throw new Error("Missing NEXT_PUBLIC_APP_URL");
+        }
+
         // Create invitation in Clerk
         const invitation =
             await client.organizations.createOrganizationInvitation({
@@ -94,6 +100,7 @@ export async function POST(req: Request) {
                 inviterUserId: userId,
                 emailAddress: email,
                 role,
+                redirectUrl: `${appUrl.replace(/\/$/, "")}/accept-invitation`,
             });
 
         return NextResponse.json({
