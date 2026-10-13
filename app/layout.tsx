@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Urbanist } from "next/font/google";
+import { Bricolage_Grotesque, Urbanist } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Toaster } from "sonner";
 import ReduxProvider from "./store/provider";
+import InvitationLinkHandler from "@/components/notifications/invitation-link-handler";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const urbanist = Urbanist({ subsets: ["latin"], variable: "--font-urbanist" });
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage" });
+// const urbanist = Urbanist({ subsets: ["latin"], variable: "--font-urbanist" });
 
 export const metadata: Metadata = {
   title: "Docinate AI - AI Powered Multi-tenant Document Analysis",
@@ -35,9 +36,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
 
-    <html lang="en" suppressHydrationWarning className={`${urbanist.className}`}>
+    <html lang="en" suppressHydrationWarning className={`${bricolage.className}`}>
       <body className="min-h-screen flex flex-col font-sans bg-white text-slate-900 antialiased">
         <ClerkProvider>
+          <InvitationLinkHandler />
           <ReduxProvider>
             <a href="#main-content"
               className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-slate-900 text-white px-3 py-2 rounded-md focus:ring-1 

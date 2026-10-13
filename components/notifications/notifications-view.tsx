@@ -28,10 +28,11 @@ export default function NotificationsView() {
         refetchOnReconnect: true,
     });
 
-    const { acceptingId, canAccept, accept, markOneRead, markAllRead } = useNotificationActions();
-
     const notifications = data?.notifications ?? [];
     const unreadCount = data?.unreadCount ?? 0;
+
+    const { acceptingId, canAccept, getInvitationStatus, accept, markOneRead, markAllRead } =
+        useNotificationActions(notifications);
     const visible = filter === "unread" ? notifications.filter((n) => !n.readAt) : notifications;
 
     const filters: { value: Filter; label: string; count: number }[] = [
@@ -171,6 +172,7 @@ export default function NotificationsView() {
                                 variant="page"
                                 notification={n}
                                 canAccept={canAccept(n)}
+                                invitationStatus={getInvitationStatus(n)}
                                 isAccepting={acceptingId === n.id}
                                 onAccept={accept}
                                 onMarkRead={markOneRead}

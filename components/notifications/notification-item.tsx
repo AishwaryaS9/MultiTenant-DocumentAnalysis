@@ -12,12 +12,18 @@ interface NotificationItemProps {
     isAccepting: boolean;
     onAccept: (n: AppNotification) => void;
     onMarkRead: (id: string) => void;
-    /** "compact" for the bell dropdown, "page" for the Notifications page */
+    invitationStatus?: string;
     variant?: "compact" | "page";
 }
 
 const TYPE_LABELS: Record<string, string> = {
     ORG_INVITATION: "Invitation",
+};
+
+const statusNote = (status?: string) => {
+    if (status === "accepted") return "You've already accepted this invitation.";
+    if (status === "revoked") return "This invitation was revoked.";
+    return null;
 };
 
 export default function NotificationItem({
@@ -26,9 +32,11 @@ export default function NotificationItem({
     isAccepting,
     onAccept,
     onMarkRead,
+    invitationStatus,
     variant = "compact",
 }: NotificationItemProps) {
     const isUnread = !n.readAt;
+    const note = statusNote(invitationStatus);
     const createdAt = new Date(n.createdAt);
 
     if (variant === "page") {
@@ -67,6 +75,10 @@ export default function NotificationItem({
                         </div>
 
                         <p className="mt-1 text-sm text-slate-500 wrap-break-word">{n.message}</p>
+
+                        {note && (
+                            <p className="mt-1 text-xs font-medium text-slate-400">{note}</p>
+                        )}
 
                         <p
                             className="mt-2 inline-flex items-center gap-1.5 text-xs text-slate-400"
@@ -119,6 +131,7 @@ export default function NotificationItem({
             <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-slate-900 wrap-break-word">{n.title}</p>
                 <p className="text-xs text-slate-500 mt-0.5 wrap-break-word">{n.message}</p>
+                {note && <p className="text-[11px] font-medium text-slate-400 mt-1">{note}</p>}
                 <p className="text-[11px] text-slate-400 mt-1">
                     {formatDistanceToNow(createdAt, { addSuffix: true })}
                 </p>

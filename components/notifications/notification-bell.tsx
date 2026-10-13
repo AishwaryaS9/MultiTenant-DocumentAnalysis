@@ -29,11 +29,11 @@ export default function NotificationBell() {
         refetchOnReconnect: true,
     });
 
-    const { acceptingId, canAccept, accept, markOneRead, markAllRead } =
-        useNotificationActions(() => setOpen(false));
-
     const notifications = data?.notifications ?? [];
     const unreadCount = data?.unreadCount ?? 0;
+
+    const { acceptingId, canAccept, getInvitationStatus, accept, markOneRead, markAllRead } =
+        useNotificationActions(notifications, () => setOpen(false));
 
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -88,6 +88,7 @@ export default function NotificationBell() {
                                 key={n.id}
                                 notification={n}
                                 canAccept={canAccept(n)}
+                                invitationStatus={getInvitationStatus(n)}
                                 isAccepting={acceptingId === n.id}
                                 onAccept={accept}
                                 onMarkRead={markOneRead}
