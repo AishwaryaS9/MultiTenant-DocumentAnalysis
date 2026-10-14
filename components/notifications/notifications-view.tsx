@@ -10,7 +10,7 @@ import {
     useGetNotificationsQuery,
 } from "@/app/store/services/notificationsApi";
 import NotificationItem from "./notification-item";
-import { useNotificationActions } from "./use-notification-actions";
+import { useNotificationActions } from "../../app/hooks/use-notification-actions";
 
 const PAGE_LIMIT = 50;
 

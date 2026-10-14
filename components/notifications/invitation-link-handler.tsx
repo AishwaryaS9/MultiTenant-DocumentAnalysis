@@ -2,46 +2,38 @@
 
 import { useEffect, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function InvitationLinkHandler() {
-    const { isLoaded, isSignedIn, user } = useUser();
-    const arrivedViaInviteLink = useRef(false);
+    const { isLoaded, isSignedIn } = useUser();
+    const router = useRouter();
+
     const handled = useRef(false);
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        arrivedViaInviteLink.current =
-            params.has("__clerk_ticket") || params.has("__clerk_status");
-    }, []);
+        if (!isLoaded || !isSignedIn || handled.current) {
+            return;
+        }
 
-    useEffect(() => {
-        if (!isLoaded || !isSignedIn || !user) return;
-        if (!arrivedViaInviteLink.current || handled.current) return;
+        const params = new URLSearchParams(window.location.search);
+
+        const arrivedViaInviteLink =
+            params.has("__clerk_ticket") ||
+            params.has("__clerk_status");
+
+        if (!arrivedViaInviteLink) {
+            return;
+        }
 
         handled.current = true;
 
-        (async () => {
-            try {
-                const { data } = await user.getOrganizationInvitations({ status: "pending" });
+        toast.info(
+            "You opened an organization invitation. Review your notifications to accept it."
+        );
 
-                if (data.length === 0) return;
-
-                const [latest] = [...data].sort(
-                    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-                );
-
-                await latest.accept();
-                toast.success(`You joined ${latest.publicOrganizationData.name}`);
-
-                window.location.assign("/select-org");
-            } catch (error: unknown) {
-                const msg =
-                    error instanceof Error ? error.message : "Failed to accept invitation";
-                toast.error(msg);
-            }
-        })();
-    }, [isLoaded, isSignedIn, user]);
+        router.replace("/notifications");
+    }, [isLoaded, isSignedIn, router]);
 
     return null;
 }

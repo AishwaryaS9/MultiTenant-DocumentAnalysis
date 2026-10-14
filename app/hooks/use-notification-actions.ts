@@ -56,15 +56,23 @@ export function useNotificationActions(
 
         try {
             setAcceptingId(n.id);
+
             await invitation.accept();
-            await Promise.all([
-                markRead({ ids: [n.id] }).unwrap(),
-                userInvitations?.revalidate?.(),
-                userMemberships?.revalidate?.(),
-            ]);
-            toast.success(`You joined ${invitation.publicOrganizationData.name}`);
+
+            toast.success(
+                `You joined ${invitation.publicOrganizationData.name}`
+            );
+
             onAccepted?.();
+
             router.push("/select-org");
+
+            await Promise.allSettled([
+                markRead({ ids: [n.id] }).unwrap(),
+                Promise.resolve(userInvitations?.revalidate?.()),
+                Promise.resolve(userMemberships?.revalidate?.()),
+            ]);
+
         } catch (error: unknown) {
             const msg = error instanceof Error ? error.message : "Failed to accept invitation";
             toast.error(msg);

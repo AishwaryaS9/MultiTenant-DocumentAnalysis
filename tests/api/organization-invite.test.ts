@@ -40,7 +40,10 @@ import { POST } from "@/app/api/organizations/invite/route";
 const request = () =>
     new Request("https://app.example.com/api/organizations/invite", {
         method: "POST",
-        headers: { origin: "https://app.example.com" },
+        headers: {
+            origin: "https://app.example.com",
+            "content-type": "application/json",
+        },
         body: JSON.stringify({ email: "invitee@example.com" }),
     });
 
