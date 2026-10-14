@@ -37,3 +37,8 @@ export type OrganizationMember = Prisma.OrganizationMemberModel
  * 
  */
 export type Document = Prisma.DocumentModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel

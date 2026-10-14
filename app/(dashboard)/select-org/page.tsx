@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAppSelector } from "@/app/store/hooks";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 export default function SelectOrgPage() {
     const user = useAppSelector((state) => state.user);
@@ -83,6 +84,10 @@ export default function SelectOrgPage() {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 sm:w-150 sm:h-150 bg-linear-to-br from-orange-200/40 to-amber-200/20 blur-[120px] rounded-full" />
                 <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-75 h-75 sm:w-112.5 sm:h-112.5 bg-linear-to-tr from-orange-100/40 to-rose-100/30 blur-[100px] rounded-full" />
                 <div className="absolute top-1/3 -left-20 w-50 h-50 sm:w-75 sm:h-75 bg-slate-200/40 blur-[80px] rounded-full" />
+            </div>
+
+            <div className="hidden md:block absolute top-4 right-6 z-20">
+                <NotificationBell />
             </div>
 
             <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

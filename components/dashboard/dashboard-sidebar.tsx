@@ -1,22 +1,28 @@
 "use client";
 
-import { Building, ChartNoAxesCombined, FileText, Menu, Users } from 'lucide-react';
+import { Bell, Building, ChartNoAxesCombined, FileText, Menu, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
-import { useOrganization, UserButton, useUser } from '@clerk/nextjs';
+import { useAuth, useOrganization, UserButton, useUser } from '@clerk/nextjs';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import Image from 'next/image';
 import { images } from '@/assets';
+import { useGetNotificationsQuery } from '@/app/store/services/notificationsApi';
 
 export default function Sidebar() {
     const pathname = usePathname();
     const { user } = useUser();
     const { organization } = useOrganization();
+    const { isSignedIn } = useAuth();
+
+    // Same cache entry as the bell, so this adds no extra requests
+    const { data: notificationsData } = useGetNotificationsQuery(undefined, { skip: !isSignedIn });
+    const unreadCount = notificationsData?.unreadCount ?? 0;
 
     const activeSlug = organization?.slug || user?.organizationMemberships?.[0]?.organization?.slug;
 
-    const navItems = [
+    const navItems: { href: string; label: string; icon: React.ReactNode; badge?: number }[] = [
         ...(activeSlug
             ? [
                 {
@@ -41,11 +47,18 @@ export default function Sidebar() {
                 }
             ]
             : []),
+
         {
             href: "/select-org",
             label: "Switch Organizations",
             icon: <Users className="h-5 w-5" aria-hidden="true" />
-        }
+        },
+        {
+            href: "/notifications",
+            label: "Notifications",
+            icon: <Bell className="h-5 w-5" aria-hidden="true" />,
+            badge: unreadCount
+        },
     ];
 
     const NavContent = () => (
@@ -101,6 +114,14 @@ export default function Sidebar() {
                             >
                                 {item.icon}
                                 {item.label}
+                                {(item.badge ?? 0) > 0 && (
+                                    <span
+                                        aria-label={`${item.badge ?? 0} unread`}
+                                        className="ml-auto min-w-5 h-5 px-1.5 rounded-full bg-orange-500 text-white text-[11px] font-bold flex items-center justify-center"
+                                    >
+                                        {(item.badge ?? 0) > 9 ? "9+" : item.badge}
+                                    </span>
+                                )}
                             </Button>
                         </Link>
                     );
