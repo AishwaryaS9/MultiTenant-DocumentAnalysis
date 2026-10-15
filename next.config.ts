@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["officeparser", "word-extractor", "@e965/xlsx"],
   images: {
     remotePatterns: [
       {

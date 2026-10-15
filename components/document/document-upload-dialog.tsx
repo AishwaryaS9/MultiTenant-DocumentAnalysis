@@ -7,7 +7,7 @@ import { useOrganization, useUser } from "@clerk/nextjs";
 import { Check, Loader2, Sparkles, Upload, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import { allowedTypes } from "@/app/data/data";
+import { ACCEPT_ATTRIBUTE, SUPPORTED_FORMAT_LABELS, isSupportedDocument } from "@/lib/document-types";
 import { DocumentUploadDialogProps } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ export default function DocumentUploadDialog({ children, onUploadSuccess }: Docu
             return;
         }
 
-        if (!allowedTypes.includes(file.type)) {
+        if (!isSupportedDocument(file)) {
             toast.error("File type not supported");
             return;
         }
@@ -105,7 +105,7 @@ export default function DocumentUploadDialog({ children, onUploadSuccess }: Docu
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Upload failed");
+                throw new Error(data.error || data.message || "Upload failed");
             }
 
             toast.success("Document uploaded successfully!");
@@ -237,7 +237,7 @@ export default function DocumentUploadDialog({ children, onUploadSuccess }: Docu
                                     type="file"
                                     ref={fileInputRef}
                                     onChange={handleFileSelect}
-                                    accept=".txt,.pdf,.doc,.docx,.md"
+                                    accept={ACCEPT_ATTRIBUTE}
                                     className="hidden"
                                     id="file-upload"
                                     disabled={isUploading}
@@ -311,7 +311,7 @@ export default function DocumentUploadDialog({ children, onUploadSuccess }: Docu
                                                 </p>
 
                                                 <div className="flex flex-wrap justify-center gap-2 pt-2">
-                                                    {["PDF", "DOCX", "TXT", "MD", "DOC"].map((type) => (
+                                                    {SUPPORTED_FORMAT_LABELS.map((type) => (
                                                         <div key={type} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-600 shadow-sm">
                                                             {type}
                                                         </div>

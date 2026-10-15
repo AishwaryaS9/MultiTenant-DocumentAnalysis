@@ -51,20 +51,6 @@ export const steps = [
         icon: Zap,
     },
 ];
-export const allowedTypes = [
-    "text/plain",
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "text/markdown",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.ms-powerpoint",
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "text/csv",
-    "application/json",
-];
-
 export const analysisTypes: {
     value: AnalysisType;
     label: string;
