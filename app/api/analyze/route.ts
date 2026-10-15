@@ -1,4 +1,8 @@
-import { analyzeWithGemini } from "@/lib/gemini";
+export const runtime = "nodejs";
+export const maxDuration = 120;
+
+import { ANALYSIS_TYPES, analyzeWithGemini, GeminiAnalysisError, type GeminiAnalysisType } from "@/lib/gemini";
+import { DocumentExtractionError, loadDocumentForAnalysis } from "@/lib/document-extractor";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -11,9 +15,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Please sign in" }, { status: 401 });
         }
         //Get request data
-        const { documentId, organizationId, analysisType } = await request.json();
+        const { documentId, organizationId, analysisType = "summary" } = await request.json();
         if (!documentId || !organizationId) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
+        if (!ANALYSIS_TYPES.includes(analysisType)) {
+            return NextResponse.json({ error: "Invalid analysis type" }, { status: 400 });
         }
         //Find document
         const document = await prisma.document.findFirst({
@@ -32,13 +39,10 @@ export async function POST(request: Request) {
         if (!document) {
             return NextResponse.json({ error: "Document not found or no access" }, { status: 404 });
         }
-        //Get content
-        const content = document.content || document.name;
-        if (!content) {
-            return NextResponse.json({ error: "Document has no content to analyze" }, { status: 400 });
-        }
+        //Get the real content: (PDF, scanned PDF, Word, Excel, PowerPoint, ...)
+        const prepared = await loadDocumentForAnalysis(document);
         //Analysis using gemini ai
-        const result = await analyzeWithGemini(content, analysisType);
+        const result = await analyzeWithGemini(prepared, analysisType as GeminiAnalysisType);
         //Save result ot DB
         const updateDocument = await prisma.document.update({
             where: {
@@ -50,7 +54,6 @@ export async function POST(request: Request) {
                 sentiment: analysisType,
             }
         })
-        // return response
         return NextResponse.json({
             success: true,
             summary: result.analysis,
@@ -64,6 +67,12 @@ export async function POST(request: Request) {
 
     } catch (error: unknown) {
         console.error("Analysis error", error);
+        if (error instanceof DocumentExtractionError) {
+            return NextResponse.json({ error: error.message }, { status: 422 });
+        }
+        if (error instanceof GeminiAnalysisError) {
+            return NextResponse.json({ error: error.message }, { status: 502 });
+        }
         const msg = error instanceof Error ? error.message : String(error);
         return NextResponse.json({ error: msg || "Analysis failed" }, { status: 500 });
     }

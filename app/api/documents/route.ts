@@ -1,5 +1,6 @@
 export const runtime = "nodejs";
 import { uploadToBlob } from "@/lib/blob";
+import { canonicalMimeType, isSupportedDocument, resolveDocumentKind } from "@/lib/document-types";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -79,6 +80,13 @@ export async function POST(request: Request) {
 
         // Upload file to Vercel Blob
         if (file && file.size > 0) {
+            if (!isSupportedDocument(file)) {
+                return NextResponse.json(
+                    { error: "File type not supported" },
+                    { status: 400 }
+                );
+            }
+
             const blob = await uploadToBlob(
                 file,
                 clerkOrgId,
@@ -87,11 +95,12 @@ export async function POST(request: Request) {
 
             fileUrl = blob.url;
             fileSize = file.size;
-            fileType = file.type;
+
+            fileType = canonicalMimeType(file);
 
             if (
                 !extractedContent &&
-                file.type.includes("text")
+                resolveDocumentKind({ name: file.name, mimeType: file.type }) === "text"
             ) {
                 extractedContent =
                     await file.text();

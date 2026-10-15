@@ -62,8 +62,9 @@ export function useDocuments() {
                 ...prev,
                 [documentId]: true,
             }));
-        } catch {
-            toast.error("Analysis failed");
+        } catch (error) {
+            const serverMessage = (error as { data?: { error?: string } })?.data?.error;
+            toast.error(serverMessage || "Analysis failed");
         } finally {
             setAnalyzingId(null);
         }
@@ -89,7 +90,7 @@ export function useDocuments() {
             [documentId]: !prev[documentId],
         }));
     };
-  return {
+    return {
         organization,
         documents,
         isLoading,
