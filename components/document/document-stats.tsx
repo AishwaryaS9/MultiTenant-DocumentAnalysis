@@ -1,12 +1,14 @@
-import { Brain, FileText, HardDrive } from "lucide-react";
+import { Brain, FileText, HardDrive, Loader } from "lucide-react";
 import StatCard from "@/components/dashboard/stat-card";
 import { DocumentsStatsProps } from "@/types";
-import { formatFileSize } from "@/app/data/data";
+import { formatFileSize } from "@/lib/utils";
 
 export default function DocumentStats({ documents }: DocumentsStatsProps) {
     const totalDocs = documents.length;
-
     const analyzedDocs = documents.filter((d) => d.aiSummary).length;
+    const processingDocs = documents.filter(
+        (d) => d.aiSummary === null
+    ).length;
 
     const totalStorageBytes = documents.reduce(
         (acc, doc) => acc + (doc.fileSize || 0),
@@ -23,12 +25,17 @@ export default function DocumentStats({ documents }: DocumentsStatsProps) {
             ? (analyzedDocs / totalDocs) * 100
             : 0;
 
+    const processingProgress =
+        totalDocs > 0
+            ? (processingDocs / totalDocs) * 100
+            : 0;
+
     const storageProgress =
         (totalStorageBytes / MAX_STORAGE_CAP) * 100;
 
     return (
         <section
-            className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6"
+            className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4 xl:gap-6"
             aria-label="Document statistics overview"
         >
             <StatCard
@@ -47,6 +54,15 @@ export default function DocumentStats({ documents }: DocumentsStatsProps) {
                 icon={<Brain className="w-5 h-5 text-emerald-600" aria-hidden="true" />}
                 gradient="from-emerald-400 via-emerald-500 to-teal-400"
                 progress={analyzedProgress}
+            />
+
+            <StatCard
+                title="Processing"
+                value={processingDocs}
+                description="Documents currently being analyzed"
+                icon={<Loader className="w-5 h-5 text-violet-600" aria-hidden="true" />}
+                gradient="from-violet-400 via-violet-500 to-purple-400"
+                progress={processingProgress}
             />
 
             <StatCard

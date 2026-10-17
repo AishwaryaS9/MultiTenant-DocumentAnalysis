@@ -2,15 +2,33 @@
 
 import { useState } from "react";
 import { AnalysisType, DocumentCardProps } from "@/types";
-import { Brain, Calendar, Download, File, FileText, Loader2, Sparkles, Trash2, User, Maximize2, Activity, Tag } from "lucide-react";
+import {
+    Activity,
+    Brain,
+    Calendar,
+    Check,
+    ChevronDown,
+    Copy,
+    Download,
+    File,
+    FileText,
+    Loader2,
+    Sparkles,
+    Tag,
+    Trash2,
+    User,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import ReactMarkdown from "react-markdown";
 import DeleteDocumentModal from "@/components/document/delete-document-modal";
-import { analysisTypes, formatFileSize } from "@/app/data/data";
-import { cn } from "@/lib/utils";
+import { analysisTypes } from "@/app/data/data";
+import { cn, formatFileSize } from "@/lib/utils";
 import { generateAnalysisPDF } from "@/lib/generate-analysis-pdf";
+
+const SUMMARY_PREVIEW_LENGTH = 200;
+const VISIBLE_KEYWORDS = 5;
 
 export default function DocumentCard({
     document: doc,
@@ -24,398 +42,280 @@ export default function DocumentCard({
     expandedSummaries,
 }: DocumentCardProps) {
     const isExpanded = expandedSummaries[doc.id];
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
 
-    const [deleteModalOpen, setDeleteModalOpen] =
-        useState(false);
+    const summary = doc.aiSummary ?? "";
+    const isLongSummary = summary.length > SUMMARY_PREVIEW_LENGTH;
+    const keywords = doc.aiKeywords ?? [];
 
-    const getAnalysisIcon = (
-        type: AnalysisType
-    ) => {
-        const analysisType = analysisTypes.find(
-            (t) => t.value === type
-        );
+    const getAnalysisIcon = (type: AnalysisType) => {
+        const Icon = analysisTypes.find((t) => t.value === type)?.icon || Sparkles;
+        return <Icon className="h-4 w-4" aria-hidden="true" />;
+    };
 
-        const Icon =
-            analysisType?.icon || Sparkles;
-
-        return (
-            <Icon
-                className="h-4 w-4"
-                aria-hidden="true"
-            />
-        );
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(summary);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1800);
+        } catch {
+        }
     };
 
     return (
         <article
-            className="group relative overflow-hidden rounded-[24px] border border-slate-200/80 bg-linear-to-b from-white to-slate-50/50 p-4 sm:p-5
-             lg:p-6 backdrop-blur-xs transition-all duration-300 hover:border-slate-300 hover:bg-white"
+            className="border-t border-slate-100 bg-slate-50/60 p-4 sm:p-6"
             aria-labelledby={`document-title-${doc.id}`}
-            aria-describedby={`document-meta-${doc.id}`}>
-            {/* Decorative Glow */}
-            <div className="absolute -right-24 -top-24 -z-10 h-48 w-48 rounded-full blur-2xl transition-all duration-700 ease-out group-hover:scale-125 group-hover:opacity-100"
-                aria-hidden="true"
-            />
+        >
+            <h3 id={`document-title-${doc.id}`} className="sr-only">
+                {doc.name}
+            </h3>
 
-            <div className="flex flex-col gap-5 lg:gap-6 xl:flex-row xl:items-start">
+            <div className="flex flex-col gap-6 xl:flex-row xl:items-start">
                 {/* LEFT CONTENT */}
-                <div className="flex-1 min-w-0 space-y-5">
-
-                    {/* HEADER */}
-                    <div className="flex items-start gap-3 sm:gap-4">
-                        {/* FILE ICON */}
-                        <div
-                            className="relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl text-slate-900 shadow-sm transition-all duration-500"
-                            aria-hidden="true">
-                            <FileText className="h-6 w-6" />
-
-                            <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border
-                             border-slate-100 bg-white text-[10px] font-black text-slate-900 shadow-3xs">
-                                AI
+                <div className="min-w-0 flex-1 space-y-4">
+                    {/* META */}
+                    <div
+                        className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500"
+                        aria-label="Document metadata"
+                    >
+                        <span className="flex items-center gap-1.5">
+                            <User className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                            <span className="max-w-48 truncate">
+                                {doc.user.name || doc.user.email}
                             </span>
-                        </div>
+                        </span>
 
-                        {/* TITLE + META */}
-                        <div className="min-w-0 flex-1 space-y-1.5">
-                            {/* TITLE */}
-                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                                <h3 id={`document-title-${doc.id}`}
-                                    className="truncate text-base sm:text-lg font-bold tracking-tight text-slate-900">
-                                    {doc.name}
-                                </h3>
+                        <span className="flex items-center gap-1.5">
+                            <Calendar className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                            {new Date(doc.createdAt).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                            })}
+                        </span>
 
-                                {doc.sentiment && (
-                                    <span
-                                        aria-label={`Document sentiment is ${doc.sentiment}`}
-                                        className={cn(
-                                            "inline-flex items-center gap-1 rounded-md border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider",
-                                            doc.sentiment ===
-                                            "positive" &&
-                                            "border-emerald-500/20 bg-emerald-500/10 text-emerald-700",
+                        {doc.fileSize ? (
+                            <span className="flex items-center gap-1.5">
+                                <File className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                                {formatFileSize(doc.fileSize)}
+                            </span>
+                        ) : null}
 
-                                            doc.sentiment ===
-                                            "negative" &&
-                                            "border-rose-500/20 bg-rose-500/10 text-rose-700",
-
-                                            doc.sentiment ===
-                                            "neutral" &&
-                                            "border-slate-500/20 bg-slate-500/10 text-slate-700"
-                                        )}>
-                                        <Activity
-                                            className="h-3 w-3"
-                                            aria-hidden="true"
-                                        />
-                                        {doc.sentiment}
-                                    </span>
+                        {doc.sentiment && (
+                            <span
+                                aria-label={`Document sentiment is ${doc.sentiment}`}
+                                className={cn(
+                                    "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize",
+                                    doc.sentiment === "positive" && "bg-emerald-50 text-emerald-700",
+                                    doc.sentiment === "negative" && "bg-rose-50 text-rose-700",
+                                    doc.sentiment === "neutral" && "bg-slate-100 text-slate-700"
                                 )}
-                            </div>
-
-                            {/* META */}
-                            <div
-                                id={`document-meta-${doc.id}`}
-                                className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-xs sm:text-sm font-medium text-slate-500"
-                                aria-label="Document metadata">
-                                <div className="flex items-center gap-1.5">
-                                    <User
-                                        className="h-4 w-4 shrink-0 text-slate-400"
-                                        aria-hidden="true"
-                                    />
-                                    <span className="truncate max-w-30">
-                                        {doc.user.name || doc.user.email}
-                                    </span>
-                                </div>
-
-                                <span className="text-slate-300">
-                                    •
-                                </span>
-
-                                <div className="flex items-center gap-1.5">
-                                    <Calendar
-                                        className="h-4 w-4 shrink-0 text-slate-400"
-                                        aria-hidden="true"
-                                    />
-
-                                    <span>
-                                        {new Date(
-                                            doc.createdAt
-                                        ).toLocaleDateString()}
-                                    </span>
-                                </div>
-
-                                {doc.fileSize && (
-                                    <>
-                                        <span className="text-slate-300">
-                                            •
-                                        </span>
-
-                                        <div className="flex items-center gap-1.5">
-                                            <File
-                                                className="h-4 w-4 shrink-0 text-slate-400"
-                                                aria-hidden="true"
-                                            />
-
-                                            <span>
-                                                {formatFileSize(
-                                                    doc.fileSize
-                                                )}
-                                            </span>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
+                            >
+                                <Activity className="h-3 w-3" aria-hidden="true" />
+                                {doc.sentiment}
+                            </span>
+                        )}
                     </div>
 
                     {/* AI ANALYSIS */}
                     {doc.aiSummary ? (
                         <section
-                            className="rounded-xl border border-slate-200/70 bg-white p-4 sm:p-5 shadow-xs"
+                            className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs sm:p-5"
                             aria-label="AI generated document analysis"
                         >
-
-                            {/* ANALYSIS HEADER */}
-                            <div className="mb-3.5 flex flex-col gap-3 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
-
-                                <div className="flex flex-wrap items-center gap-2.5">
-
+                            <div className="mb-3 flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                                <div className="flex items-center gap-2.5">
                                     <div
-                                        className="flex h-7 w-7 items-center justify-center rounded-md bg-orange-500 text-white shadow-2xs"
+                                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-white"
                                         aria-hidden="true"
                                     >
                                         <Brain className="h-4 w-4" />
                                     </div>
-
-                                    <div>
-                                        <span className="text-sm font-bold tracking-tight text-slate-900">
-                                            AI Analysis
-                                        </span>
-
-                                        <div className="text-sm text-slate-500">
-                                            Generated insights
-                                        </div>
-                                    </div>
-
-                                    <div className="rounded-full bg-black px-3 py-1 text-xs font-medium tracking-wide text-white">
-                                        Gemini AI
+                                    <div className="leading-tight">
+                                        <p className="text-sm font-semibold text-slate-900">
+                                            AI analysis
+                                        </p>
+                                        <p className="text-xs text-slate-500">
+                                            Generated by Gemini
+                                        </p>
                                     </div>
                                 </div>
 
-                                {doc.aiSummary.length >
-                                    200 && (
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() =>
-                                                onToggleSummary(
-                                                    doc.id
-                                                )
-                                            }
-                                            aria-label={
-                                                isExpanded
-                                                    ? "Collapse AI analysis summary"
-                                                    : "Expand AI analysis summary"
-                                            }
-                                            className="h-8 sm:h-7 gap-1.5 rounded-md px-2.5 text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-300"
-                                        >
-                                            <span>
-                                                {isExpanded
-                                                    ? "Show less"
-                                                    : "Read more"}
-                                            </span>
-
-                                            <Maximize2
-                                                className={cn(
-                                                    "h-3 w-3 transition-transform duration-200",
-                                                    isExpanded &&
-                                                    "rotate-180"
-                                                )}
-                                                aria-hidden="true"
-                                            />
-                                        </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleCopy}
+                                    aria-label="Copy analysis to clipboard"
+                                    className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                                >
+                                    {copied ? (
+                                        <Check className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
+                                    ) : (
+                                        <Copy className="h-3.5 w-3.5" aria-hidden="true" />
                                     )}
+                                    {copied ? "Copied" : "Copy"}
+                                </Button>
                             </div>
 
-                            {/* SUMMARY */}
-                            <div className="prose prose-sm max-w-none wrap-break-word text-sm leading-relaxed text-slate-600 transition-all duration-200" aria-live="polite">
+                            <div
+                                className="prose prose-sm max-w-none text-sm leading-relaxed text-slate-600 wrap-break-word"
+                                aria-live="polite"
+                            >
                                 <ReactMarkdown>
-                                    {isExpanded
-                                        ? doc.aiSummary
-                                        : doc.aiSummary
-                                            .length > 200
-                                            ? `${doc.aiSummary.substring(
-                                                0,
-                                                200
-                                            )}...`
-                                            : doc.aiSummary}
+                                    {isExpanded || !isLongSummary
+                                        ? summary
+                                        : `${summary.substring(0, SUMMARY_PREVIEW_LENGTH)}...`}
                                 </ReactMarkdown>
                             </div>
 
-                            {/* KEYWORDS */}
-                            {doc.aiKeywords.length >
-                                0 && (
-                                    <div
-                                        className="mt-4 border-t border-slate-100 pt-3.5"
-                                        aria-label="Document keywords"
-                                    >
-                                        <div className="mb-3 flex items-center gap-2">
-                                            <Tag
-                                                className="h-3 w-3 text-slate-500"
-                                                aria-hidden="true"
-                                            />
+                            {isLongSummary && (
+                                <button
+                                    type="button"
+                                    onClick={() => onToggleSummary(doc.id)}
+                                    aria-expanded={!!isExpanded}
+                                    className="mt-2 inline-flex items-center gap-1 rounded-md text-xs font-semibold text-orange-600 hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300"
+                                >
+                                    {isExpanded ? "Show less" : "Read more"}
+                                    <ChevronDown
+                                        className={cn(
+                                            "h-3.5 w-3.5 transition-transform duration-200 motion-reduce:transition-none",
+                                            isExpanded && "rotate-180"
+                                        )}
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                            )}
 
-                                            <span className="text-[12px] font-semibold text-slate-700">
-                                                Key Topics
-                                            </span>
-                                        </div>
-
-                                        <div className="flex flex-wrap gap-1.5">
-                                            {doc.aiKeywords.slice(0, 5).map((keyword, idx) => (
-                                                <Badge key={idx}
-                                                    variant="outline"
-                                                    className="rounded-md border-slate-200/60 bg-slate-50/50 px-2 py-0.5 text-xs font-semibold text-slate-600">
-                                                    {keyword}
-                                                </Badge>
-                                            )
-                                            )}
-
-                                            {doc.aiKeywords.length > 5 && (
-                                                <span className="ml-1 self-center text-xs font-semibold text-slate-400">
-                                                    +
-                                                    {doc.aiKeywords.length - 5}{" "}
-                                                    topics
-                                                </span>
-                                            )}
-                                        </div>
+                            {keywords.length > 0 && (
+                                <div className="mt-4 border-t border-slate-100 pt-3.5">
+                                    <div className="mb-2.5 flex items-center gap-2 text-xs font-semibold text-slate-700">
+                                        <Tag className="h-3 w-3 text-slate-500" aria-hidden="true" />
+                                        Key topics
                                     </div>
-                                )}
+
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {keywords.slice(0, VISIBLE_KEYWORDS).map((keyword, idx) => (
+                                            <Badge
+                                                key={`${keyword}-${idx}`}
+                                                variant="outline"
+                                                className="rounded-full border-orange-100 bg-orange-50/60 px-2.5 py-0.5 text-xs font-medium text-orange-700"
+                                            >
+                                                {keyword}
+                                            </Badge>
+                                        ))}
+
+                                        {keywords.length > VISIBLE_KEYWORDS && (
+                                            <span className="ml-1 self-center text-xs font-medium text-slate-400">
+                                                +{keywords.length - VISIBLE_KEYWORDS} more
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </section>
                     ) : (
                         <section
-                            className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/30 py-6 sm:py-8 px-4 text-center"
+                            className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-8 text-center"
                             aria-label={
-                                doc.status ===
-                                    "failed"
+                                doc.status === "failed"
                                     ? "Document analysis failed"
                                     : "Document analysis unavailable"
                             }
                         >
                             <div
-                                className="relative mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-slate-100 bg-white shadow-3xs"
+                                className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50"
                                 aria-hidden="true"
                             >
                                 {doc.status === "failed" ? (
                                     <FileText className="h-5 w-5 text-rose-500" />
                                 ) : (
-                                    <Sparkles className="h-5 w-5 animate-pulse text-orange-500" />
+                                    <Sparkles
+                                        className={cn(
+                                            "h-5 w-5 text-orange-500",
+                                            isAnalyzing && "animate-pulse"
+                                        )}
+                                    />
                                 )}
                             </div>
 
-                            <h4 className="text-sm font-bold text-slate-800">
-                                {doc.status === "failed" ? "Analysis Failed" : "No Analysis Yet"}
+                            <h4 className="text-sm font-semibold text-slate-800">
+                                {doc.status === "failed"
+                                    ? "Analysis failed"
+                                    : isAnalyzing
+                                        ? "Analyzing your document"
+                                        : "No analysis yet"}
                             </h4>
 
-                            <p className="mt-1 max-w-sm text-xs leading-normal text-slate-400">
-                                {doc.status ===
-                                    "failed"
-                                    ? "Could not analyze for summary. The file might be too small or contain unsupported formatting."
-                                    : "Unlock key insights, summaries, and sentiment analysis by running the AI processor."}
+                            <p className="mt-1 max-w-sm text-xs leading-normal text-slate-500">
+                                {doc.status === "failed"
+                                    ? "We couldn't analyze this file. It may be too short or use unsupported formatting. Try a different analysis type."
+                                    : "Choose an analysis type and select Analyze to get a summary, key topics and sentiment."}
                             </p>
                         </section>
                     )}
                 </div>
 
                 {/* RIGHT PANEL */}
-                <aside className="flex w-full shrink-0 flex-col items-stretch justify-start gap-3 sm:gap-3.5 xl:w-56 xl:border-l xl:border-slate-200/80 xl:pl-6"
-                    aria-label="Document actions">
-
-                    {/* DOWNLOAD */}
+                <aside
+                    className="flex w-full shrink-0 flex-col gap-3 xl:w-60 xl:border-l xl:border-slate-200/80 xl:pl-6"
+                    aria-label="Document actions"
+                >
                     {doc.fileUrl && (
                         <Button
                             variant="outline"
-                            size="default"
-                            onClick={() => {
-                                if (doc.fileUrl) {
-                                    window.open(doc.fileUrl, "_blank");
-                                }
-                            }}
+                            onClick={() => window.open(doc.fileUrl!, "_blank", "noopener,noreferrer")}
                             aria-label={`Download ${doc.name}`}
-                            className="h-10 sm:h-9 w-full justify-center rounded-xl border-slate-200/80 px-4 text-sm font-semibold text-slate-700
-                             transition-all hover:bg-slate-50 active:scale-[0.99] focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-300"
+                            className="h-10 w-full justify-center rounded-xl border-slate-200 bg-white text-sm font-semibold text-slate-700 hover:bg-slate-50"
                         >
-                            <Download
-                                className="mr-2.5 h-4 w-4 shrink-0 text-slate-400"
-                                aria-hidden="true"
-                            />
-
-                            <span>
-                                Download File
-                            </span>
+                            <Download className="mr-2 h-4 w-4 text-slate-400" aria-hidden="true" />
+                            Download file
                         </Button>
                     )}
 
-                    {/* EXPORT */}
                     {doc.aiSummary && (
                         <Button
                             variant="outline"
-                            size="default"
                             onClick={() =>
-                                generateAnalysisPDF(
-                                    {
-                                        name: doc.name,
-                                        createdAt:
-                                            doc.createdAt,
-                                        aiSummary:
-                                            doc.aiSummary,
-                                        aiKeywords:
-                                            doc.aiKeywords,
-                                        sentiment:
-                                            doc.sentiment,
-                                        user: doc.user,
-                                    }
-                                )
+                                generateAnalysisPDF({
+                                    name: doc.name,
+                                    createdAt: doc.createdAt,
+                                    aiSummary: doc.aiSummary,
+                                    aiKeywords: doc.aiKeywords,
+                                    sentiment: doc.sentiment,
+                                    user: doc.user,
+                                })
                             }
                             aria-label={`Export AI insights for ${doc.name}`}
-                            className="h-10 sm:h-9 w-full justify-center rounded-xl  border-orange-200/60 bg-orange-50/20 px-4 text-sm font-semibold text-orange-600 transition-all hover:bg-orange-50 active:scale-[0.99] focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-orange-300"
+                            className="h-10 w-full justify-center rounded-xl border-orange-200 bg-orange-50/50 text-sm font-semibold text-orange-600 hover:bg-orange-50"
                         >
-                            <Sparkles
-                                className="mr-2.5 h-4 w-4 shrink-0 text-orange-500"
-                                aria-hidden="true"
-                            />
-
-                            <span>
-                                Export Insights
-                            </span>
+                            <Sparkles className="mr-2 h-4 w-4 text-orange-500" aria-hidden="true" />
+                            Export insights
                         </Button>
                     )}
 
-                    <div
-                        className="my-1 hidden h-px w-full bg-slate-100 xl:block"
-                        aria-hidden="true"
-                    />
+                    <div className="my-1 hidden h-px w-full bg-slate-200/70 xl:block" aria-hidden="true" />
 
-                    {/* SELECT */}
-                    <div className="flex w-full flex-col gap-2">
-                        <span className="px-0.5 text-[11px] font-black uppercase tracking-wider text-slate-400">
-                            {doc.aiSummary
-                                ? "Re-analyze with"
-                                : "Analyze with"}
+                    <div className="flex flex-col gap-2">
+                        <span className="px-0.5 text-xs font-semibold text-slate-500">
+                            {doc.aiSummary ? "Re-analyze with" : "Analyze with"}
                         </span>
 
                         <Select
                             value={selectedAnalysisType}
-                            onValueChange={(value: AnalysisType) => onAnalysisTypeChange(value)}>
+                            onValueChange={(value: AnalysisType) => onAnalysisTypeChange(value)}
+                            disabled={isAnalyzing}
+                        >
                             <SelectTrigger
                                 aria-label="Select AI analysis type"
-                                className="h-10 sm:h-9 w-full rounded-lg border-slate-200/80 px-4 text-sm font-semibold shadow-xs transition-all
-                                 active:scale-[0.99] focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-300">
+                                className="h-10 w-full rounded-xl border-slate-200 bg-white px-3.5 text-sm font-semibold shadow-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-0"
+                            >
                                 <SelectValue>
                                     <div className="flex items-center gap-2 truncate">
-                                        {getAnalysisIcon(
-                                            selectedAnalysisType
-                                        )}
-
+                                        {getAnalysisIcon(selectedAnalysisType)}
                                         <span className="truncate">
-                                            {analysisTypes.find((type) => type.value === selectedAnalysisType)?.label}
+                                            {analysisTypes.find((t) => t.value === selectedAnalysisType)?.label}
                                         </span>
                                     </div>
                                 </SelectValue>
@@ -426,65 +326,47 @@ export default function DocumentCard({
                                     <SelectItem
                                         key={type.value}
                                         value={type.value}
-                                        className="rounded-lg text-sm font-medium">
-                                        <span>
-                                            {type.label}
-                                        </span>
+                                        className="rounded-lg text-sm font-medium"
+                                    >
+                                        {type.label}
                                     </SelectItem>
-                                )
-                                )}
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
 
-                    {/* ANALYZE */}
-                    <Button onClick={() => onAnalyze(doc.id)}
+                    <Button
+                        onClick={() => onAnalyze(doc.id)}
                         disabled={isAnalyzing}
-                        aria-label={
-                            doc.aiSummary
-                                ? `Re-analyze ${doc.name}`
-                                : `Analyze ${doc.name}`
-                        }
+                        aria-label={doc.aiSummary ? `Re-analyze ${doc.name}` : `Analyze ${doc.name}`}
                         className={cn(
-                            "flex h-10 sm:h-9 w-full items-center justify-center rounded-xl px-4 text-sm font-semibold transition-all shadow-xs active:scale-[0.99] cursor-pointer focus-visible:ring-1 focus-visible:ring-offset-1",
+                            "h-10 w-full rounded-xl text-sm font-semibold text-white shadow-none transition-colors focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-1",
                             doc.aiSummary
-                                ? "bg-slate-900 text-white hover:bg-black"
-                                : "bg-orange-400 text-white hover:bg-orange-600"
+                                ? "bg-slate-900 hover:bg-black"
+                                : "bg-orange-500 hover:bg-orange-600"
                         )}
                     >
                         {isAnalyzing ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin shrink-0" aria-hidden="true" />
-
-                                <span>
-                                    {doc.aiSummary ? "Re-analyzing..." : "Analyzing..."}
-                                </span>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                                {doc.aiSummary ? "Re-analyzing..." : "Analyzing..."}
                             </>
                         ) : (
                             <>
-                                <Brain className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
-
-                                <span>
-                                    {doc.aiSummary ? "Re-analyze" : "Analyze"}
-                                </span>
+                                <Brain className="mr-2 h-4 w-4" aria-hidden="true" />
+                                {doc.aiSummary ? "Re-analyze" : "Analyze"}
                             </>
                         )}
                     </Button>
 
-                    {/* DELETE */}
                     <Button
                         variant="ghost"
-                        size="default"
                         onClick={() => setDeleteModalOpen(true)}
                         aria-label={`Delete ${doc.name}`}
-                        className="h-10 sm:h-9 w-full justify-center rounded-xl bg-rose-50 px-4 text-sm font-semibold text-rose-500
-                         transition-colors hover:bg-rose-100 hover:text-rose-600 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-rose-300">
-                        <Trash2
-                            className="mr-2.5 h-4 w-4 shrink-0"
-                            aria-hidden="true"
-                        />
-
-                        <span>Delete</span>
+                        className="h-10 w-full justify-center rounded-xl bg-rose-50 text-sm font-semibold text-rose-600 hover:bg-rose-100 hover:text-rose-700 focus-visible:ring-2 focus-visible:ring-rose-300"
+                    >
+                        <Trash2 className="mr-2 h-4 w-4" aria-hidden="true" />
+                        Delete
                     </Button>
                 </aside>
             </div>

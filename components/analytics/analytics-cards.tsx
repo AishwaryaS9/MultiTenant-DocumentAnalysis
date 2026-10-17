@@ -59,7 +59,7 @@ export default function AnalyticsCards({ totalAnalyzed, aiCoverage, activeUsers,
                             role="listitem"
                             aria-labelledby={headingId}
                             tabIndex={0}
-                            className="rounded-2xl border bg-white p-6 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-1"
+                            className="border p-6 card-outline"
                         >
                             <div className="flex items-center justify-between">
                                 <h3
@@ -71,7 +71,7 @@ export default function AnalyticsCards({ totalAnalyzed, aiCoverage, activeUsers,
 
                                 <card.icon
                                     aria-hidden="true"
-                                    className="h-5 w-5 text-blue-500"
+                                    className="h-5 w-5 text-primary"
                                 />
                             </div>
 

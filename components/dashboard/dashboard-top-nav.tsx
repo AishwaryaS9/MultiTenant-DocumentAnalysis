@@ -6,7 +6,6 @@ interface DashboardTopNavProps {
     lastName?: string | null;
 }
 
-/** Desktop top bar shared by the org layout and user-level pages (e.g. notifications). */
 export default function DashboardTopNav({ firstName, lastName }: DashboardTopNavProps) {
     return (
         <header

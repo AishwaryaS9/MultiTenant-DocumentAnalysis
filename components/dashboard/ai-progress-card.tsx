@@ -1,71 +1,119 @@
-import { Brain } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useId } from "react";
+import { Card, CardContent } from "../ui/card";
+import { Sparkles } from "lucide-react";
 import { AIProgressCardProps } from "@/types";
 
-export default function AIProgressCard({ percentage }: AIProgressCardProps) {
+const AIProgressCard = ({ percentage }: AIProgressCardProps) => {
+    const gradientId = useId();
+    const pct = Math.round(Math.min(Math.max(percentage, 0), 100));
+
+    const status =
+        pct === 0
+            ? {
+                label: "Not started",
+                text: "Upload a document to begin analysis.",
+                pill: "bg-slate-100 text-slate-600",
+                dot: "bg-slate-400",
+            }
+            : pct < 100
+                ? {
+                    label: "In progress",
+                    text: "Some documents are still waiting for a summary.",
+                    pill: "bg-amber-50 text-amber-700",
+                    dot: "bg-amber-500 animate-pulse motion-reduce:animate-none",
+                }
+                : {
+                    label: "Complete",
+                    text: "Every document has an AI summary.",
+                    pill: "bg-emerald-50 text-emerald-700",
+                    dot: "bg-emerald-500",
+                };
+
     return (
         <Card
-            className="sm:col-span-2 xl:col-span-2 min-h-55 border-none bg-dashboard-panel text-white shadow-2xl relative overflow-hidden flex flex-col justify-center"
+            className="group relative h-full w-full overflow-hidden card-outline"
             role="region"
-            aria-label="AI processing progress card">
-            {/* Decorative Background Icon */}
+            aria-label="AI analysis progress"
+        >
             <div
-                className="absolute -right-5 -bottom-5 opacity-10 rotate-12 pointer-events-none"
                 aria-hidden="true"
-            >
-                <Brain className="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48" />
-            </div>
+                className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-orange-200/40 blur-3xl"
+            />
 
-            <CardContent className="p-5 sm:p-6 lg:p-7 relative z-10 h-full flex flex-col justify-between">
-                <div className="flex items-start justify-between gap-3 sm:gap-4">
-                    <div className="min-w-0">
-                        <p className="text-slate-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-1"
-                            aria-label="AI processing label">
-                            Neural Processing
-                        </p>
-
-                        <div className="flex items-end sm:items-baseline gap-2 flex-wrap">
-                            <span className="text-3xl sm:text-5xl font-black tracking-tighter leading-none"
-                                aria-label={`AI indexing progress is ${percentage} percent`}>
-                                {percentage}%
-                            </span>
-
-                            <span className="text-slate-400 font-medium text-sm sm:text-base whitespace-nowrap">
-                                Indexed
-                            </span>
-                        </div>
+            <CardContent className="relative flex h-full flex-col gap-5 p-5">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <span
+                            className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white shadow-sm shadow-orange-500/30"
+                            aria-hidden="true"
+                        >
+                            <Sparkles className="h-4 w-4" />
+                        </span>
+                        <h3 className="text-sm font-semibold tracking-tight text-slate-900">
+                            AI analysis
+                        </h3>
                     </div>
 
-                    <div className="p-2 sm:p-3 bg-slate-800/50 rounded-xl shrink-0"
-                        aria-hidden="true">
-                        <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-orange-400" />
-                    </div>
+                    <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${status.pill}`}
+                    >
+                        <span className={`h-1.5 w-1.5 rounded-full ${status.dot}`} aria-hidden="true" />
+                        {status.label}
+                    </span>
                 </div>
 
-                {/* Progress Bar */}
-                <div
-                    className="w-full bg-slate-800/50 rounded-full h-3.5 p-1 my-5"
-                    role="progressbar"
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-valuenow={Math.round(percentage)}
-                    aria-label="AI indexing progress"
-                >
+                <div className="mt-auto flex items-center gap-4">
                     <div
-                        className="bg-linear-to-r from-amber-400 via-orange-500 to-amber-400 h-full rounded-full transition-all duration-1000"
-                        style={{
-                            width: `${Math.min(
-                                Math.max(percentage, 0),
-                                100
-                            )}%`,
-                        }}
-                    />
-                </div>
+                        className="relative h-20 w-20 shrink-0"
+                        role="progressbar"
+                        aria-valuenow={pct}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label="Documents analyzed"
+                    >
+                        <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+                            <defs>
+                                <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#fb923c" />
+                                    <stop offset="100%" stopColor="#ea580c" />
+                                </linearGradient>
+                            </defs>
+                            <circle
+                                cx="50"
+                                cy="50"
+                                r="42"
+                                fill="none"
+                                strokeWidth="9"
+                                className="stroke-slate-100"
+                            />
+                            <circle
+                                cx="50"
+                                cy="50"
+                                r="42"
+                                fill="none"
+                                strokeWidth="9"
+                                strokeLinecap="round"
+                                pathLength={100}
+                                strokeDasharray={`${pct} 100`}
+                                stroke={`url(#${gradientId})`}
+                                className="transition-[stroke-dasharray] duration-700 ease-out motion-reduce:transition-none"
+                            />
+                        </svg>
+                        <span className="absolute inset-0 flex items-center justify-center text-lg font-semibold tabular-nums tracking-tight text-slate-900">
+                            {pct}%
+                        </span>
+                    </div>
 
-                <p className="text-slate-400 text-[11px] sm:text-xs italic leading-relaxed" aria-label="AI engine status">
-                    AI Engine is optimized and ready for queries
-                </p>
+                    <div className="min-w-0">
+                        <p className="text-sm font-medium text-slate-900">
+                            {pct}% of documents analyzed
+                        </p>
+                        <p className="mt-1 text-xs leading-snug text-slate-500">{status.text}</p>
+                    </div>
+                </div>
             </CardContent>
         </Card>
     );
-}
+};
+
+export default AIProgressCard;

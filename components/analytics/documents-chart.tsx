@@ -1,9 +1,14 @@
 "use client";
 
 import { DocumentsChartProps } from "@/types";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
-export default function DocumentsChart({ data }: DocumentsChartProps) {
+interface ExtendedDocumentsChartProps extends DocumentsChartProps {
+    timeRange?: string;
+    onTimeRangeChange?: (range: string) => void;
+}
+
+export default function DocumentsChart({ data }: ExtendedDocumentsChartProps) {
     const chartId = "documents-processed-chart";
     const descriptionId = `${chartId}-description`;
 
@@ -19,13 +24,21 @@ export default function DocumentsChart({ data }: DocumentsChartProps) {
             role="figure"
             aria-labelledby={chartId}
             aria-describedby={descriptionId}
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 id={chartId} className="mb-4 text-lg font-semibold">
-                Documents Processed This Week
-            </h3>
+            className="p-6 border card-outline"
+        >
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h3 id={chartId} className="chart-title">
+                        Analysis activity
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                        Documents Processed This Week
+                    </p>
+                </div>
+            </div>
 
             <div id={descriptionId} className="sr-only">
-                Documents processed this week. Total documents processed:
+                Analysis activity chart. Total documents processed:
                 {" "}
                 {totalDocuments}.
                 {data.map(
@@ -34,53 +47,83 @@ export default function DocumentsChart({ data }: DocumentsChartProps) {
                 )}
             </div>
 
-            <div className="h-64 sm:h-72">
+            <div className="h-48 sm:h-56">
                 {!hasData ? (
                     <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50">
                         <div className="px-4 text-center">
                             <p className="text-sm font-medium text-slate-600">
-                                No documents processed yet
+                                No activity recorded yet
                             </p>
-
-                            <p className="mt-1 text-xs text-slate-500">
-                                Upload documents to start tracking weekly processing activity.
+                            <p className="chart-subtitle">
+                                Start running analyses to populate this chart.
                             </p>
                         </div>
                     </div>
                 ) : (
-                    <div aria-hidden="true" className="h-full w-full my-12">
+                    <div aria-hidden="true" className="h-full w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart
+                            <AreaChart
                                 data={data}
                                 margin={{
-                                    top: 5,
-                                    right: 20,
-                                    left: 10,
-                                    bottom: 5,
+                                    top: 10,
+                                    right: 10,
+                                    left: -20,
+                                    bottom: 0,
                                 }}
                             >
-                                <CartesianGrid strokeDasharray="3 3" />
+                                <defs>
+                                    <linearGradient id="colorDocuments" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#F97316" stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor="#F97316" stopOpacity={0.0} />
+                                    </linearGradient>
+                                </defs>
+
+                                <CartesianGrid
+                                    strokeDasharray="none"
+                                    vertical={false}
+                                    stroke="#F1F5F9"
+                                />
 
                                 <XAxis
                                     dataKey="day"
-                                    tick={{ fontSize: 13 }}
+                                    tick={{ fontSize: 12, fill: "#94A3B8" }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    dy={10}
                                 />
 
                                 <YAxis
                                     allowDecimals={false}
-                                    tick={{ fontSize: 13 }}
+                                    tick={{ fontSize: 12, fill: "#94A3B8" }}
+                                    axisLine={false}
+                                    tickLine={false}
+                                    domain={[0, 'auto']}
                                 />
 
                                 <Tooltip
-                                    cursor={{ fill: "#FFF7ED" }}
+                                    contentStyle={{
+                                        backgroundColor: "#FFFFFF",
+                                        borderColor: "#E2E8F0",
+                                        borderRadius: "0.75rem",
+                                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                                    }}
                                 />
 
-                                <Bar
+                                <Area
+                                    type="monotone"
                                     dataKey="documents"
-                                    radius={[8, 8, 0, 0]}
-                                    fill="#F97316"
+                                    stroke="#F97316"
+                                    strokeWidth={2.5}
+                                    fillOpacity={1}
+                                    fill="url(#colorDocuments)"
+                                    activeDot={{
+                                        r: 6,
+                                        fill: "#FFFFFF",
+                                        stroke: "#F97316",
+                                        strokeWidth: 3,
+                                    }}
                                 />
-                            </BarChart>
+                            </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 )}
