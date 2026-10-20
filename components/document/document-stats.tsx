@@ -42,8 +42,8 @@ export default function DocumentStats({ documents }: DocumentsStatsProps) {
                 title="Total Assets"
                 value={totalDocs}
                 description="Documents uploaded into your workspace"
-                icon={<FileText className="w-5 h-5 text-orange-600" aria-hidden="true" />}
-                gradient="from-orange-400 via-orange-500 to-amber-400"
+                icon={<FileText className="w-5 h-5 text-primary" aria-hidden="true" />}
+                gradient="from-primary via-orange-500 to-amber-400"
                 progress={totalDocsProgress}
             />
 
@@ -51,8 +51,8 @@ export default function DocumentStats({ documents }: DocumentsStatsProps) {
                 title="Analyzed"
                 value={analyzedDocs}
                 description="AI processed reports and summaries"
-                icon={<Brain className="w-5 h-5 text-emerald-600" aria-hidden="true" />}
-                gradient="from-emerald-400 via-emerald-500 to-teal-400"
+                icon={<Brain className="w-5 h-5 text-primary" aria-hidden="true" />}
+                gradient="from-primary via-orange-500 to-amber-400"
                 progress={analyzedProgress}
             />
 
@@ -60,8 +60,8 @@ export default function DocumentStats({ documents }: DocumentsStatsProps) {
                 title="Processing"
                 value={processingDocs}
                 description="Documents currently being analyzed"
-                icon={<Loader className="w-5 h-5 text-violet-600" aria-hidden="true" />}
-                gradient="from-violet-400 via-violet-500 to-purple-400"
+                icon={<Loader className="w-5 h-5 text-primary" aria-hidden="true" />}
+                gradient="from-primary via-orange-500 to-amber-400"
                 progress={processingProgress}
             />
 
@@ -69,8 +69,8 @@ export default function DocumentStats({ documents }: DocumentsStatsProps) {
                 title="Storage Used"
                 value={formatFileSize(totalStorageBytes)}
                 description="Total cloud storage consumption"
-                icon={<HardDrive className="w-5 h-5 text-blue-600" aria-hidden="true" />}
-                gradient="from-blue-400 via-blue-500 to-indigo-400"
+                icon={<HardDrive className="w-5 h-5 text-primary" aria-hidden="true" />}
+                gradient="from-primary via-orange-500 to-amber-400"
                 progress={storageProgress}
             />
         </section>

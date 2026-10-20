@@ -15,7 +15,7 @@ export function getDocStatus(doc: DocumentItem, isAnalyzing: boolean): DocStatus
 export const statusStyles: Record<DocStatus, { label: string; className: string }> = {
     analyzed: { label: "Analyzed", className: "bg-emerald-50 text-emerald-700" },
     processing: { label: "Processing", className: "bg-orange-50 text-orange-600" },
-    pending: { label: "Not analyzed", className: "bg-slate-100 text-slate-600" },
+    pending: { label: "Pending", className: "bg-slate-100 text-slate-600" },
     failed: { label: "Failed", className: "bg-rose-50 text-rose-600" },
 };
 

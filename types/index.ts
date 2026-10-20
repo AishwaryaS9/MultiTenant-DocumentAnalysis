@@ -140,6 +140,11 @@ export interface DashboardHeaderProps {
     orgSlug: string;
 }
 
+export interface DashboardTopNavProps {
+    firstName?: string | null;
+    lastName?: string | null;
+}
+
 export interface AIProgressCardProps {
     percentage: number;
 }
@@ -216,6 +221,7 @@ export interface User {
     id?: string;
     name?: string | null;
     firstName?: string | null;
+    lastName?: string | null;
     email?: string | null;
 }
 
@@ -248,10 +254,12 @@ export interface OrganizationMember {
     };
 }
 
-
-export interface Testimonial {
-    text: string;
-    avatar?: React.ReactNode;
+export interface EmptyWorkspaceStateProps {
+    orgName: string;
+    setOrgName: (v: string) => void;
+    isCreating: boolean;
+    onCreate: () => void;
+    onJoinWithInvite?: () => void;
 }
 
 export interface ClerkWebhookEventData {
@@ -368,4 +376,14 @@ export interface AppNotification {
 export interface NotificationsResponse {
     notifications: AppNotification[];
     unreadCount: number;
+}
+
+export interface NotificationItemProps {
+    notification: AppNotification;
+    canAccept: boolean;
+    isAccepting: boolean;
+    onAccept: (n: AppNotification) => void;
+    onMarkRead: (id: string) => void;
+    invitationStatus?: string;
+    variant?: "compact" | "page";
 }

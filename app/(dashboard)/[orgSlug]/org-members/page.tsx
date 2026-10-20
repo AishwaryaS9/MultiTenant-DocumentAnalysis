@@ -2,7 +2,7 @@ import MembersToolbar from "@/components/org-members/members-toolbar";
 import { Card } from "@/components/ui/card";
 import { notFound, redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { MoreHorizontal } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { OrganizationMember, OrganizationMembersProps } from "@/types";
 import InviteTeamModal from "@/components/dashboard/invite-team-modal";
 import { Button } from "@/components/ui/button";
@@ -43,70 +43,68 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
   const members = data.members;
   const totalCount = data.totalCount;
 
-
   return (
     <main aria-labelledby="team-directory-heading" className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6">
-      <header
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 w-full"
-        aria-labelledby="team-directory-heading">
+      <header className="flex w-full flex-col justify-between gap-4 pb-4 sm:flex-row sm:items-center">
         {/* Page Info */}
-        <div className="flex flex-col gap-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span
-              className="text-xs font-bold uppercase tracking-wider text-orange-600 truncate"
-              aria-label={`Workspace ${organization.name}`}>
-              {organization.name}
-            </span>
-          </div>
+        <div className="flex min-w-0 flex-col gap-1">
+          <span
+            className="truncate text-xs font-bold uppercase tracking-wider text-orange-600"
+            aria-label={`Workspace ${organization.name}`}>
+            {organization.name}
+          </span>
 
-          <div className="flex items-baseline gap-3 flex-wrap">
-            <h1
-              id="team-directory-heading"
-              className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight truncate">
-              Team Directory
-            </h1>
-          </div>
+          <h1
+            id="team-directory-heading"
+            className="truncate text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Team Directory
+          </h1>
 
           <p className="text-sm text-slate-500">
-            Manage system access roles and profiles for your organization's members.
+            Manage system access roles and profiles for your organization&apos;s members.
           </p>
         </div>
 
         {orgRole === "org:admin" && (
-          <div
-            className="flex items-center gap-3 shrink-0 "
-            role="status"
-            aria-label={`Total users: ${totalCount}`}>
+          <div className="flex shrink-0 items-center gap-3">
             <InviteTeamModal>
               <Button
-                variant="outline"
-                aria-label="Invite team members"
-                className="rounded-xl font-medium text-slate-700 bg-white hover:bg-slate-50 border-slate-200 shadow-sm cursor-pointer min-h-10 px-4 focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-600"
-              >
-                Invite Team
+                aria-label="Upload document"
+                className="rounded-xl bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 flex items-center gap-2 font-medium text-sm cursor-pointer min-h-10 shadow-sm focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:ring-slate-900">
+                <Plus className="w-4 h-4 shrink-0" aria-hidden="true" />
+                <span>Invite Team</span>
               </Button>
             </InviteTeamModal>
-
           </div>
         )}
       </header>
 
       <MembersToolbar />
 
-      <Card className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-0 gap-0 shadow-xs">
+      <Card className="gap-0 overflow-hidden card-outline p-0 ">
         {/* Card header */}
-        <div className="border-b border-slate-200/80 px-6 py-5">
-          <h2 className="text-lg font-bold tracking-tight text-slate-900">
-            {totalCount} {totalCount === 1 ? "member" : "members"}
-          </h2>
-          <p className="mt-0.5 text-sm text-slate-500">
-            People with access to {organization.name}
-          </p>
+        <div className="flex items-center justify-between gap-4 border-b border-slate-200/80 px-6 py-5">
+          <div>
+            <h2 className="text-sm font-semibold tracking-tight text-slate-900">
+              {totalCount} {totalCount === 1 ? "member" : "members"}
+            </h2>
+            <p className="mt-0.5 text-xs text-slate-500">
+              People with access to {organization.name}
+            </p>
+          </div>
+          <div
+            aria-hidden="true"
+            className="hidden h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600 sm:flex">
+            <Users className="h-5 w-5" />
+          </div>
         </div>
 
         {/* Member rows */}
         {members.length === 0 ? (
-          <div role="status" className="flex h-36 items-center justify-center text-sm text-muted-foreground">
+          <div
+            role="status"
+            className="flex h-44 flex-col items-center justify-center gap-2 text-sm text-slate-500">
+            <Users className="h-8 w-8 text-slate-300" aria-hidden="true" />
             No directory records match your active query filters.
           </div>
         ) : (
@@ -117,12 +115,12 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
               return (
                 <li
                   key={member.id}
-                  className="flex items-center justify-between gap-4 px-6 py-2 transition-colors hover:bg-slate-50/50 focus-within:bg-slate-50/50">
+                  className="flex items-center justify-between gap-4 px-6 py-3 transition-colors hover:bg-slate-50/70 focus-within:bg-slate-50/70">
                   {/* Avatar + info */}
                   <div className="flex min-w-0 items-center gap-4">
                     <div
                       aria-hidden="true"
-                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold ${isOwner ? "bg-slate-900 text-white" : "bg-orange-50 text-orange-600"
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold ring-2 ring-white ${isOwner ? "bg-slate-900 text-white" : "bg-orange-50 text-orange-600"
                         }`}>
                       {getInitials(member.user.name, member.user.email)}
                     </div>
@@ -131,7 +129,7 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
                       <span className="truncate text-[15px] font-semibold text-slate-900">
                         {member.user.name || "Pending User"}
                       </span>
-                      <span className="truncate text-sm text-slate-500">
+                      <span className="truncate text-xs font-base text-slate-500">
                         {member.user.email}
                       </span>
                     </div>
@@ -139,16 +137,20 @@ export default async function OrganizationMembers({ params, searchParams }: Orga
 
                   {/* Role + actions */}
                   <div className="flex shrink-0 items-center gap-3">
-                    <span className="rounded-lg bg-stone-100 px-3 py-1.5 text-xs font-semibold capitalize text-stone-600">
+                    <span
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold capitalize ${isOwner
+                        ? "bg-slate-900 text-white"
+                        : "bg-stone-100 text-stone-600"
+                        }`}>
                       {member.role}
                     </span>
 
-                    <button
+                    {/* <button
                       type="button"
                       aria-label={`More actions for ${member.user.name || member.user.email}`}
-                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400">
+                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400">
                       <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
-                    </button>
+                    </button> */}
                   </div>
                 </li>
               );

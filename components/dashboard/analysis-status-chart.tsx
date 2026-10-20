@@ -73,7 +73,7 @@ export default function AnalysisStatusChart({ data }: AnalysisStatusChartProps) 
                         Documents by status
                     </h3>
                     <p className="chart-subtitle">
-                        {total} total in your vault
+                        {total} documents in your workspace
                     </p>
                 </div>
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-feature-pill">

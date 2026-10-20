@@ -28,6 +28,7 @@ const Hero = () => {
                     id: user.id,
                     name: user.fullName,
                     firstName: user.firstName,
+                    lastName: user.lastName,
                     email: user.primaryEmailAddress?.emailAddress ?? null,
                 })
             );

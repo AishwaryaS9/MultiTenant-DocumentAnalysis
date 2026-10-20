@@ -201,3 +201,10 @@ export const sortOptions: { value: SortKey; label: string }[] = [
     { value: "name", label: "Name (A–Z)" },
     { value: "size", label: "Largest first" },
 ];
+
+//Notifications
+export const statusNote = (status?: string) => {
+    if (status === "accepted") return "You've already accepted this invitation.";
+    if (status === "revoked") return "This invitation was revoked.";
+    return null;
+};

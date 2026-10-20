@@ -9,7 +9,7 @@ import DocumentRow, { getDocStatus, getUpdatedAt } from "./document-row";
 import { sortOptions, statusOptions } from "@/app/data/data";
 
 const triggerClass =
-    "h-11 w-auto min-w-0 gap-2 rounded-xl border-slate-200 bg-white px-4 text-[15px] font-medium text-slate-800 shadow-none hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-0";
+    "h-11 w-auto min-w-0 gap-2 rounded-xl border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 shadow-none hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-0";
 
 export default function DocumentList({
     documents,
@@ -74,7 +74,7 @@ export default function DocumentList({
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search documents..."
                         aria-label="Search documents"
-                        className="h-12 w-full rounded-2xl bg-stone-100 pl-11 pr-4 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-300"
+                        className="h-12 w-full rounded-2xl bg-stone-100 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-200"
                     />
                 </div>
 
@@ -88,8 +88,8 @@ export default function DocumentList({
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
                             {statusOptions.map((o) => (
-                                <SelectItem key={o.value} value={o.value}>
-                                    {o.label}
+                                <SelectItem key={o.value} value={o.value} className="text-xs">
+                                    <span className="text-xs">{o.label}</span>
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -101,8 +101,8 @@ export default function DocumentList({
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
                             {sortOptions.map((o) => (
-                                <SelectItem key={o.value} value={o.value}>
-                                    {o.label}
+                                <SelectItem key={o.value} value={o.value} className="text-xs">
+                                    <span className="text-xs">{o.label}</span>
                                 </SelectItem>
                             ))}
                         </SelectContent>

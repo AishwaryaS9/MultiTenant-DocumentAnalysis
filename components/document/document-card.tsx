@@ -128,7 +128,7 @@ export default function DocumentCard({
                             <div className="mb-3 flex items-center justify-between gap-3 border-b border-slate-100 pb-3">
                                 <div className="flex items-center gap-2.5">
                                     <div
-                                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-white"
+                                        className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white"
                                         aria-hidden="true"
                                     >
                                         <Brain className="h-4 w-4" />
@@ -175,7 +175,7 @@ export default function DocumentCard({
                                     type="button"
                                     onClick={() => onToggleSummary(doc.id)}
                                     aria-expanded={!!isExpanded}
-                                    className="mt-2 inline-flex items-center gap-1 rounded-md text-xs font-semibold text-orange-600 hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300"
+                                    className="mt-2 inline-flex items-center gap-1 rounded-md text-xs font-semibold text-primary hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300"
                                 >
                                     {isExpanded ? "Show less" : "Read more"}
                                     <ChevronDown
@@ -267,7 +267,7 @@ export default function DocumentCard({
                             variant="outline"
                             onClick={() => window.open(doc.fileUrl!, "_blank", "noopener,noreferrer")}
                             aria-label={`Download ${doc.name}`}
-                            className="h-10 w-full justify-center rounded-xl border-slate-200 bg-white text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                            className="h-10 w-full justify-center rounded-xl border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50"
                         >
                             <Download className="mr-2 h-4 w-4 text-slate-400" aria-hidden="true" />
                             Download file
@@ -288,7 +288,7 @@ export default function DocumentCard({
                                 })
                             }
                             aria-label={`Export AI insights for ${doc.name}`}
-                            className="h-10 w-full justify-center rounded-xl border-orange-200 bg-orange-50/50 text-sm font-semibold text-orange-600 hover:bg-orange-50"
+                            className="h-10 w-full justify-center rounded-xl border-orange-200 bg-orange-50/50 text-xs font-semibold text-orange-600 hover:bg-orange-50"
                         >
                             <Sparkles className="mr-2 h-4 w-4 text-orange-500" aria-hidden="true" />
                             Export insights
@@ -309,7 +309,8 @@ export default function DocumentCard({
                         >
                             <SelectTrigger
                                 aria-label="Select AI analysis type"
-                                className="h-10 w-full rounded-xl border-slate-200 bg-white px-3.5 text-sm font-semibold shadow-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-0"
+                                className="h-10 w-full rounded-xl border-slate-200 bg-white px-3.5 text-xs font-semibold shadow-none focus-visible:ring-2 
+                                focus-visible:ring-orange-300 focus-visible:ring-offset-0"
                             >
                                 <SelectValue>
                                     <div className="flex items-center gap-2 truncate">
@@ -326,7 +327,7 @@ export default function DocumentCard({
                                     <SelectItem
                                         key={type.value}
                                         value={type.value}
-                                        className="rounded-lg text-sm font-medium"
+                                        className="rounded-lg text-xs font-medium"
                                     >
                                         {type.label}
                                     </SelectItem>
@@ -340,10 +341,10 @@ export default function DocumentCard({
                         disabled={isAnalyzing}
                         aria-label={doc.aiSummary ? `Re-analyze ${doc.name}` : `Analyze ${doc.name}`}
                         className={cn(
-                            "h-10 w-full rounded-xl text-sm font-semibold text-white shadow-none transition-colors focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-1",
+                            "h-10 w-full rounded-xl text-xs font-semibold text-white shadow-none transition-colors focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-1",
                             doc.aiSummary
                                 ? "bg-slate-900 hover:bg-black"
-                                : "bg-orange-500 hover:bg-orange-600"
+                                : "bg-primary hover:bg-primary/90"
                         )}
                     >
                         {isAnalyzing ? (
@@ -363,7 +364,7 @@ export default function DocumentCard({
                         variant="ghost"
                         onClick={() => setDeleteModalOpen(true)}
                         aria-label={`Delete ${doc.name}`}
-                        className="h-10 w-full justify-center rounded-xl bg-rose-50 text-sm font-semibold text-rose-600 hover:bg-rose-100 hover:text-rose-700 focus-visible:ring-2 focus-visible:ring-rose-300"
+                        className="h-10 w-full justify-center rounded-xl bg-rose-50 text-xs font-semibold text-rose-600 hover:bg-rose-100 hover:text-rose-700 focus-visible:ring-1 focus-visible:ring-rose-300"
                     >
                         <Trash2 className="mr-2 h-4 w-4" aria-hidden="true" />
                         Delete

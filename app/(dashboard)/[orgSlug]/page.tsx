@@ -20,6 +20,7 @@ interface OrgDashboardPageProps {
 
 export default async function OrgDashboardPage({ params }: OrgDashboardPageProps) {
     const { userId } = await auth();
+
     if (!userId) redirect("/sign-in");
 
     const { orgSlug } = await params;
@@ -99,7 +100,7 @@ export default async function OrgDashboardPage({ params }: OrgDashboardPageProps
                         title="Documents"
                         value={totalDocs}
                         icon={<FileText className="text-primary" />}
-                        description={`of ${MAX_DOCS_CAP} Stored in vault`}
+                        description={`of ${MAX_DOCS_CAP} total documents`}
                         gradient="from-orange-500 to-amber-400"
                         progress={docsProgress}
                     />
