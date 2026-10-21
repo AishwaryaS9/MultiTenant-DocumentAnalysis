@@ -1,12 +1,7 @@
 import { UserButton } from "@clerk/nextjs";
 import NotificationBell from "@/components/notifications/notification-bell";
+import { DashboardTopNavProps } from "@/types";
 
-interface DashboardTopNavProps {
-    firstName?: string | null;
-    lastName?: string | null;
-}
-
-/** Desktop top bar shared by the org layout and user-level pages (e.g. notifications). */
 export default function DashboardTopNav({ firstName, lastName }: DashboardTopNavProps) {
     return (
         <header

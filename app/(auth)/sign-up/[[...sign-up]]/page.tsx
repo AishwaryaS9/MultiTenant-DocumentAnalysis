@@ -49,23 +49,23 @@ export default function SignUpPage() {
                         <span>Get Started in Seconds</span>
                     </div>
 
-                    <h1 className="text-4xl xl:text-5xl tracking-tight text-gray-900 font-extrabold leading-[1.15] text-balance">
+                    <h1 className="text-4xl xl:text-5xl tracking-tight text-gray-900 font-bold leading-[1.15] text-balance">
                         Unlock the power of{" "}
-                        <span className="text-orange-600 block sm:inline">
+                        <span className="text-primary block sm:inline">
                             intelligent document analysis.
                         </span>
                     </h1>
 
-                    <p className="text-base text-gray-600 leading-relaxed font-normal text-pretty">
+                    <p className="text-sm text-gray-600 leading-relaxed font-normal text-pretty">
                         Create your workspace today. Transform multi-format PDFs, reports, and data sets into structured, actionable insights instantly.
                     </p>
 
                     <div className="flex flex-wrap items-center gap-4 pt-2 text-xs font-medium text-gray-700">
                         <span className="flex items-center gap-2 bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-stone-200/80 shadow-xs transition-transform hover:-translate-y-0.5">
-                            <ShieldCheck className="h-4 w-4 text-orange-600" /> Free trial available
+                            <ShieldCheck className="h-4 w-4 text-primary" /> Free trial available
                         </span>
                         <span className="flex items-center gap-2 bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-stone-200/80 shadow-xs transition-transform hover:-translate-y-0.5">
-                            <Zap className="h-4 w-4 text-orange-600" /> No credit card required
+                            <Zap className="h-4 w-4 text-primary" /> No credit card required
                         </span>
                     </div>
                 </div>
@@ -85,7 +85,7 @@ export default function SignUpPage() {
                         href="/"
                         prefetch
                         aria-label="Docinate AI homepage"
-                        className="inline-flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                        className="inline-flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-1 focus-visible:primary/50"
                     >
                         <Image
                             src={images.logo_full}

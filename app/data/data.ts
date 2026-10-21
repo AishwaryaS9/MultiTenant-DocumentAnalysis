@@ -1,5 +1,6 @@
 import { images } from "@/assets";
-import { AnalysisType } from "@/types";
+import { DocumentsRange } from "@/lib/analytics";
+import { AnalysisType, SortKey, StatusFilter } from "@/types";
 import { Building2, FileSearch, FileUp, Hash, List, MessageCircle, MessageSquare, ShieldCheck, Sparkles, UserPlus, Zap } from "lucide-react";
 
 export const navLinks = [
@@ -51,6 +52,7 @@ export const steps = [
         icon: Zap,
     },
 ];
+
 export const analysisTypes: {
     value: AnalysisType;
     label: string;
@@ -89,14 +91,6 @@ export const analysisTypes: {
         },
     ];
 
-// Format file size
-export const formatFileSize = (bytes?: number) => {
-    if (!bytes) return "N/A";
-    if (bytes < 1024) return bytes + " bytes";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-};
-
 export const mimeTypeLabels: Record<string, string> = {
     "application/pdf": "PDF",
     "application/msword": "DOC",
@@ -110,15 +104,6 @@ export const mimeTypeLabels: Record<string, string> = {
     "application/json": "JSON",
     "text/markdown": "MD"
 };
-
-export const testimonials = [
-    { text: "Such an innovative solution", avatar: "🚀" },
-    { text: "If you are worried about your data or privacy this is the way to go", avatar: "🔒" },
-    { text: "This application is impressive", avatar: "✨" },
-    { text: "For sure a keeper", avatar: "👤" },
-    { text: "Such Power features - applying a prompt to each section", avatar: "🔥" },
-    { text: "I purchased and Love it!", avatar: "⭐" },
-];
 
 export const features = [
     {
@@ -164,7 +149,6 @@ export const features = [
     },
 ];
 
-
 export const searchSuggestions = [
     "Invoices",
     "Contracts",
@@ -196,3 +180,31 @@ export const differentiators = [
             "Built with Clerk authentication, Prisma, PostgreSQL, and Vercel Blob storage to ensure secure access control, reliable document management, and enterprise-ready scalability."
     },
 ];
+
+export const RANGE_OPTIONS: { value: DocumentsRange; label: string; subtitle: string }[] = [
+    { value: "week", label: "This week", subtitle: "Documents processed this week" },
+    { value: "month", label: "This month", subtitle: "Documents processed this month" },
+    { value: "year", label: "This year", subtitle: "Documents processed this year" },
+];
+
+export const statusOptions: { value: StatusFilter; label: string }[] = [
+    { value: "all", label: "All files" },
+    { value: "analyzed", label: "Analyzed" },
+    { value: "processing", label: "Processing" },
+    { value: "pending", label: "Not analyzed" },
+    { value: "failed", label: "Failed" },
+];
+
+export const sortOptions: { value: SortKey; label: string }[] = [
+    { value: "updated", label: "Recently updated" },
+    { value: "oldest", label: "Oldest first" },
+    { value: "name", label: "Name (A–Z)" },
+    { value: "size", label: "Largest first" },
+];
+
+//Notifications
+export const statusNote = (status?: string) => {
+    if (status === "accepted") return "You've already accepted this invitation.";
+    if (status === "revoked") return "This invitation was revoked.";
+    return null;
+};

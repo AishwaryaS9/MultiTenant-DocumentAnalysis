@@ -35,7 +35,7 @@ export default function MembersToolbar() {
   }, [searchTerm]);
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-slate-200/80 bg-white p-4 shadow-xs lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex flex-col gap-4 rounded-xl p-4 card-outline lg:flex-row lg:items-center lg:justify-between">
       <label htmlFor="member-search" className="sr-only">
         Search members by name or email
       </label>
@@ -48,7 +48,7 @@ export default function MembersToolbar() {
           placeholder="Search name or email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="h-10 bg-slate-50/50 pl-9 transition-all focus-visible:ring-1 focus-visible:ring-gray-400 focus-visible:ring-offset-1 focus-visible:ring-offset-gray-50"
+          className="h-10 bg-slate-50/50 pl-9 transition-all focus-visible:ring-1 "
         />
       </div>
 
@@ -64,7 +64,7 @@ export default function MembersToolbar() {
         >
           <SelectTrigger
             aria-label="Filter members by role"
-            className="h-10 w-32.5 bg-white font-medium text-slate-700"
+            className="h-10 w-32.5 bg-white font-medium text-slate-700 text-xs"
           >
             <SelectValue placeholder="All Roles" />
           </SelectTrigger>
@@ -72,9 +72,9 @@ export default function MembersToolbar() {
             side="bottom"
             align="start"
             sideOffset={4}>
-            <SelectItem value="all">All Roles</SelectItem>
-            <SelectItem value="admin">Admin</SelectItem>
-            <SelectItem value="member">Member</SelectItem>
+            <SelectItem value="all" className="text-xs">All Roles</SelectItem>
+            <SelectItem value="admin" className="text-xs">Admin</SelectItem>
+            <SelectItem value="member" className="text-xs">Member</SelectItem>
           </SelectContent>
         </Select>
 
@@ -84,7 +84,7 @@ export default function MembersToolbar() {
         >
           <SelectTrigger
             aria-label="Sort members"
-            className="h-10 w-35 bg-white font-medium text-slate-700"
+            className="h-10 w-35 bg-white font-medium text-slate-700 text-xs"
           >
             <SelectValue placeholder="Sort By" />
           </SelectTrigger>
@@ -92,9 +92,9 @@ export default function MembersToolbar() {
             side="bottom"
             align="start"
             sideOffset={4}>
-            <SelectItem value="newest">Newest First</SelectItem>
-            <SelectItem value="oldest">Oldest First</SelectItem>
-            <SelectItem value="name">Name A-Z</SelectItem>
+            <SelectItem value="newest" className="text-xs">Newest First</SelectItem>
+            <SelectItem value="oldest" className="text-xs">Oldest First</SelectItem>
+            <SelectItem value="name" className="text-xs">Name A-Z</SelectItem>
           </SelectContent>
         </Select>
       </div>

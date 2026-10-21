@@ -11,7 +11,7 @@ export default function LoadingDocuments() {
 
             <div className="z-10 mt-5 space-y-1.5 px-2 text-center">
                 <h3 className="text-sm sm:text-base font-semibold tracking-tight text-slate-800 animate-pulse">
-                    Retrieving vault assets
+                    Retrieving workspace assets
                 </h3>
 
                 <p className="mx-auto max-w-64 text-xs sm:text-sm leading-relaxed text-slate-400 font-medium">

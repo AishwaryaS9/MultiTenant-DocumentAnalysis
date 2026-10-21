@@ -16,6 +16,7 @@ const Hero = () => {
     const dispatch = useAppDispatch();
     const { user, isLoaded } = useUser();
     const { organization, isLoaded: isOrgLoaded } = useOrganization();
+
     const shouldReduceMotion = useReducedMotion();
 
     useEffect(() => {
@@ -27,6 +28,7 @@ const Hero = () => {
                     id: user.id,
                     name: user.fullName,
                     firstName: user.firstName,
+                    lastName: user.lastName,
                     email: user.primaryEmailAddress?.emailAddress ?? null,
                 })
             );
@@ -97,7 +99,7 @@ const Hero = () => {
                     className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl tracking-tight text-gray-900 mb-6 max-w-4xl font-semibold leading-[1.05] text-balance"
                 >
                     Analyze complex documents <br />
-                    <span className="font-semibold text-orange-600 block sm:inline">
+                    <span className="font-semibold text-primary block sm:inline">
                         at the speed of thought.
                     </span>
                 </motion.h1>

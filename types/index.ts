@@ -1,5 +1,5 @@
 import { LucideIcon } from "lucide-react";
-import React from "react";
+import React, { ReactNode } from "react";
 
 export type AnalysisType =
     | "summary"
@@ -116,6 +116,22 @@ export interface StatCardProps {
     progress?: number;
 };
 
+export interface DocumentRowProps {
+    doc: DocumentItem;
+    status: DocStatus;
+    isOpen: boolean;
+    onToggle: () => void;
+    panelId: string;
+    children: ReactNode;
+}
+
+export type DocumentItem = DocumentsListProps["documents"][number];
+export type DocStatus = "analyzed" | "processing" | "pending" | "failed";
+
+export type StatusFilter = "all" | DocStatus;
+export type SortKey = "updated" | "oldest" | "name" | "size";
+
+
 //Dashboard
 export interface DashboardHeaderProps {
     orgName: string;
@@ -124,12 +140,22 @@ export interface DashboardHeaderProps {
     orgSlug: string;
 }
 
+export interface DashboardTopNavProps {
+    firstName?: string | null;
+    lastName?: string | null;
+}
+
 export interface AIProgressCardProps {
     percentage: number;
 }
 
 export interface AIInsightCardProps {
     role: string;
+}
+
+export interface AIAnalysisCtaProps {
+    orgSlug: string;
+    href?: string;
 }
 
 export interface EmptyDashboardProps {
@@ -195,6 +221,7 @@ export interface User {
     id?: string;
     name?: string | null;
     firstName?: string | null;
+    lastName?: string | null;
     email?: string | null;
 }
 
@@ -227,10 +254,12 @@ export interface OrganizationMember {
     };
 }
 
-
-export interface Testimonial {
-    text: string;
-    avatar?: React.ReactNode;
+export interface EmptyWorkspaceStateProps {
+    orgName: string;
+    setOrgName: (v: string) => void;
+    isCreating: boolean;
+    onCreate: () => void;
+    onJoinWithInvite?: () => void;
 }
 
 export interface ClerkWebhookEventData {
@@ -314,6 +343,24 @@ export interface AnalysisStatusChartProps {
     }[];
 }
 
+export interface WorkflowItem {
+    label: string;
+    value: number;
+}
+
+export interface ProcessingPerformanceChartProps {
+    title?: string;
+    subtitle?: string;
+    badge?: string;
+    items: WorkflowItem[];
+    unit?: string;
+    max?: number;
+    footerLabel?: string;
+    footerValue: number;
+    footerDelta?: string;
+}
+
+
 //Notifications
 export interface AppNotification {
     id: string;
@@ -329,4 +376,14 @@ export interface AppNotification {
 export interface NotificationsResponse {
     notifications: AppNotification[];
     unreadCount: number;
+}
+
+export interface NotificationItemProps {
+    notification: AppNotification;
+    canAccept: boolean;
+    isAccepting: boolean;
+    onAccept: (n: AppNotification) => void;
+    onMarkRead: (id: string) => void;
+    invitationStatus?: string;
+    variant?: "compact" | "page";
 }
