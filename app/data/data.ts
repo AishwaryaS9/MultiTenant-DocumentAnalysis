@@ -1,7 +1,7 @@
 import { images } from "@/assets";
 import { DocumentsRange } from "@/lib/analytics";
-import { AnalysisType, SortKey, StatusFilter } from "@/types";
-import { Building2, FileSearch, FileUp, Hash, List, MessageCircle, MessageSquare, ShieldCheck, Sparkles, UserPlus, Zap } from "lucide-react";
+import { AnalysisType, SortKey, StatusFilter, Feature } from "@/types";
+import { Building2, FileSearch, FileUp, Hash, List, MessageCircle, MessageSquare, ShieldCheck, Sparkles, UserPlus, Zap, Layers, Workflow, Users, LucideIcon } from "lucide-react";
 
 export const navLinks = [
     { label: "Home", href: "/" },
@@ -105,50 +105,53 @@ export const mimeTypeLabels: Record<string, string> = {
     "text/markdown": "MD"
 };
 
-export const features = [
+export const features: Feature[] = [
     {
         badge: "DEEP DIVE",
         title: "Go deeper than ever into long documents",
         description: "Our AI intelligently breaks down documents and creates multiple search indexes for more accurate, thorough analysis.",
-        image: images.feature_one,
-        bgColor: "bg-white",
-        gridSpan: "md:col-span-3",
+        icon: Layers,
+        iconPosition: "top",
+        iconSide: "left",
+        gridSpan: "md:col-span-6",
     },
-
     {
         badge: "SMART SUMMARIES",
         title: "Easily manage and analyze multiple documents",
         description: "Visualize complex analysis with ease—AI works on every document and returns results in a structured table.",
-        image: images.feature_three,
-        bgColor: "bg-white",
+        icon: FileSearch,
+        iconPosition: "bottom",
+        iconSide: "left",
         gridSpan: "md:col-span-3",
     },
     {
         badge: "FLOW AI",
         title: "Smaller inputs to AI enable greater precision",
         description: "Our AI intelligently breaks down documents and creates multiple search indexes for more accurate and thorough analysis.",
-        image: images.feature_two,
-        bgColor: "bg-white",
-        gridSpan: "md:col-span-2",
+        icon: Workflow,
+        iconPosition: "top",
+        iconSide: "left",
+        gridSpan: "md:col-span-3",
     },
     {
         badge: "LOCAL LLM SUPPORT",
         title: "Run document analysis without sending data to the cloud",
         description: "Perfect for users focused on data privacy and security.",
-        image: images.feature_four,
-        bgColor: "bg-white",
-        gridSpan: "md:col-span-2",
+        icon: ShieldCheck,
+        iconPosition: "top",
+        iconSide: "right",
+        gridSpan: "md:col-span-6",
     },
     {
         badge: "TEAM COLLABORATION",
         title: "Work together in a shared workspace seamlessly and efficiently",
         description: "Invite teammates, share documents, and collaborate in a secure and organized workspace.",
-        image: images.feature_five,
-        bgColor: "bg-white",
-        gridSpan: "md:col-span-2",
+        icon: Users,
+        iconPosition: "bottom",
+        iconSide: "left",
+        gridSpan: "md:col-span-6",
     },
 ];
-
 export const searchSuggestions = [
     "Invoices",
     "Contracts",

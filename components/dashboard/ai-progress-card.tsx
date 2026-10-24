@@ -40,7 +40,7 @@ const AIProgressCard = ({ percentage }: AIProgressCardProps) => {
                 className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-orange-200/40 blur-3xl"
             />
 
-            <CardContent className="relative flex h-full flex-col gap-5 p-5">
+            <CardContent className="relative flex h-full flex-col gap-2 ">
                 <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                         <span

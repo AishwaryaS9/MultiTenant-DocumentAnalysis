@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 
-// GET /api/notifications?limit=20 -> latest notifications (max 100) + unread count for the signed-in user
 export async function GET(req: Request) {
     const { userId } = await auth();
 
@@ -13,7 +12,11 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const limitParam = Number(new URL(req.url).searchParams.get("limit"));
+    const params = new URL(req.url).searchParams;
+    const limitParam = Number(params.get("limit"));
+    const pageParam = Number(params.get("page"));
+    const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : null;
+    const unreadOnly = params.get("unread") === "true";
     const limit =
         Number.isInteger(limitParam) && limitParam > 0
             ? Math.min(limitParam, MAX_LIMIT)
@@ -24,27 +27,39 @@ export async function GET(req: Request) {
         select: { id: true },
     });
 
-    // User not synced to the DB yet: nothing to show, not an error.
     if (!user) {
-        return NextResponse.json({ notifications: [], unreadCount: 0 });
+        return NextResponse.json(
+            page
+                ? { notifications: [], unreadCount: 0, totalCount: 0, allCount: 0 }
+                : { notifications: [], unreadCount: 0 }
+        );
     }
 
-    const [notifications, unreadCount] = await Promise.all([
+    const [notifications, unreadCount, allCount] = await Promise.all([
         prisma.notification.findMany({
-            where: { userId: user.id },
-            orderBy: { createdAt: "desc" },
+            where: { userId: user.id, ...(unreadOnly ? { readAt: null } : {}) },
+            orderBy: [{ createdAt: "desc" }, { id: "desc" }],
             take: limit,
+            ...(page ? { skip: (page - 1) * limit } : {}),
         }),
         prisma.notification.count({
             where: { userId: user.id, readAt: null },
         }),
+        page ? prisma.notification.count({ where: { userId: user.id } }) : Promise.resolve(0),
     ]);
 
-    return NextResponse.json({ notifications, unreadCount });
+    if (!page) {
+        return NextResponse.json({ notifications, unreadCount });
+    }
+
+    return NextResponse.json({
+        notifications,
+        unreadCount,
+        totalCount: unreadOnly ? unreadCount : allCount,
+        allCount,
+    });
 }
 
-// PATCH /api/notifications  body: { ids?: string[] }
-// Marks the given notifications as read, or all unread ones when `ids` is omitted.
 export async function PATCH(req: Request) {
     const { userId } = await auth();
 
@@ -75,7 +90,6 @@ export async function PATCH(req: Request) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Always scoped to the current user, so ids belonging to others are ignored.
     const result = await prisma.notification.updateMany({
         where: {
             userId: user.id,

@@ -1,12 +1,24 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import { FileSearch, Search } from "lucide-react";
 import { DocumentsListProps, SortKey, StatusFilter } from "@/types";
 import DocumentCard from "@/components/document/document-card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import DocumentRow, { getDocStatus, getUpdatedAt } from "./document-row";
 import { sortOptions, statusOptions } from "@/app/data/data";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
+import { getPageItems, getTotalPages } from "@/lib/pagination";
+
+const PAGE_SIZE = 5;
 
 const triggerClass =
     "h-11 w-auto min-w-0 gap-2 rounded-xl border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 shadow-none hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-0";
@@ -27,6 +39,8 @@ export default function DocumentList({
     const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
     const [sortBy, setSortBy] = useState<SortKey>("updated");
     const [openId, setOpenId] = useState<string | null>(null);
+    const [page, setPage] = useState(1);
+    const listTopRef = useRef<HTMLDivElement>(null);
 
     const visibleDocs = useMemo(() => {
         const q = query.trim().toLowerCase();
@@ -56,11 +70,23 @@ export default function DocumentList({
             });
     }, [documents, query, statusFilter, sortBy, isAnalyzing]);
 
+    const totalPages = getTotalPages(visibleDocs.length, PAGE_SIZE);
+    const currentPage = Math.min(page, totalPages);
+    const pageStart = (currentPage - 1) * PAGE_SIZE;
+    const pagedDocs = visibleDocs.slice(pageStart, pageStart + PAGE_SIZE);
+
+    const goToPage = (next: number) => {
+        setPage(Math.min(Math.max(next, 1), totalPages));
+        setOpenId(null);
+        listTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
     return (
         <section
             aria-label="Organization documents"
             className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white"
         >
+            <div ref={listTopRef} className="scroll-mt-6" />
             {/* TOOLBAR */}
             <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
                 <div className="relative w-full sm:max-w-md">
@@ -71,7 +97,10 @@ export default function DocumentList({
                     <input
                         type="search"
                         value={query}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={(e) => {
+                            setQuery(e.target.value);
+                            setPage(1);
+                        }}
                         placeholder="Search documents..."
                         aria-label="Search documents"
                         className="h-12 w-full rounded-2xl bg-stone-100 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-200"
@@ -81,7 +110,10 @@ export default function DocumentList({
                 <div className="flex items-center gap-2.5">
                     <Select
                         value={statusFilter}
-                        onValueChange={(v) => setStatusFilter(v as StatusFilter)}
+                        onValueChange={(v) => {
+                            setStatusFilter(v as StatusFilter);
+                            setPage(1);
+                        }}
                     >
                         <SelectTrigger aria-label="Filter by status" className={triggerClass}>
                             <SelectValue />
@@ -95,7 +127,13 @@ export default function DocumentList({
                         </SelectContent>
                     </Select>
 
-                    <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortKey)}>
+                    <Select
+                        value={sortBy}
+                        onValueChange={(v) => {
+                            setSortBy(v as SortKey);
+                            setPage(1);
+                        }}
+                    >
                         <SelectTrigger aria-label="Sort documents" className={triggerClass}>
                             <SelectValue />
                         </SelectTrigger>
@@ -113,7 +151,7 @@ export default function DocumentList({
             {/* ROWS */}
             {visibleDocs.length > 0 ? (
                 <ul className="border-t border-slate-100">
-                    {visibleDocs.map((doc) => {
+                    {pagedDocs.map((doc) => {
                         const isOpen = openId === doc.id;
 
                         return (
@@ -158,6 +196,50 @@ export default function DocumentList({
                             ? "Upload a document to see it here."
                             : "Try a different search term or clear the status filter."}
                     </p>
+                </div>
+            )}
+
+            {/* PAGINATION */}
+            {visibleDocs.length > PAGE_SIZE && (
+                <div className="flex flex-col items-center gap-3 border-t border-slate-100 p-4 sm:flex-row sm:justify-between sm:p-5">
+                    <p className="text-sm text-slate-500" aria-live="polite">
+                        Showing {pageStart + 1}&ndash;{Math.min(pageStart + PAGE_SIZE, visibleDocs.length)} of{" "}
+                        {visibleDocs.length}
+                    </p>
+
+                    <Pagination className="mx-0 w-auto">
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    disabled={currentPage === 1}
+                                    onClick={() => goToPage(currentPage - 1)}
+                                />
+                            </PaginationItem>
+
+                            {getPageItems(currentPage, totalPages).map((item) => (
+                                <PaginationItem key={item}>
+                                    {typeof item === "number" ? (
+                                        <PaginationLink
+                                            isActive={item === currentPage}
+                                            aria-label={`Go to page ${item}`}
+                                            onClick={() => goToPage(item)}
+                                        >
+                                            {item}
+                                        </PaginationLink>
+                                    ) : (
+                                        <PaginationEllipsis />
+                                    )}
+                                </PaginationItem>
+                            ))}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => goToPage(currentPage + 1)}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
                 </div>
             )}
         </section>

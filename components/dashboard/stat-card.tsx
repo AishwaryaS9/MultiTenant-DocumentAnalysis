@@ -7,15 +7,15 @@ const StatCard = ({ title, value, icon, description, gradient, progress = 0 }: S
 
     return (
         <Card
-            className="h-full w-full card-outline"
+            className="h-full w-full gap-0 py-0 card-outline"
             role="region"
             aria-label={`${title} statistics card`}
         >
-            <CardContent className="flex h-full flex-col gap-3 p-4">
+            <CardContent className="flex h-full flex-col gap-2 px-4 py-6">
                 {/* Title + icon */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                     <span
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 [&>svg]:h-4 [&>svg]:w-4"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 [&>svg]:h-4 [&>svg]:w-4"
                         aria-hidden="true"
                     >
                         {icon}
@@ -26,18 +26,18 @@ const StatCard = ({ title, value, icon, description, gradient, progress = 0 }: S
                 {/* Value */}
                 <div>
                     <p
-                        className="text-2xl font-bold tabular-nums tracking-tight text-slate-900 sm:text-3xl"
+                        className="text-xl font-bold leading-tight tabular-nums tracking-tight text-slate-900 sm:text-2xl"
                         aria-label={`${title} value is ${value}`}
                     >
                         {value}
                     </p>
                     {description && (
-                        <p className="mt-0.5 text-xs text-slate-500">{description}</p>
+                        <p className="text-xs leading-tight text-slate-500">{description}</p>
                     )}
                 </div>
 
                 {/* Capacity */}
-                <div className="mt-auto flex items-center gap-3">
+                <div className="mt-auto flex items-center gap-2">
                     <div
                         className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100"
                         role="progressbar"
