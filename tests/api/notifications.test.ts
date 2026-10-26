@@ -80,6 +80,53 @@ describe("/api/notifications", () => {
         expect(mockFindMany.mock.calls[2][0].take).toBe(20);
     });
 
+    it("GET with ?page skips earlier pages and returns totals", async () => {
+        mockAuth.mockResolvedValue({ userId: "clerk_1" });
+        mockFindUser.mockResolvedValue({ id: "user_1" });
+        mockFindMany.mockResolvedValue([{ id: "n11" }]);
+        mockCount.mockResolvedValueOnce(4).mockResolvedValueOnce(25);
+
+        const res = await GET(get("?page=2&limit=10"));
+        const body = await res.json();
+
+        const args = mockFindMany.mock.calls[0][0];
+        expect(args.take).toBe(10);
+        expect(args.skip).toBe(10);
+        expect(args.where).toEqual({ userId: "user_1" });
+        expect(body).toEqual({
+            notifications: [{ id: "n11" }],
+            unreadCount: 4,
+            totalCount: 25,
+            allCount: 25,
+        });
+    });
+
+    it("GET with ?unread=true filters to unread and totals match the unread count", async () => {
+        mockAuth.mockResolvedValue({ userId: "clerk_1" });
+        mockFindUser.mockResolvedValue({ id: "user_1" });
+        mockFindMany.mockResolvedValue([]);
+        mockCount.mockResolvedValueOnce(4).mockResolvedValueOnce(25);
+
+        const res = await GET(get("?page=1&limit=10&unread=true"));
+        const body = await res.json();
+
+        expect(mockFindMany.mock.calls[0][0].where).toEqual({ userId: "user_1", readAt: null });
+        expect(body.totalCount).toBe(4);
+        expect(body.allCount).toBe(25);
+    });
+
+    it("GET ignores an invalid ?page and keeps the original response shape", async () => {
+        mockAuth.mockResolvedValue({ userId: "clerk_1" });
+        mockFindUser.mockResolvedValue({ id: "user_1" });
+        mockFindMany.mockResolvedValue([]);
+        mockCount.mockResolvedValue(0);
+
+        const res = await GET(get("?page=0"));
+
+        expect(mockFindMany.mock.calls[0][0].skip).toBeUndefined();
+        expect(await res.json()).toEqual({ notifications: [], unreadCount: 0 });
+    });
+
     it("PATCH returns 401 when signed out", async () => {
         mockAuth.mockResolvedValue({ userId: null });
         const res = await PATCH(patch({}));

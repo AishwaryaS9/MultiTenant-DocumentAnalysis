@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { motion, Variants, useReducedMotion } from 'framer-motion'
 import { features } from '@/app/data/data';
 import SectionBadge from '../common/section-badge';
@@ -65,7 +64,7 @@ export default function Features() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.4 }}
-                        className="inline-flex items-center gap-2 px-3.5 py-1 mb-4 "
+                        className="inline-flex items-center gap-2 px-3.5 py-1 mb-4"
                     >
                         <SectionBadge title="Features" />
                     </motion.div>
@@ -96,52 +95,70 @@ export default function Features() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.15 }}
-                    className="grid grid-cols-1 md:grid-cols-6 gap-6 max-w-7xl mx-auto"
+                    className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-7xl mx-auto"
                 >
-                    {features.map((feature, index) => (
-                        <motion.article
-                            key={index}
-                            variants={itemVariants}
-                            tabIndex={0}
-                            aria-labelledby={`feature-title-${index}`}
-                            className={`${feature.bgColor} ${feature.gridSpan} rounded-[2rem] p-8 border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.01)] 
-                            flex flex-col justify-between group`}
-                        >
-                            <div className="w-full aspect-16/10 rounded-2xl bg-[#F8F9FA] flex items-center justify-center overflow-hidden mb-6 border border-gray-50">
-                                {feature.image ? (
-                                    <Image
-                                        src={feature.image}
-                                        alt=""
-                                        width={500}
-                                        height={350}
-                                        className="w-full h-full object-contain p-2 "
-                                        sizes="(max-w-7xl) 50vw, 33vw"
-                                    />
-                                ) : (
-                                    <div className="w-12 h-12 rounded-full bg-gray-100 animate-pulse" />
-                                )}
-                            </div>
+                    {features.map((feature, index) => {
+                        const Icon = feature.icon
+                        const iconRight = feature.iconSide === "right"
 
-                            <div className="flex flex-col gap-2 mb-2">
+                        const visual = (
+                            <div
+                                aria-hidden="true"
+                                className={`flex items-center gap-5 ${iconRight ? "flex-row-reverse" : ""}`}
+                            >
+                                <Icon className="size-12 shrink-0 text-primary" strokeWidth={1.25} />
+                                <div
+                                    className={`h-10 flex-1 max-w-sm bg-dots-primary ${iconRight ? "dots-fade-l" : "dots-fade-r"
+                                        }`}
+                                />
+                            </div>
+                        )
+
+                        const text = (
+                            <div>
                                 {feature.badge && (
-                                    <span className="w-fit bg-gray-100 text-[10px] font-bold tracking-wider text-gray-500 px-2.5 py-0.5 rounded-md uppercase">
+                                    <span className="mb-3 block text-[11px] font-semibold uppercase tracking-wider text-primary">
                                         {feature.badge}
                                     </span>
                                 )}
-
-                                <h3 id={`feature-title-${index}`} className="text-xl font-semibold text-gray-900 tracking-tight leading-snug">
+                                <h3
+                                    id={`feature-title-${index}`}
+                                    className="text-lg sm:text-xl font-medium text-strong tracking-tight leading-snug"
+                                >
                                     {feature.title}
                                 </h3>
+                                <p className="mt-3 text-sm text-strong/70 leading-relaxed">
+                                    {feature.description}
+                                </p>
                             </div>
+                        )
 
-                            <p className="text-[14px] text-gray-500 leading-relaxed">
-                                {feature.description}
-                            </p>
-                        </motion.article>
-                    ))}
+                        return (
+                            <motion.article
+                                key={index}
+                                variants={itemVariants}
+                                tabIndex={0}
+                                aria-labelledby={`feature-title-${index}`}
+                                className={`${feature.gridSpan} bg-feature-card min-h-65 p-8 flex flex-col justify-between gap-8 transition-colors duration-300 hover:bg-[#ececec] focus-visible:outline-2 focus-visible:outline-primary/40`}
+                            >
+                                {feature.iconPosition === "top" ? (
+                                    <>
+                                        {visual}
+                                        {text}
+                                    </>
+                                ) : (
+                                    <>
+                                        {text}
+                                        {visual}
+                                    </>
+                                )}
+                            </motion.article>
+                        )
+                    })}
                 </motion.div>
             </div>
         </section>
     )
 }
+
 

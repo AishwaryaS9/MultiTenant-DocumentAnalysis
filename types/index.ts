@@ -16,6 +16,17 @@ export interface DifferentiatorProps {
     description: string;
 }
 
+export interface Feature {
+    badge?: string;
+    title: string;
+    description: string;
+    icon: LucideIcon;
+    iconPosition: "top" | "bottom";
+    iconSide: "left" | "right";
+    gridSpan: string;
+}
+
+
 //Document
 export interface Document {
     id: string;
@@ -376,6 +387,8 @@ export interface AppNotification {
 export interface NotificationsResponse {
     notifications: AppNotification[];
     unreadCount: number;
+    totalCount?: number;
+    allCount?: number;
 }
 
 export interface NotificationItemProps {
@@ -386,4 +399,10 @@ export interface NotificationItemProps {
     onMarkRead: (id: string) => void;
     invitationStatus?: string;
     variant?: "compact" | "page";
+}
+
+export interface NotificationsPageArgs {
+    limit?: number;
+    page?: number;
+    unreadOnly?: boolean;
 }

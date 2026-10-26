@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { AnalysisStatusChartProps } from "@/types";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-const COLORS = ["#F26B21", "#FFC4A3", "#DDD9D3"];
+const GRADIENTS: [string, string][] = [
+    ["#ef6439", "#FF9E5E"], // Analyzed
+    ["#FFB48A", "#FFDCC7"], // Processing
+    ["#CFCAC3", "#ECE9E5"], // Not analyzed
+];
 
 function ChartTooltip({ active, payload }: any) {
     if (!active || !payload?.length) return null;
@@ -22,6 +26,7 @@ function ChartTooltip({ active, payload }: any) {
 
 export default function AnalyticsStatusChart({ data }: AnalysisStatusChartProps) {
     const [isMounted, setIsMounted] = useState(false);
+    const gradientId = `status-gradient-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
 
     useEffect(() => {
         setIsMounted(true);
@@ -82,6 +87,22 @@ export default function AnalyticsStatusChart({ data }: AnalysisStatusChartProps)
                         <div aria-hidden="true" className="h-full w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
+                                    <defs>
+                                        {GRADIENTS.map(([from, to], index) => (
+                                            <linearGradient
+                                                key={index}
+                                                id={`${gradientId}-${index}`}
+                                                x1="0"
+                                                y1="0"
+                                                x2="1"
+                                                y2="1"
+                                            >
+                                                <stop offset="0%" stopColor={from} />
+                                                <stop offset="100%" stopColor={to} />
+                                            </linearGradient>
+                                        ))}
+                                    </defs>
+
                                     <Pie
                                         data={chartData}
                                         cx="50%"
@@ -97,7 +118,10 @@ export default function AnalyticsStatusChart({ data }: AnalysisStatusChartProps)
                                         animationDuration={800}
                                     >
                                         {chartData.map((_, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={`url(#${gradientId}-${index})`}
+                                            />
                                         ))}
                                     </Pie>
 
@@ -132,7 +156,9 @@ export default function AnalyticsStatusChart({ data }: AnalysisStatusChartProps)
                         <span className="flex items-center gap-3 text-xs text-slate-500">
                             <span
                                 className="size-2.5 rounded-full"
-                                style={{ backgroundColor: COLORS[index] }}
+                                style={{
+                                    backgroundImage: `linear-gradient(135deg, ${GRADIENTS[index][0]}, ${GRADIENTS[index][1]})`,
+                                }}
                             />
                             {item.name}
                         </span>

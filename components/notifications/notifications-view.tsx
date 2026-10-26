@@ -1,39 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { NOTIFICATIONS_POLL_INTERVAL_MS, useGetNotificationsQuery } from "@/app/store/services/notificationsApi";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
+import { getPageItems, getTotalPages } from "@/lib/pagination";
 import NotificationItem from "./notification-item";
 import { useNotificationActions } from "../../app/hooks/use-notification-actions";
 
-const PAGE_LIMIT = 50;
+const PAGE_SIZE = 5;
 
 type Filter = "all" | "unread";
 
 export default function NotificationsView() {
     const { isSignedIn } = useAuth();
     const [filter, setFilter] = useState<Filter>("all");
+    const [page, setPage] = useState(1);
+    const listRef = useRef<HTMLDivElement>(null);
 
-    const { data, isLoading, isError, refetch } = useGetNotificationsQuery(PAGE_LIMIT, {
-        skip: !isSignedIn,
-        pollingInterval: NOTIFICATIONS_POLL_INTERVAL_MS,
-        skipPollingIfUnfocused: true,
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-    });
+    const { data, isLoading, isFetching, isError, refetch } = useGetNotificationsQuery(
+        { limit: PAGE_SIZE, page, unreadOnly: filter === "unread" },
+        {
+            skip: !isSignedIn,
+            pollingInterval: NOTIFICATIONS_POLL_INTERVAL_MS,
+            skipPollingIfUnfocused: true,
+            refetchOnFocus: true,
+            refetchOnReconnect: true,
+        }
+    );
 
     const notifications = data?.notifications ?? [];
     const unreadCount = data?.unreadCount ?? 0;
+    const totalCount = data?.totalCount ?? 0;
+    const totalPages = getTotalPages(totalCount, PAGE_SIZE);
+
+    if (data && !isFetching && page > totalPages) {
+        setPage(totalPages);
+    }
+
+    const changeFilter = (next: Filter) => {
+        setFilter(next);
+        setPage(1);
+    };
+
+    const goToPage = (next: number) => {
+        setPage(Math.min(Math.max(next, 1), totalPages));
+        listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
 
     const { acceptingId, canAccept, getInvitationStatus, accept, markOneRead, markAllRead } =
         useNotificationActions(notifications);
-    const visible = filter === "unread" ? notifications.filter((n) => !n.readAt) : notifications;
 
     const filters: { value: Filter; label: string; count: number }[] = [
-        { value: "all", label: "All", count: notifications.length },
+        { value: "all", label: "All", count: data?.allCount ?? 0 },
         { value: "unread", label: "Unread", count: unreadCount },
     ];
 
@@ -82,7 +112,7 @@ export default function NotificationsView() {
                         key={f.value}
                         type="button"
                         aria-pressed={filter === f.value}
-                        onClick={() => setFilter(f.value)}
+                        onClick={() => changeFilter(f.value)}
                         className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${filter === f.value
                             ? "bg-feature-pill text-primary"
                             : "text-muted-foreground hover:text-foreground"
@@ -95,7 +125,11 @@ export default function NotificationsView() {
             </div>
 
             {/* List */}
-            <Card className="gap-0 overflow-hidden card-outline p-0 shadow-none">
+            <Card
+                ref={listRef}
+                aria-busy={isFetching}
+                className="scroll-mt-6 gap-0 overflow-hidden card-outline p-0 shadow-none"
+            >
                 {isLoading ? (
                     <div role="status" aria-label="Loading notifications" className="divide-y divide-border">
                         {[0, 1, 2].map((i) => (
@@ -119,7 +153,7 @@ export default function NotificationsView() {
                             Try again
                         </Button>
                     </div>
-                ) : visible.length === 0 ? (
+                ) : notifications.length === 0 ? (
                     <div role="status" className="flex h-56 flex-col items-center justify-center px-4 text-center">
                         <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-feature-pill">
                             <Bell className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -134,8 +168,11 @@ export default function NotificationsView() {
                         </p>
                     </div>
                 ) : (
-                    <ul aria-label="Notifications list" className="divide-y divide-border">
-                        {visible.map((n) => (
+                    <ul
+                        aria-label="Notifications list"
+                        className={`divide-y divide-border transition-opacity ${isFetching ? "opacity-60" : ""}`}
+                    >
+                        {notifications.map((n) => (
                             <NotificationItem
                                 key={n.id}
                                 variant="page"
@@ -148,6 +185,50 @@ export default function NotificationsView() {
                             />
                         ))}
                     </ul>
+                )}
+
+                {/* PAGINATION */}
+                {totalCount > PAGE_SIZE && (
+                    <div className="flex flex-col items-center gap-3 border-t border-slate-100 p-4 sm:flex-row sm:justify-between sm:p-5">
+                        <p className="text-sm text-slate-500" aria-live="polite">
+                            Showing {(page - 1) * PAGE_SIZE + 1}&ndash;{Math.min((page - 1) * PAGE_SIZE + PAGE_SIZE, totalCount)} of{" "}
+                            {totalCount}
+                        </p>
+
+                        <Pagination className="mx-0 w-auto">
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        disabled={page === 1}
+                                        onClick={() => goToPage(page - 1)}
+                                    />
+                                </PaginationItem>
+
+                                {getPageItems(page, totalPages).map((item) => (
+                                    <PaginationItem key={item}>
+                                        {typeof item === "number" ? (
+                                            <PaginationLink
+                                                isActive={item === page}
+                                                aria-label={`Go to page ${item}`}
+                                                onClick={() => goToPage(item)}
+                                            >
+                                                {item}
+                                            </PaginationLink>
+                                        ) : (
+                                            <PaginationEllipsis />
+                                        )}
+                                    </PaginationItem>
+                                ))}
+
+                                <PaginationItem>
+                                    <PaginationNext
+                                        disabled={page === totalPages}
+                                        onClick={() => goToPage(page + 1)}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
                 )}
             </Card>
         </section>

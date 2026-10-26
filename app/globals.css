@@ -411,3 +411,19 @@
 .chart-subtitle {
   @apply mt-1 text-xs text-slate-500;
 }
+
+
+.bg-dots-primary {
+  background-image: radial-gradient(var(--primary) 1.1px, transparent 1.3px);
+  background-size: 13px 13px;
+}
+
+.dots-fade-r {
+  -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, transparent 100%);
+}
+
+.dots-fade-l {
+  -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 0%, transparent 100%);
+}
